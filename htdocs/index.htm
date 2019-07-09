@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>DK9MBS SDR Server</title>
+  <meta name="description" content="DK9MBS SDR Server">
+  <meta name="author" content="dk9mbs">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!--<link rel="stylesheet" href="css/styles.css?v=1.0">-->
+  <script src="/js/index.js"></script>
+</head>
+
+<body>
+  <!--<script src="js/scripts.js"></script>-->
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+
+  <!-- 
+    bootstrap-vue 
+    https://bootstrap-vue.js.org/docs/reference/starter-templates/
+  -->
+
+  <link
+      type="text/css"
+      rel="stylesheet"
+      href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css"
+    />
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css"
+    />
+  <script src="https://unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
+  <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
+  <!-- end boostrap-vue -->
+
+<div id="app">
+  <!--
+  <b-navbar toggleable="lg" type="dark" variant="dark">
+    <b-navbar-brand href="#">DK9MBS</b-navbar-brand>
+
+    <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+
+    <b-collapse id="nav-collapse" is-nav>
+      <b-navbar-nav>
+        <b-nav-item href="#">dk9mbs.de</b-nav-item>
+      </b-navbar-nav>
+
+      <b-navbar-nav class="ml-auto">
+
+        <b-nav-item-dropdown text="Lang" right>
+          <b-dropdown-item href="#">DE</b-dropdown-item>
+        </b-nav-item-dropdown>
+
+        <b-nav-item-dropdown right>
+          <template slot="button-content"><em>User</em></template>
+          <b-dropdown-item href="#">Sign Out</b-dropdown-item>
+        </b-nav-item-dropdown>
+      </b-navbar-nav>
+    </b-collapse>
+  </b-navbar>
+-->
+  <b-tabs>
+
+      <b-tab title="Logentry" active>
+
+          <b-container fluid>
+              <b-row class="my-1" key="type">
+                  <b-col>
+                      <label for="logbook_id" size="sm">Logbook</label>
+                      <b-form-select v-model="logentry.logbook_id" class="mb-3" size="sm">
+                        <option v-for="n in logbooks" :value="n.id">{% raw %}{{ n.description }}{% endraw %}</option>
+                      </b-form-select>
+
+                  </b-col>
+                  <b-col>
+                      <label for="mode_id">Mode</label>
+                      <b-form-select v-model="logentry.mode_id" class="mb-3" size="sm">
+                        <option v-for="n in modes" :value="n.id">{% raw %}{{ n.description }}{% endraw %}</option>
+                      </b-form-select>
+                    </b-col>
+                  <b-col>
+                      <label for="rig_id">Rig</label>
+                      <b-form-select v-model="logentry.rig_id" class="mb-3" size="sm">
+                        <option v-for="n in rigs" :value="n.id">{% raw %}{{ n.description }}{% endraw %}</option>
+                      </b-form-select>
+                  </b-col>
+              </b-row>
+
+
+              <b-row class="my-1" key="type">
+                  <b-col>
+                      <label for="yourcall">Call</label>
+                      <b-form-input id="yourcall" type="text" v-model="logentry.yourcall" size="sm"></b-form-input>
+                  </b-col>
+                  <b-col>
+                      <label for="viacall">via</label>
+                      <b-form-input id="viacall" type="text" v-model="logentry.viacall" size="sm"></b-form-input>
+                  </b-col>
+              </b-row>
+
+  
+                <b-row class="my-1" key="type">
+                  <b-col>
+                      <label for="logdate_utc">Date</label>
+                      <b-form-input id="logdate_utc" type="date" v-model="logentry.logdate_utc" size="sm"></b-form-input>
+                  </b-col>
+                  <b-col>
+                      <label for="start_utc">UTC</label>
+                      <b-form-input id="start_utc" type="text" v-model="logentry.start_utc" size="sm"></b-form-input>
+                  </b-col>
+                  <b-col>
+                      <label for="rxrst">RX&nbsp;RST</label>
+                      <b-form-input id="rxrst" type="number" v-model="logentry.rxrst" size="sm"></b-form-input>
+                  </b-col>
+                  <b-col>
+                      <label for="txrst">TX&nbsp;RST</label>
+                      <b-form-input id="txrst" type="number" v-model="logentry.txrst" size="sm"></b-form-input>
+                  </b-col>
+                  <b-col>
+                      <label for="power">Power</label>
+                      <b-form-input id="power" type="number" v-model="logentry.power" size="sm"></b-form-input>
+                  </b-col>
+                  <b-col>
+                      <label for="frequency">QRG</label>
+                      <b-form-input id="frequency" type="number" v-model="logentry.frequency" size="sm"></b-form-input>
+                  </b-col>
+                </b-row>
+  
+
+                <b-row class="my-1" key="type">
+                    <b-col>
+                        <label for="name">Name</label>
+                        <b-form-input id="name" type="text" v-model="logentry.name" size="sm"></b-form-input>
+                    </b-col>
+                    <b-col>
+                        <label for="qth">QTH</label>
+                        <b-form-input id="qth" type="text" v-model="logentry.qth" size="sm"></b-form-input>
+                    </b-col>
+                </b-row>
+  
+                <b-row class="my-1" key="type">
+                    <b-col>
+                        <label for="locator">Loc</label>
+                        <b-form-input id="locator" type="text" v-model="logentry.locator" size="sm"></b-form-input>
+                    </b-col>
+                    <b-col>
+                        <label for="country">Country</label>
+                        <b-form-input id="country" type="text" v-model="logentry.country" size="sm"></b-form-input>
+                    </b-col>
+                </b-row>
+
+                <b-row class="my-1" key="type">
+                    <b-col>
+                        <label for="comment">Comment</label>
+                        <b-form-input id="comment" type="text" v-model="logentry.comment" size="sm"></b-form-input>
+                    </b-col>
+                </b-row>                
+
+
+
+                <b-row class="my-1" key="type">
+                    <b-col>
+                        <label for="itu_prefix">Prefix</label>
+                        <b-form-input id="itu_prefix" type="text" v-model="logentry.itu_prefix" size="sm"></b-form-input>
+                    </b-col>
+                    <b-col>
+                        <label for="dxcc">DXCC</label>
+                        <b-form-input id="dxcc" type="text" v-model="logentry.dxcc" size="sm"></b-form-input>
+                    </b-col>
+                    <b-col>
+                        <label for="cq">CQ</label>
+                        <b-form-input id="cq" type="text" v-model="logentry.cq" size="sm"></b-form-input>
+                    </b-col>
+                    <b-col>
+                        <label for="itu">ITU</label>
+                        <b-form-input id="itu" type="text" v-model="logentry.itu" size="sm"></b-form-input>
+                    </b-col>
+                    <b-col>
+                        <label for="dok">DOK</label>
+                        <b-form-input id="dok" type="text" v-model="logentry.dok" size="sm"></b-form-input>
+                    </b-col>
+                    <b-col>
+                        <label for="qsl_shipmentmode">Shipment</label>
+                        <b-form-select v-model="logentry.qsl_shipmentmode" class="mb-3" size="sm">
+                          <option v-for="n in qslshipmentmodes" :value="n.id">{% raw %}{{ n.description }}{% endraw %}</option>
+                        </b-form-select>
+
+                      </b-col>
+                  </b-row>
+
+                  <b-row class="my-1" key="type">
+                      <b-col>
+                          <label for="qslsend">Send</label>
+                          <b-form-checkbox id="qslsend" unchecked-value="0" value="1" v-model="logentry.qslsend" size="sm"></b-form-checkbox>
+                      </b-col>
+                      <b-col>
+                          <label for="qslrecv">Recv</label>
+                          <b-form-checkbox id="qslrecv" unchecked-value="0" value="1" v-model="logentry.qslrecv" size="sm"></b-form-checkbox>
+                      </b-col>
+                  </b-row>                  
+
+                  <b-row class="my-1" key="type">
+                    <b-col>
+                      <b-button v-on:click="clearForm()" size="sm">Neu</b-button>
+                      <b-button v-on:click="save()" size="sm">Speichern</b-button>
+                    </b-col>
+                </b-row>        
+              </b-container>
+              
+      </b-tab>
+    
+    </b-tabs>
+  </div>
+
+<script>
+vue = new Vue({
+  el: '#app',
+  data () {
+    return {
+      logentry: {},
+      rigs: [],
+      modes: [],
+      logbooks: [],
+      qslshipmentmodes: [],
+      alert: {message: null, type: 'warning',dismissSecs: 10,dismissCountDown: 0,showDismissibleAlert: false}, 
+      auth: {username: 'guest', password:null},
+    }
+  },
+  mounted () {
+    var recordId=0;
+    para= new URLSearchParams(window.location.search);
+    if(para.has('recordid')) recordId=para.get('recordid');
+    this.initEntry(recordId);
+
+    axios.get('/api/v1.0/tuxlog/logbooks').then( (response) => {
+      this.logbooks=response.data;
+    }
+    ).catch( (response) => { alert('Error loading lookbooks') } )
+
+    axios.get('/api/v1.0/tuxlog/rigs').then( (response) => {
+      this.rigs=response.data;
+    }
+    ).catch( (response) => { alert('Error loading rigs') } )
+
+    axios.get('/api/v1.0/tuxlog/modes').then( (response) => {
+      this.modes=response.data;
+    }
+    ).catch( (response) => { alert('Error loading modes') } )
+
+    axios.get('/api/v1.0/tuxlog/qslshipmentmodes').then( (response) => {
+      this.qslshipmentmodes=response.data;
+    }
+    ).catch( (response) => { alert('Error loading qslshipmentmodes') } )
+
+    
+
+  },
+   filters:{
+      getconfigkey: function(value,key){
+      	if(value==null) return null;
+          return value[key];
+        }
+    },
+  methods: {
+    initEntry: function (id) {
+      if (id==0) {
+        this.clearForm();
+      } else {axios.get('/api/v1.0/tuxlog/logs/'+id).then( (response) => {
+          this.logentry=response.data;
+          console.log(this.logentry);
+        }).catch( (response) => { alert('Fehler') } )
+      }
+    },
+    clearForm: function() {
+      now = new Date();
+      utcTime = now.getUTCHours()+":"+now.getUTCMinutes();
+
+      this.logentry={"id":"0", "rig_id": "ic735", "mode_id": "SSTV", 
+      "logbook_id": "dk9mbs", "qsl_shipmentmode": "bureau", "logdate_utc": new Date().toISOString().slice(0,10), 
+      "start_utc": utcTime};
+    },
+    save: function() {
+      alert(JSON.stringify(this.logentry));
+    },
+    showAlert: function(message, type='warning') {
+      this.alert.message=message;
+      this.alert.type=type;
+      this.alert.dismissCountDown = this.alert.dismissSecs;
+    }
+  }
+})
+
+
+
+
+listener=new ServerMessageListener();
+
+foo=new class extends BaseListener { execute(){}; }
+foo.setVue(vue);
+
+listener.addListener(foo);
+listener.addListener( new class { execute() {} }    );
+listener.connect();
+
+listener.execListener();
+
+</script>
+
+</body>
+</html>

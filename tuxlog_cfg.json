@@ -1,0 +1,4 @@
+{
+"httpcfg": {"host":"", "port":"8080"},
+"mysqlcfg": {"host":"localhost", "port":"3306","database":"database", "username":"username", "password":"password"}
+}
