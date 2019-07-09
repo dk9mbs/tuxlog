@@ -148,9 +148,9 @@ class CommandBuilder:
                 else:
                     values=values+str(self.__query_json[key]).replace(",",".")
 
-        print ("Fields => %s => %s" % (fields,values))
-
-        pass
+        sql="INSERT INTO log_%s (%s) VALUES (%s);" % (table,fields,values)
+        print(sql)
+        return sql
 
     def __get_metadata(self, table, field):
         key='db_field_%s.%s' % (table, field)
