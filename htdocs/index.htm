@@ -278,8 +278,8 @@ vue = new Vue({
       now = new Date();
       utcTime = now.getUTCHours()+":"+now.getUTCMinutes();
 
-      this.logentry={"id":"0", "rig_id": "ic735", "mode_id": "SSTV", 
-      "logbook_id": "dk9mbs", "qsl_shipmentmode": "bureau", "logdate_utc": new Date().toISOString().slice(0,10), 
+      this.logentry={"id":"0", "rig": {"id": "ic735"}, "mode": {"id": "SSTV"}, 
+      "logbook": {"id":"dk9mbs"}, "qsl_shipmentmode": {"id":"bureau"}, "logdate_utc": new Date().toISOString().slice(0,10), 
       "start_utc": utcTime};
     },
     save: function() {
