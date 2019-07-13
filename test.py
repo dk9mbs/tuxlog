@@ -1,7 +1,16 @@
 
 
 from dk9mbs.database import ConnectionFactory
+import sys
 
-print("Include:")
-print(ConnectionFactory.mysql)
-print ("End include")
+def create_model():
+    import model
+    rig=getattr(sys.modules["model"], "LogRigs")
+    rig.create(id="ft857", description="ICOM FT 857")
+    
+    rig.save()
+    #print(rig)
+
+create_model()
+
+

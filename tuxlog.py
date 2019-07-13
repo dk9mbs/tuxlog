@@ -82,7 +82,6 @@ app.threaded=True
 
 ConnectionFactory.init(app, cfg)
 print(ConnectionFactory.mysql)
-import test
 
 # UI
 @app.route('/')

@@ -23,6 +23,8 @@ from geventwebsocket.handler import WebSocketHandler
 import pymysql
 from flaskext.mysql import MySQL
 
+import model
+
 class MetaDataCache:
     __meta_data=dict()
 
