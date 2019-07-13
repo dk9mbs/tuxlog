@@ -25,9 +25,8 @@ from geventwebsocket.handler import WebSocketHandler
 
 from flaskext.mysql import MySQL
 
-from dk9mbs.database import ConnectionFactory
-from dk9mbs.database import DataSet
-from dk9mbs.database import CommandBuilderFactory
+from playhouse.shortcuts import model_to_dict, dict_to_model
+from modelfactory import ModelClassFactory
 
 with open('/etc/tuxlog/tuxlog_cfg.json') as json_file:
     cfg=json.load(json_file)
@@ -79,10 +78,6 @@ app.port=cfg['httpcfg']['port']
 app.threaded=True
 
 
-
-ConnectionFactory.init(app, cfg)
-print(ConnectionFactory.mysql)
-
 # UI
 @app.route('/')
 def index():
@@ -121,9 +116,7 @@ def handle_websocket():
 
 # Web Api v1.0
 
-from datetime import datetime
-from datetime import date
-from datetime import timedelta
+import datetime
 from decimal import Decimal
 
 '''Create an encoder subclassing JSON.encoder. 
@@ -131,27 +124,34 @@ Make this encoder aware of our classes (e.g. datetime.datetime objects)
 '''
 class JsonTypeConverter(json.JSONEncoder):
     def typeformatter(self, obj):
-        if isinstance(obj, datetime) or isinstance(obj, date):
+        #print("##############TYPE#############"+str(type(obj)))
+        if isinstance(obj, datetime.time ) or isinstance(obj, datetime.date) :
             return obj.isoformat()
-        elif isinstance(obj, timedelta):
+        elif isinstance(obj, datetime.timedelta):
             return str(obj)
         elif isinstance(obj, Decimal):
             return float(obj)
         else:
-            return self.default(self, obj)
+            return json.JSONEncoder.default(self, obj)
 
 
 
 @app.route('/api/v1.0/<database>/<table>', methods=['GET'])
 def get_dataset(database, table):
-    data=DataSet().fetch(CommandBuilderFactory.create_builder(ConnectionFactory.create_connection(),{
-        "query": 'SELECT * from log_%s ORDER BY id desc' % table,
-        "rowcount": 50
-        }, '')
-    )
-    data=json.dumps( data, default=JsonTypeConverter().typeformatter )
+
+    from dk9mbs.database.model import database as db
+    import pymysql
+    mod=ModelClassFactory(table).create()
+    data = mod.select()
+
+    tmp=[]
+    for item in data:
+        tmp.append(model_to_dict(item))
+
+    tmp=json.dumps(tmp)
+
     return Response(
-            data,
+            tmp,
             mimetype="text/json",
             headers={
                 "dk9mbs": "yes"
@@ -160,18 +160,18 @@ def get_dataset(database, table):
 
 @app.route('/api/v1.0/<database>/<table>/<recordid>', methods=['GET'])
 def get_record(database, table, recordid):
-    data=DataSet().fetch(CommandBuilderFactory.create_builder(ConnectionFactory.create_connection(),{
-        "query": 'SELECT * from log_%s WHERE id=%s ORDER BY id desc' % (table, recordid),
-        "rowcount": 1
-        }, '')
-    )
 
+    mod=ModelClassFactory(table).create()
+    data = model_to_dict(mod.get(mod.id==recordid))
+    
     if len(data) == 0:
         print ("FEHLER")
         return
         
-    data=json.dumps( data[0], default=JsonTypeConverter().typeformatter )
+    data=json.dumps( data, default=JsonTypeConverter().typeformatter )
+ 
     print(data)
+
     return Response(
             data,
             mimetype="text/json",

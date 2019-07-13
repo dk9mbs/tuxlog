@@ -70,20 +70,20 @@
               <b-row class="my-1" key="type">
                   <b-col>
                       <label for="logbook_id" size="sm">Logbook</label>
-                      <b-form-select v-model="logentry.logbook_id" class="mb-3" size="sm">
+                      <b-form-select v-model="logentry.logbook.id" class="mb-3" size="sm">
                         <option v-for="n in logbooks" :value="n.id">{% raw %}{{ n.description }}{% endraw %}</option>
                       </b-form-select>
 
                   </b-col>
                   <b-col>
                       <label for="mode_id">Mode</label>
-                      <b-form-select v-model="logentry.mode_id" class="mb-3" size="sm">
+                      <b-form-select v-model="logentry.mode.id" class="mb-3" size="sm">
                         <option v-for="n in modes" :value="n.id">{% raw %}{{ n.description }}{% endraw %}</option>
                       </b-form-select>
                     </b-col>
                   <b-col>
                       <label for="rig_id">Rig</label>
-                      <b-form-select v-model="logentry.rig_id" class="mb-3" size="sm">
+                      <b-form-select v-model="logentry.rig.id" class="mb-3" size="sm">
                         <option v-for="n in rigs" :value="n.id">{% raw %}{{ n.description }}{% endraw %}</option>
                       </b-form-select>
                   </b-col>
@@ -184,7 +184,7 @@
                     </b-col>
                     <b-col>
                         <label for="qsl_shipmentmode">Shipment</label>
-                        <b-form-select v-model="logentry.qsl_shipmentmode" class="mb-3" size="sm">
+                        <b-form-select v-model="logentry.qsl_shipmentmode.id" class="mb-3" size="sm">
                           <option v-for="n in qslshipmentmodes" :value="n.id">{% raw %}{{ n.description }}{% endraw %}</option>
                         </b-form-select>
 
@@ -235,22 +235,22 @@ vue = new Vue({
     if(para.has('recordid')) recordId=para.get('recordid');
     this.initEntry(recordId);
 
-    axios.get('/api/v1.0/tuxlog/logbooks').then( (response) => {
+    axios.get('/api/v1.0/tuxlog/LogLogbooks').then( (response) => {
       this.logbooks=response.data;
     }
     ).catch( (response) => { alert('Error loading lookbooks') } )
 
-    axios.get('/api/v1.0/tuxlog/rigs').then( (response) => {
+    axios.get('/api/v1.0/tuxlog/LogRigs').then( (response) => {
       this.rigs=response.data;
     }
     ).catch( (response) => { alert('Error loading rigs') } )
 
-    axios.get('/api/v1.0/tuxlog/modes').then( (response) => {
+    axios.get('/api/v1.0/tuxlog/LogModes').then( (response) => {
       this.modes=response.data;
     }
     ).catch( (response) => { alert('Error loading modes') } )
 
-    axios.get('/api/v1.0/tuxlog/qslshipmentmodes').then( (response) => {
+    axios.get('/api/v1.0/tuxlog/LogQslshipmentmodes').then( (response) => {
       this.qslshipmentmodes=response.data;
     }
     ).catch( (response) => { alert('Error loading qslshipmentmodes') } )
@@ -268,7 +268,7 @@ vue = new Vue({
     initEntry: function (id) {
       if (id==0) {
         this.clearForm();
-      } else {axios.get('/api/v1.0/tuxlog/logs/'+id).then( (response) => {
+      } else {axios.get('/api/v1.0/tuxlog/LogLogs/'+id).then( (response) => {
           this.logentry=response.data;
           console.log(this.logentry);
         }).catch( (response) => { alert('Fehler') } )

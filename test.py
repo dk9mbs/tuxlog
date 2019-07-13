@@ -1,16 +1,14 @@
-
-
-from dk9mbs.database import ConnectionFactory
 import sys
+from modelfactory import ModelClassFactory
+#import dk9mbs.database.model
+from dk9mbs.database.model import LogRigs
 
-def create_model():
-    import model
-    rig=getattr(sys.modules["model"], "LogRigs")
-    rig.create(id="ft857", description="ICOM FT 857")
-    
-    rig.save()
-    #print(rig)
-
-create_model()
+mod=ModelClassFactory("LogLogs").create()
+entry=mod.get(mod.id==736)
+print (entry.__dict__)
+print(__file__)
 
 
+
+
+#LogRigs.create(id="ic957", description="test")
