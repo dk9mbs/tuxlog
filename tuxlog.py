@@ -28,6 +28,9 @@ from flaskext.mysql import MySQL
 from playhouse.shortcuts import model_to_dict, dict_to_model
 from modelfactory import ModelClassFactory
 
+import haminfoproviderfactory as haminfo
+
+
 with open('/etc/tuxlog/tuxlog_cfg.json') as json_file:
     cfg=json.load(json_file)
 
@@ -54,8 +57,6 @@ args = parser.parse_args()
 if args.frequency:
     cfg['hwcfg']['frequency']=args.frequency
 
-
-
 def handler(signum, frame):
     pass
 
@@ -65,7 +66,6 @@ def handler_int(signum, frame):
 
 signal.signal(signal.SIGINT, handler_int)
 signal.signal(signal.SIGTERM, handler)
-
 
 app = Flask(__name__, template_folder='htdocs', static_url_path='/htdocs/')
 app.config['SECRET_KEY'] = 'secret!'
@@ -135,14 +135,24 @@ class JsonTypeConverter(json.JSONEncoder):
             return json.JSONEncoder.default(self, obj)
 
 
+@app.route('/api/v1.0/<database>/<table>', methods=['POST'])
+def save_or_update(database, table):
+    mod_cls=ModelClassFactory(table).create()
+    data_model=dict_to_model(mod_cls, request.json)
+    #data_model.save(force_insert=True)
+    data_model.save()
+    print(data_model.id)
+
+    for wsock in connections:
+        wsock.send(json.dumps({'publisher':'save','target': table, 'message': {"id":data_model.id} } ))
+
+    return Response({"id":data_model.id})
+
 
 @app.route('/api/v1.0/<database>/<table>', methods=['GET'])
 def get_dataset(database, table):
-
-    from dk9mbs.database.model import database as db
-    import pymysql
-    mod=ModelClassFactory(table).create()
-    data = mod.select()
+    mod_cls=ModelClassFactory(table).create()
+    data = mod_cls.select()
 
     tmp=[]
     for item in data:
@@ -179,6 +189,13 @@ def get_record(database, table, recordid):
                 "dk9mbs": "yes"
             }
         )     
+
+@app.route('/api/v1.0/haminfo/<provider>/<call>', methods=['GET'])
+def get_ham_info(provider, call):
+    result=haminfo.HamInfoProviderResultFactory.create()
+    haminfo.HamInfoProviderFactory.create(provider).read(call, result)
+    print("HamInfo => "+str(result))
+    return Response(json.dumps(result), mimetype="text/json")
 
 server = WSGIServer((cfg['httpcfg']['host'], int(cfg['httpcfg']['port'])), app, handler_class=WebSocketHandler)
 server.serve_forever()

@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
 
-  <title>DK9MBS SDR Server</title>
-  <meta name="description" content="DK9MBS SDR Server">
+  <title>DK9MBS tuxlog</title>
+  <meta name="description" content="DK9MBS tuxlog">
   <meta name="author" content="dk9mbs">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -12,7 +12,7 @@
   <script src="/js/index.js"></script>
 </head>
 
-<body>
+<body style="background-color:silver">
   <!--<script src="js/scripts.js"></script>-->
   <script src="https://cdn.jsdelivr.net/npm/vue"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
@@ -70,7 +70,7 @@
               <b-row class="my-1" key="type">
                   <b-col>
                       <label for="logbook_id" size="sm">Logbook</label>
-                      <b-form-select v-model="logentry.logbook.id" class="mb-3" size="sm">
+                      <b-form-select v-model="logentry['logbook']['id']" class="mb-3" size="sm">
                         <option v-for="n in logbooks" :value="n.id">{% raw %}{{ n.description }}{% endraw %}</option>
                       </b-form-select>
 
@@ -89,57 +89,42 @@
                   </b-col>
               </b-row>
 
+              <b-row class="my-1" key="type">
+                <b-col>
+                    <label for="power">Power</label>
+                    <b-form-input id="power" type="number" v-model="logentry.power" size="sm"></b-form-input>
+                </b-col>
+                <b-col>
+                    <label for="frequency">QRG</label>
+                    <b-form-input id="frequency" type="number" v-model="logentry.frequency" size="sm"></b-form-input>
+                </b-col>
+                <b-col>
+                  <label for="logdate_utc">Date</label>
+                  <b-form-input id="logdate_utc" type="date" v-model="logentry.logdate_utc" size="sm"></b-form-input>
+              </b-col>
+              <b-col>
+                  <label for="start_utc">UTC</label>
+                  <b-form-input id="start_utc" type="text" v-model="logentry.start_utc" size="sm"></b-form-input>
+              </b-col>
+          </b-row>
+
 
               <b-row class="my-1" key="type">
                   <b-col>
                       <label for="yourcall">Call</label>
-                      <b-form-input id="yourcall" type="text" v-model="logentry.yourcall" size="sm"></b-form-input>
+                      <b-form-input id="yourcall" type="text" @change="yourcall_onchange" v-model="logentry.yourcall" size="sm"></b-form-input>
                   </b-col>
                   <b-col>
-                      <label for="viacall">via</label>
-                      <b-form-input id="viacall" type="text" v-model="logentry.viacall" size="sm"></b-form-input>
-                  </b-col>
+                    <label for="rxrst">RX&nbsp;RST</label>
+                    <b-form-input id="rxrst" type="number" v-model="logentry.rxrst" size="sm"></b-form-input>
+                </b-col>
+                <b-col>
+                    <label for="txrst">TX&nbsp;RST</label>
+                    <b-form-input id="txrst" type="number" v-model="logentry.txrst" size="sm"></b-form-input>
+                </b-col>
               </b-row>
-
-  
-                <b-row class="my-1" key="type">
-                  <b-col>
-                      <label for="logdate_utc">Date</label>
-                      <b-form-input id="logdate_utc" type="date" v-model="logentry.logdate_utc" size="sm"></b-form-input>
-                  </b-col>
-                  <b-col>
-                      <label for="start_utc">UTC</label>
-                      <b-form-input id="start_utc" type="text" v-model="logentry.start_utc" size="sm"></b-form-input>
-                  </b-col>
-                  <b-col>
-                      <label for="rxrst">RX&nbsp;RST</label>
-                      <b-form-input id="rxrst" type="number" v-model="logentry.rxrst" size="sm"></b-form-input>
-                  </b-col>
-                  <b-col>
-                      <label for="txrst">TX&nbsp;RST</label>
-                      <b-form-input id="txrst" type="number" v-model="logentry.txrst" size="sm"></b-form-input>
-                  </b-col>
-                  <b-col>
-                      <label for="power">Power</label>
-                      <b-form-input id="power" type="number" v-model="logentry.power" size="sm"></b-form-input>
-                  </b-col>
-                  <b-col>
-                      <label for="frequency">QRG</label>
-                      <b-form-input id="frequency" type="number" v-model="logentry.frequency" size="sm"></b-form-input>
-                  </b-col>
-                </b-row>
   
 
-                <b-row class="my-1" key="type">
-                    <b-col>
-                        <label for="name">Name</label>
-                        <b-form-input id="name" type="text" v-model="logentry.name" size="sm"></b-form-input>
-                    </b-col>
-                    <b-col>
-                        <label for="qth">QTH</label>
-                        <b-form-input id="qth" type="text" v-model="logentry.qth" size="sm"></b-form-input>
-                    </b-col>
-                </b-row>
   
                 <b-row class="my-1" key="type">
                     <b-col>
@@ -147,13 +132,21 @@
                         <b-form-input id="locator" type="text" v-model="logentry.locator" size="sm"></b-form-input>
                     </b-col>
                     <b-col>
+                      <label for="qth">QTH</label>
+                      <b-form-input id="qth" type="text" v-model="logentry.qth" size="sm"></b-form-input>
+                  </b-col>
+                  <b-col>
                         <label for="country">Country</label>
                         <b-form-input id="country" type="text" v-model="logentry.country" size="sm"></b-form-input>
                     </b-col>
                 </b-row>
 
                 <b-row class="my-1" key="type">
-                    <b-col>
+                  <b-col>
+                    <label for="name">Name</label>
+                    <b-form-input id="name" type="text" v-model="logentry.name" size="sm"></b-form-input>
+                </b-col>
+                <b-col>
                         <label for="comment">Comment</label>
                         <b-form-input id="comment" type="text" v-model="logentry.comment" size="sm"></b-form-input>
                     </b-col>
@@ -182,14 +175,22 @@
                         <label for="dok">DOK</label>
                         <b-form-input id="dok" type="text" v-model="logentry.dok" size="sm"></b-form-input>
                     </b-col>
-                    <b-col>
-                        <label for="qsl_shipmentmode">Shipment</label>
-                        <b-form-select v-model="logentry.qsl_shipmentmode.id" class="mb-3" size="sm">
-                          <option v-for="n in qslshipmentmodes" :value="n.id">{% raw %}{{ n.description }}{% endraw %}</option>
-                        </b-form-select>
-
-                      </b-col>
                   </b-row>
+
+
+                  <b-row class="my-1" key="type">
+                    <b-col>
+                      <label for="viacall">via</label>
+                      <b-form-input id="viacall" type="text" v-model="logentry.viacall" size="sm"></b-form-input>
+                    </b-col>
+                    <b-col>
+                      <label for="qsl_shipmentmode">Shipment</label>
+                      <b-form-select v-model="logentry.qsl_shipmentmode.id" class="mb-3" size="sm">
+                        <option v-for="n in qslshipmentmodes" :value="n.id">{% raw %}{{ n.description }}{% endraw %}</option>
+                      </b-form-select>
+                  </b-col>
+                </b-row>
+  
 
                   <b-row class="my-1" key="type">
                       <b-col>
@@ -206,6 +207,17 @@
                     <b-col>
                       <b-button v-on:click="clearForm()" size="sm">Neu</b-button>
                       <b-button v-on:click="save()" size="sm">Speichern</b-button>
+
+
+                      <b-alert
+                      :show="alert.dismissCountDown"
+                      dismissible
+                      v-bind:variant="alert.type"
+                      @dismissed="alert.dismissCountDown=0"
+                      @dismiss-count-down="countDownChanged">
+                      <p>{% raw %}{{ alert.message }}{% endraw %}</p>
+                      </b-alert>
+                
                     </b-col>
                 </b-row>        
               </b-container>
@@ -213,6 +225,8 @@
       </b-tab>
     
     </b-tabs>
+
+
   </div>
 
 <script>
@@ -220,6 +234,7 @@ vue = new Vue({
   el: '#app',
   data () {
     return {
+      alert: {message: null, type: 'warning',dismissSecs: 10,dismissCountDown: 0,showDismissibleAlert: false},
       logentry: {},
       rigs: [],
       modes: [],
@@ -265,6 +280,23 @@ vue = new Vue({
         }
     },
   methods: {
+    yourcall_onchange: function(event) {
+      console.log(this.logentry.name)
+      axios.get('/api/v1.0/haminfo/hamdb/'+event).then((response)=>{
+        this.logentry.name=response.data.haminfo.name
+        this.logentry.country=response.data.haminfo.country
+        this.logentry.qth=response.data.haminfo.qth
+        this.logentry.locator=response.data.haminfo.locator
+        this.$forceUpdate();
+    }).catch((response) => {
+      this.logentry.name=""
+      this.logentry.country=""
+      this.logentry.qth=""
+      this.logentry.locator=""
+      this.$forceUpdate();
+      this.showAlert('Error loading haminfo => '+response, "warning")
+    })
+    },
     initEntry: function (id) {
       if (id==0) {
         this.clearForm();
@@ -278,18 +310,25 @@ vue = new Vue({
       now = new Date();
       utcTime = now.getUTCHours()+":"+now.getUTCMinutes();
 
-      this.logentry={"id":"0", "rig": {"id": "ic735"}, "mode": {"id": "SSTV"}, 
+      this.logentry={"rig": {"id": "ic735"}, "mode": {"id": "SSTV"}, 
       "logbook": {"id":"dk9mbs"}, "qsl_shipmentmode": {"id":"bureau"}, "logdate_utc": new Date().toISOString().slice(0,10), 
-      "start_utc": utcTime};
+      "start_utc": utcTime, "qslsend":0, "qslrecv":0};
     },
     save: function() {
-      alert(JSON.stringify(this.logentry));
+      axios.post('/api/v1.0/tuxlog/LogLogs', this.logentry).then((response) => {
+        this.showAlert('log saved!', "success")
+        this.clearForm();
+      }).catch((response)=>{alert('Fehler')})
+    },
+    countDownChanged: function(dismissCountDown) {
+      this.alert.dismissCountDown = dismissCountDown
     },
     showAlert: function(message, type='warning') {
       this.alert.message=message;
       this.alert.type=type;
       this.alert.dismissCountDown = this.alert.dismissSecs;
     }
+
   }
 })
 
