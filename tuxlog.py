@@ -28,7 +28,7 @@ from flaskext.mysql import MySQL
 from playhouse.shortcuts import model_to_dict, dict_to_model
 from modelfactory import ModelClassFactory
 
-import haminfoproviderfactory as haminfo
+import dk9mbs.haminfoproviderfactory as haminfo
 
 
 with open('/etc/tuxlog/tuxlog_cfg.json') as json_file:
