@@ -1,16 +1,5 @@
-class HamInfoProviderResultFactory:
-    @classmethod
-    def create(cls):
-        result={"haminfo":{}}
-        result['haminfo']['call']=""
-        result['haminfo']['name']=""
-        result['haminfo']['lat']=""
-        result['haminfo']['lon']=""
-        result['haminfo']['qth']=""
-        result['haminfo']['country']=""
-        result['haminfo']['locator']=""
-        result['datasource']=""
-        return result
+import requests
+#from .. import modelfactory as test
 
 class HamBaseInfoProvider:
     def read(self, call, info_json):

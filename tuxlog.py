@@ -26,9 +26,11 @@ from geventwebsocket.handler import WebSocketHandler
 from flaskext.mysql import MySQL
 
 from playhouse.shortcuts import model_to_dict, dict_to_model
-from modelfactory import ModelClassFactory
 
-import haminfoproviderfactory as haminfo
+#from modelfactory import ModelClassFactory
+#import haminfoproviderfactory as haminfo
+from business.modelfactory import ModelClassFactory
+import business.haminfo as haminfo
 
 
 with open('/etc/tuxlog/tuxlog_cfg.json') as json_file:
@@ -192,7 +194,7 @@ def get_record(database, table, recordid):
 
 @app.route('/api/v1.0/haminfo/<provider>/<call>', methods=['GET'])
 def get_ham_info(provider, call):
-    result=haminfo.HamInfoProviderResultFactory.create()
+    result=haminfo.init_haminfo_dict()
     haminfo.HamInfoProviderFactory.create(provider).read(call, result)
     print("HamInfo => "+str(result))
     return Response(json.dumps(result), mimetype="text/json")
