@@ -62,8 +62,12 @@
     </b-collapse>
   </b-navbar>
 -->
-  <b-tabs>
 
+  <div>
+  <b-table striped hover small :items="history" :fields="historyfields" ></b-table>
+  </div>
+
+  <b-tabs>
       <b-tab title="Logentry" active>
 
           <b-container fluid>
@@ -242,6 +246,8 @@ vue = new Vue({
       qslshipmentmodes: [],
       alert: {message: null, type: 'warning',dismissSecs: 10,dismissCountDown: 0,showDismissibleAlert: false}, 
       auth: {username: 'guest', password:null},
+      history: [],
+      historyfields: ["id", "yourcall"]
     }
   },
   mounted () {
@@ -269,9 +275,10 @@ vue = new Vue({
       this.qslshipmentmodes=response.data;
     }
     ).catch( (response) => { alert('Error loading qslshipmentmodes') } )
-
     
-
+    axios.get('/api/v1.0/tuxlog/LogLogs/10?order=id:desc').then( (response) => {
+      this.history=response.data;
+    }).catch((response)=> {alert('Fehler')})
   },
    filters:{
       getconfigkey: function(value,key){
@@ -280,7 +287,16 @@ vue = new Vue({
         }
     },
   methods: {
+     makeToast(append = false, text) {
+        this.toastCount++
+        this.$bvToast.toast(text, {
+          title: 'BootstrapVue Toast',
+          autoHideDelay: 5000,
+          appendToast: append
+        })
+      },
     yourcall_onchange: function(event) {
+      this.makeToast(true, 'Reading from callbook...')
       console.log(this.logentry.name)
       axios.get('/api/v1.0/haminfo/hamdb/'+event).then((response)=>{
         this.logentry.name=response.data.haminfo.name
@@ -316,8 +332,9 @@ vue = new Vue({
     },
     save: function() {
       axios.post('/api/v1.0/tuxlog/LogLogs', this.logentry).then((response) => {
-        this.showAlert('log saved!', "success")
+        //this.showAlert('log saved!', "success")
         this.clearForm();
+        this.makeToast(true, 'New entry saved!');
       }).catch((response)=>{alert('Fehler')})
     },
     countDownChanged: function(dismissCountDown) {

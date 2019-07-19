@@ -124,18 +124,18 @@ from decimal import Decimal
 '''Create an encoder subclassing JSON.encoder. 
 Make this encoder aware of our classes (e.g. datetime.datetime objects) 
 '''
-class JsonTypeConverter(json.JSONEncoder):
-    def typeformatter(self, obj):
-        #print("##############TYPE#############"+str(type(obj)))
-        if isinstance(obj, datetime.time ) or isinstance(obj, datetime.date) :
-            return obj.isoformat()
-        elif isinstance(obj, datetime.timedelta):
-            return str(obj)
-        elif isinstance(obj, Decimal):
-            return float(obj)
-        else:
-            return json.JSONEncoder.default(self, obj)
-
+def typeformatter(obj):
+    #print("##############TYPE#############"+str(type(obj)))
+    if isinstance(obj, datetime.time ) or isinstance(obj, datetime.date) :
+        return obj.isoformat()
+    elif isinstance(obj, datetime.timedelta):
+        return str(obj)
+    elif isinstance(obj, Decimal):
+        return float(obj)
+    else:
+        #return json.JSONEncoder.default(self, obj)
+        #return json.JSONEncoder.default(obj)
+        pass
 
 @app.route('/api/v1.0/<database>/<table>', methods=['POST'])
 def save_or_update(database, table):
@@ -151,17 +151,48 @@ def save_or_update(database, table):
     return Response({"id":data_model.id})
 
 
+@app.route('/api/v1.0/<database>/<table>/<page>/<pagesize>', methods=['GET'])
+@app.route('/api/v1.0/<database>/<table>/<pagesize>', methods=['GET'])
 @app.route('/api/v1.0/<database>/<table>', methods=['GET'])
-def get_dataset(database, table):
+def get_dataset(database, table, page=1, pagesize=0):
+    from peewee import Ordering
+    from operator import attrgetter
+
+    order=""
+
+    if request.args.get("order") != None:
+        order = request.args.get("order")
+
     mod_cls=ModelClassFactory(table).create()
-    data = mod_cls.select()
 
+    query = mod_cls.select()
+
+    if order!="":
+        field=order
+        sorter="asc"
+
+        if len(order.split(":")) > 1:
+            field=order.split(":")[0]
+            sorter=order.split(":")[1]
+        
+        if sorter=="desc":
+            query = query.order_by( attrgetter(str(field))(mod_cls).desc() )
+        else:
+            query = query.order_by( attrgetter(str(field))(mod_cls).asc() )
+
+
+    if int(pagesize)>0:
+        query = query.limit(int( pagesize))
+
+
+    print(query)
     tmp=[]
-    for item in data:
-        tmp.append(model_to_dict(item))
+    #for item in query:
+    #    print(item.id)
+    #    tmp.append(model_to_dict(item))
 
-    tmp=json.dumps(tmp)
-
+    tmp = list(query.dicts())
+    tmp=json.dumps(tmp, default=typeformatter)
     return Response(
             tmp,
             mimetype="text/json",
@@ -180,7 +211,8 @@ def get_record(database, table, recordid):
         print ("FEHLER")
         return
         
-    data=json.dumps( data, default=JsonTypeConverter().typeformatter )
+    #data=json.dumps( data, default=JsonTypeConverter().typeformatter )
+    data=json.dumps( data, default=typeformatter )
  
     print(data)
 
