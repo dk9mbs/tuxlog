@@ -13,6 +13,24 @@
 </head>
 
 <body style="background-color:silver">
+
+  <style>
+    .parent{
+    width: max-width;
+    background: red;
+}
+.child{
+    float: left;
+    height: max-height;
+    width: 20%
+}
+.child1{
+    float: left;
+    height: max-height;
+    width: max-width
+}
+  </style>
+
   <!--<script src="js/scripts.js"></script>-->
   <script src="https://cdn.jsdelivr.net/npm/vue"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
@@ -36,7 +54,7 @@
   <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
   <!-- end boostrap-vue -->
 
-<div id="app">
+<div class="parent" id="app">
   <!--
   <b-navbar toggleable="lg" type="dark" variant="dark">
     <b-navbar-brand href="#">DK9MBS</b-navbar-brand>
@@ -63,13 +81,15 @@
   </b-navbar>
 -->
 
-  <div>
+  <div class="child">
   <b-table striped hover small :items="history" :fields="historyfields" ></b-table>
   </div>
 
-  <b-tabs>
+  <!--
+  <b-tabs style="float:right;">
       <b-tab title="Logentry" active>
-
+-->
+<div class="child1">
           <b-container fluid>
               <b-row class="my-1" key="type">
                   <b-col>
@@ -225,13 +245,15 @@
                     </b-col>
                 </b-row>        
               </b-container>
-              
+            </div>
+
+<!--           
       </b-tab>
     
     </b-tabs>
+-->
 
-
-  </div>
+</div>
 
 <script>
 vue = new Vue({
@@ -247,7 +269,7 @@ vue = new Vue({
       alert: {message: null, type: 'warning',dismissSecs: 10,dismissCountDown: 0,showDismissibleAlert: false}, 
       auth: {username: 'guest', password:null},
       history: [],
-      historyfields: ["id", "yourcall"]
+      historyfields: ["id", "yourcall", "start_utc","txrst","rxrst"]
     }
   },
   mounted () {
@@ -276,7 +298,7 @@ vue = new Vue({
     }
     ).catch( (response) => { alert('Error loading qslshipmentmodes') } )
     
-    axios.get('/api/v1.0/tuxlog/LogLogs/10?order=id:desc').then( (response) => {
+    axios.get('/api/v1.0/tuxlog/LogLogs/5?order=id:desc').then( (response) => {
       this.history=response.data;
     }).catch((response)=> {alert('Fehler')})
   },
