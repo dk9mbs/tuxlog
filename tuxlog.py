@@ -157,35 +157,37 @@ def save_or_update(database, table):
 def get_dataset(database, table, page=1, pagesize=0):
     from peewee import Ordering
     from operator import attrgetter
+    from peewee import RawQuery
 
     order=""
+    limit=""
+    where=""
 
     if request.args.get("order") != None:
         order = request.args.get("order")
 
+    if request.args.get("where") != None:
+        where = request.args.get("where")
+    
     mod_cls=ModelClassFactory(table).create()
 
-    query = mod_cls.select()
+    table=mod_cls._meta.table_name
+
 
     if order!="":
-        field=order
-        sorter="asc"
-
-        if len(order.split(":")) > 1:
-            field=order.split(":")[0]
-            sorter=order.split(":")[1]
-        
-        if sorter=="desc":
-            query = query.order_by( attrgetter(str(field))(mod_cls).desc() )
-        else:
-            query = query.order_by( attrgetter(str(field))(mod_cls).asc() )
-
+        order=" ORDER BY %s" % order
 
     if int(pagesize)>0:
-        query = query.limit(int( pagesize))
+        limit=" LIMIT %s" % str(pagesize)
 
+    if where!="":
+        where = " WHERE %s" % where
 
-    print(query)
+    sql='Select * from %s %s %s %s;' % (table, where, order, limit)
+    print(sql)
+    query=mod_cls.raw(sql)
+    
+    #print(query)
     tmp=[]
     #for item in query:
     #    print(item.id)

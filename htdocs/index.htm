@@ -298,9 +298,7 @@ vue = new Vue({
     }
     ).catch( (response) => { alert('Error loading qslshipmentmodes') } )
     
-    axios.get('/api/v1.0/tuxlog/LogLogs/5?order=id:desc').then( (response) => {
-      this.history=response.data;
-    }).catch((response)=> {alert('Fehler')})
+    this.loadHistory();
   },
    filters:{
       getconfigkey: function(value,key){
@@ -309,6 +307,11 @@ vue = new Vue({
         }
     },
   methods: {
+    loadHistory: function() {
+        axios.get('/api/v1.0/tuxlog/LogLogs/10?order=id desc').then( (response) => {
+        this.history=response.data;
+      }).catch((response)=> {alert('Fehler')})
+    },
      makeToast(append = false, text) {
         this.toastCount++
         this.$bvToast.toast(text, {
@@ -347,14 +350,14 @@ vue = new Vue({
     clearForm: function() {
       now = new Date();
       utcTime = now.getUTCHours()+":"+now.getUTCMinutes();
-
+      this.loadHistory();
+      
       this.logentry={"rig": {"id": "ic735"}, "mode": {"id": "SSTV"}, 
       "logbook": {"id":"dk9mbs"}, "qsl_shipmentmode": {"id":"bureau"}, "logdate_utc": new Date().toISOString().slice(0,10), 
       "start_utc": utcTime, "qslsend":0, "qslrecv":0};
     },
     save: function() {
       axios.post('/api/v1.0/tuxlog/LogLogs', this.logentry).then((response) => {
-        //this.showAlert('log saved!', "success")
         this.clearForm();
         this.makeToast(true, 'New entry saved!');
       }).catch((response)=>{alert('Fehler')})
