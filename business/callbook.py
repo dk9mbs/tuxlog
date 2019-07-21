@@ -1,7 +1,7 @@
 import requests
 import json
-from services.haminfo.hamdb import HamDbProvider
-from services.haminfo.hamdb import HamBaseInfoProvider
+from services.callbook.hamdb import HamDbProvider
+from services.callbook.hamdb import HamBaseInfoProvider
 
 class HamInfoProviderFactory:
 

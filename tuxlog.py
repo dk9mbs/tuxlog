@@ -30,7 +30,7 @@ from playhouse.shortcuts import model_to_dict, dict_to_model
 #from modelfactory import ModelClassFactory
 #import haminfoproviderfactory as haminfo
 from business.modelfactory import ModelClassFactory
-import business.haminfo as haminfo
+import business.callbook as callbook
 
 
 with open('/etc/tuxlog/tuxlog_cfg.json') as json_file:
@@ -226,16 +226,15 @@ def get_record(database, table, recordid):
             }
         )     
 
-@app.route('/api/v1.0/haminfo/<provider>/<call>', methods=['GET'])
+@app.route('/api/v1.0/callbook/<provider>/<call>', methods=['GET'])
 def get_ham_info(provider, call):
-    result=haminfo.init_haminfo_dict()
-    haminfo.HamInfoProviderFactory.create(provider).read(call, result)
+    result=callbook.init_haminfo_dict()
+    callbook.HamInfoProviderFactory.create(provider).read(call, result)
     print("HamInfo => "+str(result))
     return Response(json.dumps(result), mimetype="text/json")
 
 server = WSGIServer((cfg['httpcfg']['host'], int(cfg['httpcfg']['port'])), app, handler_class=WebSocketHandler)
 server.serve_forever()
-
 
 
 

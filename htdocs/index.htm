@@ -323,7 +323,7 @@ vue = new Vue({
     yourcall_onchange: function(event) {
       this.makeToast(true, 'Reading from callbook...')
       console.log(this.logentry.name)
-      axios.get('/api/v1.0/haminfo/hamdb/'+event).then((response)=>{
+      axios.get('/api/v1.0/callbook/hamdb/'+event).then((response)=>{
         this.logentry.name=response.data.haminfo.name
         this.logentry.country=response.data.haminfo.country
         this.logentry.qth=response.data.haminfo.qth
