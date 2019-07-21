@@ -27,9 +27,7 @@ from flaskext.mysql import MySQL
 
 from playhouse.shortcuts import model_to_dict, dict_to_model
 
-#from modelfactory import ModelClassFactory
-#import haminfoproviderfactory as haminfo
-from business.modelfactory import ModelClassFactory
+from business.datamodel import ModelClassFactory
 import business.callbook as callbook
 
 
@@ -155,12 +153,7 @@ def save_or_update(database, table):
 @app.route('/api/v1.0/<database>/<table>/<pagesize>', methods=['GET'])
 @app.route('/api/v1.0/<database>/<table>', methods=['GET'])
 def get_dataset(database, table, page=1, pagesize=0):
-    from peewee import Ordering
-    from operator import attrgetter
-    from peewee import RawQuery
-
     order=""
-    limit=""
     where=""
 
     if request.args.get("order") != None:
@@ -169,31 +162,8 @@ def get_dataset(database, table, page=1, pagesize=0):
     if request.args.get("where") != None:
         where = request.args.get("where")
     
-    mod_cls=ModelClassFactory(table).create()
-
-    table=mod_cls._meta.table_name
-
-
-    if order!="":
-        order=" ORDER BY %s" % order
-
-    if int(pagesize)>0:
-        limit=" LIMIT %s" % str(pagesize)
-
-    if where!="":
-        where = " WHERE %s" % where
-
-    sql='Select * from %s %s %s %s;' % (table, where, order, limit)
-    print(sql)
-    query=mod_cls.raw(sql)
-    
-    #print(query)
-    tmp=[]
-    #for item in query:
-    #    print(item.id)
-    #    tmp.append(model_to_dict(item))
-
-    tmp = list(query.dicts())
+    from business.datamodel import get_modellist_by_raw
+    tmp = get_modellist_by_raw(table, where=where, order=order, pagesize=pagesize)
     tmp=json.dumps(tmp, default=typeformatter)
     return Response(
             tmp,

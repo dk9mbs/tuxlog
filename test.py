@@ -1,11 +1,19 @@
-import sys
-from modelfactory import ModelClassFactory
+from business.adifimport import adif_import_str
+
+f = open("/tmp/wsjtx_log.adi", "r")
+content=f.read()
+
+adif_import_str(content)
+
+
+#import sys
+#from modelfactory import ModelClassFactory
 #import dk9mbs.database.model
 #from dk9mbs.database.model import LogRigs
 
-from dk9mbs.haminfoproviderfactory import HamInfoProviderResultFactory
+#from dk9mbs.haminfoproviderfactory import HamInfoProviderResultFactory
 
-HamInfoProviderResultFactory("hamdb").create()
+#HamInfoProviderResultFactory("hamdb").create()
 
 #mod=ModelClassFactory("LogLogs").create()
 #entry=mod.get(mod.id==736)
