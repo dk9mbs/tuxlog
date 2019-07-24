@@ -1,9 +1,16 @@
-from business.adifimport import adif_import_str
+#from business.adifimport import adif_import_str
+from business.adifimport import AdifParserContainer
 
 f = open("/tmp/wsjtx_log.adi", "r")
 content=f.read()
 
-adif_import_str(content)
+parser = AdifParserContainer()
+@parser.register("readline")
+def readline():
+    pass
+
+parser.adif_import_str(content)
+#adif_import_str(content)
 
 
 #import sys
