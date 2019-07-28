@@ -137,6 +137,34 @@ def typeformatter(obj):
 
 @app.route('/api/v1.0/<database>/<table>', methods=['POST'])
 def save_or_update(database, table):
+    if request.headers.get("content-type")=="text/adif":
+        from business.adifimport import AdifImportLogic
+        
+        if request.args.get("logbook_id") != None:
+            logbook_id = request.args.get("logbook_id")
+        else:
+            abort(500, 'Cannot find logbook_id in querystring!!!')
+
+        content=request.data.decode()
+        print(content)
+        saved_rec=[]
+
+        parser = AdifImportLogic(table,logbook_id)
+        @parser.register("error_save_adif_rec")
+        def error_save_adif_record(**kwargs):
+            nonlocal saved_rec
+            saved_rec.append({"status":"Error", "message": {"error":kwargs['error_desc']}})
+
+        @parser.register("after_save_adif_rec")
+        def after_save_adif_rec(**kwargs):
+            nonlocal saved_rec
+            saved_rec.append({"status":"OK", "message": {"id": kwargs['adif_rec'].__data__['id']}})
+            for wsock in connections:
+                wsock.send(json.dumps({'publisher':'save','target': table, 'message': {"id":kwargs['adif_rec'].__data__['id']} } ))
+
+        parser.adif_import(content)
+        return Response(json.dumps(saved_rec))
+
     mod_cls=ModelClassFactory(table).create()
     data_model=dict_to_model(mod_cls, request.json)
     #data_model.save(force_insert=True)
