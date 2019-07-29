@@ -35,27 +35,27 @@ with open('/etc/tuxlog/tuxlog_cfg.json') as json_file:
     cfg=json.load(json_file)
 
 
-parser = argparse.ArgumentParser(description='Get iq datastream form radio device')
+#parser = argparse.ArgumentParser(description='Get iq datastream form radio device')
 
-parser.add_argument("-f", "--frequency", dest="frequency",
-                        help="Frequency (in Hz)", metavar="FREQUENCY")
-parser.add_argument("-o", "--output", dest="outputfile",
-                        help="Onput file", metavar="FILE")
-parser.add_argument("-s", "--sample-rate", dest="samplerate",
-                        help="Samplerate", metavar="SAMPLERATE")
-parser.add_argument("-g", "--gain", dest="gain",
-                        help="Gain", metavar="GAIN")
-parser.add_argument("-p", "--port", dest="port",
-                        help="TCP port for listening iq stream", metavar="PORT")
-parser.add_argument("-q", "--quiet",
-                        action="store_false", dest="verbose", default=True,
-                        help="don't print status messages to stdout")
+#parser.add_argument("-f", "--frequency", dest="frequency",
+#                        help="Frequency (in Hz)", metavar="FREQUENCY")
+#parser.add_argument("-o", "--output", dest="outputfile",
+#                        help="Onput file", metavar="FILE")
+#parser.add_argument("-s", "--sample-rate", dest="samplerate",
+#                        help="Samplerate", metavar="SAMPLERATE")
+#parser.add_argument("-g", "--gain", dest="gain",
+#                        help="Gain", metavar="GAIN")
+#parser.add_argument("-p", "--port", dest="port",
+#                        help="TCP port for listening iq stream", metavar="PORT")
+#parser.add_argument("-q", "--quiet",
+#                        action="store_false", dest="verbose", default=True,
+#                        help="don't print status messages to stdout")
 
-args = parser.parse_args()
+#args = parser.parse_args()
 
 
-if args.frequency:
-    cfg['hwcfg']['frequency']=args.frequency
+#if args.frequency:
+#    cfg['hwcfg']['frequency']=args.frequency
 
 def handler(signum, frame):
     pass
@@ -231,8 +231,8 @@ def get_ham_info(provider, call):
     print("HamInfo => "+str(result))
     return Response(json.dumps(result), mimetype="text/json")
 
-server = WSGIServer((cfg['httpcfg']['host'], int(cfg['httpcfg']['port'])), app, handler_class=WebSocketHandler)
-server.serve_forever()
+#server = WSGIServer((cfg['httpcfg']['host'], int(cfg['httpcfg']['port'])), app, handler_class=WebSocketHandler)
+#server.serve_forever()
 
 
 
