@@ -29,7 +29,7 @@ from playhouse.shortcuts import model_to_dict, dict_to_model
 
 from business.datamodel import ModelClassFactory
 import business.callbook as callbook
-
+from services.database.model import LogLogs
 
 with open('/etc/tuxlog/tuxlog_cfg.json') as json_file:
     cfg=json.load(json_file)
@@ -161,6 +161,22 @@ def save_or_update(database, table):
             saved_rec.append({"status":"OK", "message": {"id": kwargs['adif_rec'].__data__['id']}})
             for wsock in connections:
                 wsock.send(json.dumps({'publisher':'save','target': table, 'message': {"id":kwargs['adif_rec'].__data__['id']} } ))
+
+        @parser.register('duplicate_search_LogLogs')
+        def duplicate_search(**kwargs):
+            log=kwargs['model']
+            log_exists=LogLogs.get_or_none((LogLogs.logbook==kwargs['logbook_id']) 
+                & (LogLogs.yourcall==log.yourcall)
+                & (LogLogs.mode==log.mode_id)
+                & (LogLogs.logdate_utc==log.logdate_utc)
+                & (LogLogs.start_utc==log.start_utc)
+            )
+
+            if log_exists != None:
+                print('Found duplicate logentry => %s' % log_exists.id)
+                log.id=log_exists.id
+
+            pass
 
         parser.adif_import(content)
         return Response(json.dumps(saved_rec))
