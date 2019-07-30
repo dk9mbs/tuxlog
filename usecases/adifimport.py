@@ -1,12 +1,12 @@
-from services.database.model import MetaDataExchangeFields
-from services.database.model import LogLogs
-from services.database.model import LogModes
-from business.externalfieldmapping import ExternalFieldMapping
+from model.model import MetaDataExchangeFields
+from model.model import LogLogs
+from model.model import LogModes
+from usecases.externalfieldmapping import ExternalFieldMapping
 import peewee
 import sys
 import re
 
-class BusinessBaseContainer(object):
+class BaseUseCase(object):
     _fn=list()
 
     def register(self, name):
@@ -20,7 +20,7 @@ class BusinessBaseContainer(object):
             if fn['name']==name:
                 fn['fn'](**kwargs)
 
-class AdifImportLogic(BusinessBaseContainer):
+class AdifImportLogic(BaseUseCase):
     _logbook_id=""
     _table_name=""
 
@@ -46,6 +46,7 @@ class AdifImportLogic(BusinessBaseContainer):
             log.logbook_id=self._logbook_id
 
             self._execute('duplicate_search_%s' % self._table_name, model=log, logbook_id=self._logbook_id)
+            self._execute('before_save_adif_rec', model=log, logbook_id=self._logbook_id)
 
             try:
                 log.save()

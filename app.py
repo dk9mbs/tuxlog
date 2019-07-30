@@ -27,9 +27,9 @@ from flaskext.mysql import MySQL
 
 from playhouse.shortcuts import model_to_dict, dict_to_model
 
-from business.datamodel import ModelClassFactory
-import business.callbook as callbook
-from services.database.model import LogLogs
+from usecases.datamodel import ModelClassFactory
+import usecases.callbook as callbook
+from model.model import LogLogs
 
 with open('/etc/tuxlog/tuxlog_cfg.json') as json_file:
     cfg=json.load(json_file)
@@ -138,7 +138,7 @@ def typeformatter(obj):
 @app.route('/api/v1.0/<database>/<table>', methods=['POST'])
 def save_or_update(database, table):
     if request.headers.get("content-type")=="text/adif":
-        from business.adifimport import AdifImportLogic
+        from usecases.adifimport import AdifImportLogic
         
         if request.args.get("logbook_id") != None:
             logbook_id = request.args.get("logbook_id")
@@ -206,7 +206,7 @@ def get_dataset(database, table, page=1, pagesize=0):
     if request.args.get("where") != None:
         where = request.args.get("where")
     
-    from business.datamodel import get_modellist_by_raw
+    from usecases.datamodel import get_modellist_by_raw
     tmp = get_modellist_by_raw(table, where=where, order=order, pagesize=pagesize)
     tmp=json.dumps(tmp, default=typeformatter)
     return Response(

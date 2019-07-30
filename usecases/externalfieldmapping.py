@@ -1,7 +1,7 @@
 #from services.converter.adif import AdifParserService
-from services.database.model import MetaDataExchangeFields
-from services.database.model import LogLogs
-from services.database.model import LogModes
+from model.model import MetaDataExchangeFields
+from model.model import LogLogs
+from model.model import LogModes
 import peewee
 import sys
 

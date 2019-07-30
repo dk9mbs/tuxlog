@@ -1,7 +1,7 @@
 from __future__ import print_function
 
 import sys
-import services.database.model
+import model.model
 
 class ModelClassFactory:
     _name=""
@@ -11,7 +11,7 @@ class ModelClassFactory:
         pass
 
     def create(self):
-        return getattr(sys.modules["services.database.model"], self._name)
+        return getattr(sys.modules["model.model"], self._name)
 
 
 '''
