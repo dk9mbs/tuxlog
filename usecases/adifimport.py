@@ -31,7 +31,7 @@ class AdifImportLogic(BaseUseCase):
 
     def adif_import(self, content):
 
-        @AdifParserService
+        @AdifParserLib
         def inner_import(*args, **kwargs):
             adif_rec=args[0]
 
@@ -65,7 +65,7 @@ class AdifImportLogic(BaseUseCase):
 
 
 
-class AdifParserService:
+class AdifParserLib:
     def __init__(self,fn):
         self.fn=fn
         pass
@@ -79,11 +79,20 @@ class AdifParserService:
 
         records=str(adif).split("<eoh>")
         records=str(records[1]).split("<eor>")
+        adif_recs=list()
 
         for rec in records:
             adif_rec=self._extract_fields(rec)
             if len(adif_rec) >0:
-                self.fn(adif_rec, **kwargs)
+
+                edit_adif_rec=self.fn(adif_rec, **kwargs)
+                
+                if edit_adif_rec != None:
+                    adif_recs.append(edit_adif_rec)
+                else:
+                    adif_recs.append(adif_rec)
+
+        return adif_recs
 
     def _extract_fields(self, adif_record):
         attr = re.findall(r"(.*?):(\d)>(.*?)\s(<.*?)", adif_record) 
@@ -102,7 +111,7 @@ if __name__ == "__main__":
     f = open("/tmp/wsjtx_log.adi", "r")
     content=f.read()
 
-    @AdifParserService
+    @AdifParserLib
     def test(*args, **kwargs):
         print("Test => " + str(args[0]))
 
