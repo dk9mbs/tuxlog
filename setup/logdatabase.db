@@ -1,4 +1,4 @@
-CREATE DATABASE IF NOT EXISTS tuxlog default character set 'UTF8';
+/*CREATE DATABASE IF NOT EXISTS tuxlog default character set 'UTF8';*/
 /*USE tuxlog;*/
 
 /*
@@ -28,7 +28,7 @@ CREATE TABLE log_tmp_adif_export (
     idx int,
     tag char(250), 
     value text
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
@@ -53,13 +53,13 @@ CREATE TABLE IF NOT EXISTS log_rowids (
     tablename varchar(50) NOT NULL,
     lastrowid INT NOT NULL default '0',
     PRIMARY KEY(tablename)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS log_ituprefixe (
     itu_prefix varchar(10) NOT NULL,
     description varchar(50) NOT NULL,
     PRIMARY KEY(itu_prefix)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS log_logbooks (
     id varchar(50) NOT NULL,
@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS log_logbooks (
     parent_id varchar(50) NULL,
     deleted smallint NOT NULL default '0',
     PRIMARY KEY(id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS log_settings (
     logbook_id varchar(50) NOT NULL,
@@ -76,27 +76,27 @@ CREATE TABLE IF NOT EXISTS log_settings (
     value varchar(250) NULL,
     PRIMARY KEY(logbook_id,name),
     FOREIGN KEY(logbook_id) REFERENCES log_logbooks(id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS log_modes (
     id varchar(50) NOT NULL,
     description varchar(50) NOT NULL,
     parent varchar(50) NULL,
     PRIMARY KEY (id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS log_rigs (
     id varchar(50) NOT NULL,
     description varchar(50) NOT NULL,
     hamlib_id int NOT NULL default '0',
     PRIMARY KEY(id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS log_qslshipmentmodes (
     id varchar(50) NOT NULL,
     description varchar(50) NOT NULL,
     PRIMARY KEY(id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS log_logs(
     id int NOT NULL AUTO_INCREMENT,
@@ -137,7 +137,7 @@ CREATE TABLE IF NOT EXISTS log_logs(
     FOREIGN KEY (mode_id) REFERENCES log_modes(id),
     FOREIGN KEY (rig_id) REFERENCES log_rigs(id),
     FOREIGN KEY (qsl_shipmentmode) REFERENCES log_qslshipmentmodes(id)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
@@ -148,7 +148,7 @@ CREATE TABLE IF NOT EXISTS meta_urlclassloaders(
     classname varchar(250) NOT NULL COMMENT 'classname to load via url',
     classpath varchar(500) NOT NULL COMMENT 'path or .jar filename with path',
     PRIMARY KEY(classname)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS meta_datasources(
     id varchar(250) NOT NULL COMMENT 'Unique Value',
@@ -158,14 +158,14 @@ CREATE TABLE IF NOT EXISTS meta_datasources(
     orderby_clause LONGTEXT NULL COMMENT 'ORDER BY sql clause without keyword ORDER BY',
     empty_item TINYINT NOT NULL default 0,
     empty_item_text varchar(50) NULL default '-- Select item! --',
-    PRIMARY KEY(id) );
+    PRIMARY KEY(id) ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS meta_forms(
     id varchar(250) NOT NULL,
     classname varchar(250) NOT NULL,
     description varchar(50) NOT NULL,
     PRIMARY KEY(id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS meta_subforms(
     id varchar(250) NOT NULL,
@@ -177,13 +177,13 @@ CREATE TABLE IF NOT EXISTS meta_subforms(
     parent_container_name varchar(50) NOT NULL,
     PRIMARY KEY(id),
     FOREIGN KEY(form_id) REFERENCES meta_forms(id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS meta_database_fieldtypes(
     type_name varchar(50) NOT NULL,
     internal_type int NOT NULL default '0' COMMENT '0=String 1=Number 2=Date',
     PRIMARY KEY(type_name)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 DROP TABLE IF EXISTS meta_subform_fields;
@@ -197,7 +197,7 @@ CREATE TABLE IF NOT EXISTS meta_subform_fields(
     PRIMARY KEY(subform_id, fieldname),
     FOREIGN KEY(subform_id) REFERENCES meta_subforms(id),
     FOREIGN KEY(database_fieldtype) REFERENCES meta_database_fieldtypes(type_name)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 */
 
 CREATE TABLE IF NOT EXISTS meta_subform_components(
@@ -220,7 +220,7 @@ CREATE TABLE IF NOT EXISTS meta_subform_components(
     PRIMARY KEY(subform_id, component_name),
     FOREIGN KEY(subform_id) REFERENCES meta_subforms(id),
     FOREIGN KEY(database_fieldtype) REFERENCES meta_database_fieldtypes(type_name)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
@@ -232,7 +232,7 @@ CREATE TABLE IF NOT EXISTS  meta_callbook_providers(
     enabled TINYINT NOT NULL default true,
     offline_mode TINYINT NOT NULL default false,
     PRIMARY KEY(id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 
@@ -243,7 +243,7 @@ CREATE TABLE IF NOT EXISTS meta_data_exchange_converters(
     classname_out varchar(250) NULL,
     enabled TINYINT NOT NULL default true,
     PRIMARY KEY(id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS meta_data_exchange_fields(
     converter_id varchar(50) NOT NULL,
@@ -254,7 +254,7 @@ CREATE TABLE IF NOT EXISTS meta_data_exchange_fields(
     external_idx int NOT NULL default '100',
     PRIMARY KEY(converter_id,external_fieldname,internal_fieldname,internal_datatype),
     FOREIGN KEY(converter_id) REFERENCES meta_data_exchange_converters(id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 CREATE TABLE IF NOT EXISTS meta_backgroundtasks (
@@ -262,13 +262,13 @@ CREATE TABLE IF NOT EXISTS meta_backgroundtasks (
     classname varchar(250) NOT NULL COMMENT 'Full classname.',
     description varchar(50) NOT NULL COMMENT 'Description for this record.',
     PRIMARY KEY(id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS meta_classtypes(
     id varchar(50) NOT NULL,
     description varchar(50) NOT NULL,
     PRIMARY KEY(id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS meta_autostart(
     id int NOT NULL COMMENT 'Unique numeric id. This is the start order for the processes.',
@@ -279,14 +279,14 @@ CREATE TABLE IF NOT EXISTS meta_autostart(
     enabled TINYINT NOT NULL default true COMMENT '1=enabled 0=not enabled.',
     PRIMARY KEY(id),
     FOREIGN KEY(classtype_id) REFERENCES meta_classtypes(id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 CREATE TABLE IF NOT EXISTS meta_sys_dbversion (
 	version varchar(50) NOT NULL,
     description varchar(50) NULL,
 	PRIMARY KEY(version)    
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 /*
@@ -297,7 +297,7 @@ CREATE TABLE IF NOT EXISTS log_tmp_debug(
     src varchar(500) NULL,
     dbgmsg text NULL,
     PRIMARY KEY(id)
-); 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8; 
 
 
 /*
@@ -1107,7 +1107,7 @@ CREATE TABLE IF NOT EXISTS log_dxcluster_spots(
     spot varchar(250) NOT NULL,
     date timestamp default CURRENT_TIMESTAMP NOT NULL,
     PRIMARY KEY(id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS log_dxcluster(
     id int NOT NULL,
@@ -1115,7 +1115,7 @@ CREATE TABLE IF NOT EXISTS log_dxcluster(
     port int NOT NULL,
     position smallint NOT NULL default '100',
     PRIMARY KEY(id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS log_dxcluster_loginscript(
     id int NOT NULL,
@@ -1124,7 +1124,7 @@ CREATE TABLE IF NOT EXISTS log_dxcluster_loginscript(
     prompt varchar(250) NOT NULL,
     send varchar(50) NOT NULL,
     PRIMARY KEY(id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*
 DX Cluster eintragen

@@ -1,7 +1,7 @@
 from model.model import MetaDataExchangeFields
 from model.model import LogLogs
 from model.model import LogModes
-from usecases.externalfieldmapping import ExternalFieldMapping
+from usecases.fieldmapping import FieldMapping
 import peewee
 import sys
 import re
@@ -38,7 +38,9 @@ class AdifImportLogic(BaseUseCase):
             log=LogLogs()
 
             for adif_fld in adif_rec:
-                fld_def=ExternalFieldMapping.map_to_internal(self._table_name,adif_fld)
+                fld_def=FieldMapping.ext_to_int(adif_fld, 
+                    FieldMapping.read_mappings_from_db(self._table_name))
+
                 if fld_def!=None:
                     internal=str(fld_def.internal_fieldname).lower()
                     log.__data__[internal]=adif_rec[adif_fld]
