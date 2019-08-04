@@ -27,5 +27,6 @@ cd setup
 
 ## How to import adif data
 
+```bash
 wget --debug --header "content-type:text/adif" --post-file /tmp/wsjtx_log.adi -O - http://localhost:8081/api/v1.0/tuxlog/LogLogs?logbook_id=dk9mbs 
-
+```
