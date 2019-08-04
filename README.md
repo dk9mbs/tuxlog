@@ -1,7 +1,7 @@
 # tuxlog
 
 ## Install
-
+´´´bash
 cd /tmp
 python3 -m venv virtenv
 cd virtenv
@@ -10,7 +10,7 @@ cd tuxlog
 ../bin/pip3 -r requirements.txt
 cd setup
 ./pipeline
-
+´´´
 
 
 ## ToDo
