@@ -2,12 +2,18 @@
 
 ## Install
 ```bash
+#!/bin/bash
+
 cd /tmp
 python3 -m venv virtenv
 cd virtenv
 git clone https://github.com/dk9mbs/tuxlog.git
 cd tuxlog
 ../bin/pip3 -r requirements.txt
+./setup
+#
+# configure manually /etc/tuxlog/tuxlog_cfg.json
+#
 cd setup
 ./pipeline
 ```
