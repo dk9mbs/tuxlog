@@ -21,8 +21,8 @@ cd setup
 
 ## ToDo
 
-requets is missing in /requirements.txt
-sudo apt-get install expect
+* pip3 install venv
+* pip3 install pexpect
 
 
 ## How to import adif data
