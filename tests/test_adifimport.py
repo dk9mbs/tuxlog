@@ -3,12 +3,25 @@ import unittest
 from model import model
 from model.model import MySQLDatabase
 import json
+from os import getenv
 
-with open('/etc/tuxlog/tuxlog_cfg.json') as json_file:
-    cfg=json.load(json_file)['mysqlcfg']
+#environment=getenv("tuxlog_environment", "")
+#print('current environment => %s' % environment)
+#with open('/etc/tuxlog/tuxlog_cfg.json') as json_file:
+#    cfg=json.load(json_file)[environment]['mysqlcfg']
 
-model.database.initialize(MySQLDatabase(cfg['database'], **{'host': cfg['host'], 'use_unicode': True, 'user': cfg['username'], 'password': cfg['password'], 'charset': 'utf8'}))
-model.database.connect()
+#model.database.initialize(MySQLDatabase(cfg['database'], **{'host': cfg['host'], 'use_unicode': True, 'user': cfg['username'], 'password': cfg['password'], 'charset': 'utf8'}))
+#model.database.connect()
+
+
+
+from model import model
+import config
+environment=getenv("tuxlog_environment")
+if environment==None or environment=="":
+    environment="test"
+
+config.DatabaseConfig.open(model.database, config.DatabaseConfig.read_from_file(environment))
 
 
 class TestAdifImport(unittest.TestCase):
@@ -38,6 +51,7 @@ class TestAdifImport(unittest.TestCase):
             pass
     
         parser.adif_import(content)
+
 
 class TestAdifParser(unittest.TestCase):
 

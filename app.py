@@ -31,8 +31,14 @@ from usecases.datamodel import ModelClassFactory
 import usecases.callbook as callbook
 from model.model import LogLogs
 
-with open('/etc/tuxlog/tuxlog_cfg.json') as json_file:
-    cfg=json.load(json_file)
+
+from model import model
+import config
+environment=os.getenv("tuxlog_environment", default="prod")
+if environment==None or environment=="":
+    environment="prod"
+
+config.DatabaseConfig.open(model.database, config.DatabaseConfig.read_from_file(environment))
 
 
 def handler(signum, frame):
@@ -51,15 +57,15 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.jinja_env.auto_reload = True
 
 app.debug=False
-app.host=cfg['httpcfg']['host']
-app.port=cfg['httpcfg']['port']
+#app.host=cfg['httpcfg']['host']
+#app.port=cfg['httpcfg']['port']
 app.threaded=True
 
 
 # UI
 @app.route('/')
 def index():
-    return render_template('index.htm', config=cfg)
+    return render_template('index.htm', config=config.DatabaseConfig.get_current_cfg() )
 
 @app.route('/js/<file>', methods=['GET'])
 def get_js_file(file):

@@ -1,0 +1,24 @@
+
+
+DROP PROCEDURE IF EXISTS proc_install_upd20190804;
+DELIMITER //
+CREATE PROCEDURE proc_install_upd20190804
+()
+BEGIN
+    call proc_printf('installing upd20190804 ...');
+    IF NOT EXISTS (SELECT id FROM log_modes WHERE id='FT8') THEN 
+        INSERT INTO log_modes (id,description) values ('FT8','FT8');
+    END IF;
+    IF NOT EXISTS (SELECT id FROM log_modes WHERE id='FT4') THEN 
+        INSERT INTO log_modes (id,description) values ('FT4','FT4');
+    END IF;
+    IF NOT EXISTS (SELECT version FROM meta_sys_dbversion WHERE version='upd20190804') THEN 
+        INSERT INTO meta_sys_dbversion(version,description) VALUES ('upd20190804','upd20190804');
+    END IF;
+    call proc_printf('upd20190804 installed!');
+
+END //
+DELIMITER ;
+
+call proc_install_upd20190804();
+
