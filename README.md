@@ -5,6 +5,7 @@
 ## ToDo
 
 requets is missing in /requirements.txt
+sudo apt-get install expect
 
 
 ## How to import adif data
