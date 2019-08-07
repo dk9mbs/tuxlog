@@ -23,6 +23,7 @@ cd setup
 
 * pip3 install venv
 * pip3 install pexpect
+* apt-get install rigctld
 
 
 ## How to import adif data

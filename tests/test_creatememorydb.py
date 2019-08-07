@@ -35,4 +35,4 @@ class CreateTestDatabase(unittest.TestCase):
                 print (  "Exception => %s (%s)" % (table, str(sys.exc_info()))   )
 
 
-        print( model.database.get_tables() )
+        #print( model.database.get_tables() )

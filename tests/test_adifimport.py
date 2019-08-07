@@ -5,24 +5,14 @@ from model.model import MySQLDatabase
 import json
 from os import getenv
 
-#environment=getenv("tuxlog_environment", "")
-#print('current environment => %s' % environment)
-#with open('/etc/tuxlog/tuxlog_cfg.json') as json_file:
-#    cfg=json.load(json_file)[environment]['mysqlcfg']
 
-#model.database.initialize(MySQLDatabase(cfg['database'], **{'host': cfg['host'], 'use_unicode': True, 'user': cfg['username'], 'password': cfg['password'], 'charset': 'utf8'}))
-#model.database.connect()
-
-
-
-from model import model
+#from model import model
 import config
 environment=getenv("tuxlog_environment")
 if environment==None or environment=="":
     environment="test"
 
 config.DatabaseConfig.open(model.database, config.DatabaseConfig.read_from_file(environment))
-
 
 class TestAdifImport(unittest.TestCase):
     def test_importadif(self):
@@ -38,16 +28,16 @@ class TestAdifImport(unittest.TestCase):
         parser = AdifImportLogic("LogLogs", "dk9mbs")
         @parser.register("after_save_adif_rec")
         def readline(**kwargs):
-            print("=========================START========================")
-            print("Test:"+str(kwargs['adif_rec'].__data__))
-            print("=========================END========================")
+            #print("=========================START========================")
+            #print("Test:"+str(kwargs['adif_rec'].__data__))
+            #print("=========================END========================")
             pass
 
         @parser.register("error_save_adif_rec")
         def readlineerror(**kwargs):
-            print("=================START=EXCEPTION====================")
-            print("Test:"+str(kwargs['adif_rec'].__data__))
-            print("=========================END========================")
+            #print("=================START=EXCEPTION====================")
+            #print("Test:"+str(kwargs['adif_rec'].__data__))
+            #print("=========================END========================")
             pass
     
         parser.adif_import(content)
