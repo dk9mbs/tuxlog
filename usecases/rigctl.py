@@ -1,22 +1,28 @@
 import socket
+import logging
 
-class Rig:
+logger=logging.getLogger(__name__)
+
+class RigCtl:
     _sock=None
     _cfg=None
 
     def __init__(self,cfg, **args):
         self._cfg=cfg
-        if args['mock']==None:
-            self._sock=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            self._sock.connect((self._cfg['host'], self._cfg['port']))
-            self._sock.settimeout(1)
+        if not 'mock' in args :
+            try:
+                self._sock=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                self._sock.connect((self._cfg['host'], self._cfg['port']))
+                self._sock.settimeout(5)
+            except Exception as e:
+                logger.exception(e)
+                raise
         else:
             self._sock=args['mock']
         pass
 
     def __del__(self):
         self._sock.close()
-        print('socket closed')
         pass
 
     def set_rig(self,command, value):

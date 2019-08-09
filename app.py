@@ -8,6 +8,7 @@ import time
 import argparse
 import os
 import signal
+import logging
 
 from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread, Lock
@@ -18,6 +19,7 @@ from flask import request
 from flask import Response
 from flask import abort
 from flask import jsonify
+from flask import Blueprint
 
 from gevent.pywsgi import WSGIServer
 from geventwebsocket import WebSocketError
@@ -31,9 +33,14 @@ from usecases.datamodel import ModelClassFactory
 import usecases.callbook as callbook
 from model.model import LogLogs
 
-
 from model import model
 import config
+
+logger = logging.getLogger(__name__)
+#logging.basicConfig(filename='/tmp/tuxlog.log')
+
+
+
 environment=os.getenv("tuxlog_environment", default="prod")
 if environment==None or environment=="":
     environment="prod"
@@ -45,7 +52,7 @@ def handler(signum, frame):
     pass
 
 def handler_int(signum, frame):
-    print('Strg+c', signum)
+    logger.info('Strg+c')
     sys.exit()
 
 signal.signal(signal.SIGINT, handler_int)
@@ -69,15 +76,12 @@ def index():
 
 @app.route('/js/<file>', methods=['GET'])
 def get_js_file(file):
-    print('get file: %s' % file, file=sys.stderr)
-
-    #return app.send_static_file(file)
+    logger.info('get file: %s' % file)
     try:
-        return render_template(file, config=cfg)
-    except:
-        print('error')
-        abort(404)
-
+        return render_template(file, config=config.current_cfg)
+    except Exception as e:
+        logger.exception(e)
+        return Response( json.dumps( { 'error': 'not found'} ), 404)
 
 # Websocket
 connections = set()
@@ -86,7 +90,7 @@ connections = set()
 def handle_websocket():
     wsock = request.environ.get('wsgi.websocket')
     if not wsock:
-        abort(400, 'Expected WebSocket request.')
+        return Response( json.dumps( { 'error': 'Expected WebSocket request.'} ), 400)
 
     connections.add(wsock)
     
@@ -107,7 +111,6 @@ from decimal import Decimal
 Make this encoder aware of our classes (e.g. datetime.datetime objects) 
 '''
 def typeformatter(obj):
-    #print("##############TYPE#############"+str(type(obj)))
     if isinstance(obj, datetime.time ) or isinstance(obj, datetime.date) :
         return obj.isoformat()
     elif isinstance(obj, datetime.timedelta):
@@ -119,18 +122,77 @@ def typeformatter(obj):
         #return json.JSONEncoder.default(obj)
         pass
 
-@app.route('/api/v1.0/<database>/<table>', methods=['POST'])
-def save_or_update(database, table):
+@app.route('/api/v1.0/tuxlog/<table>', methods=['POST'])
+def save_or_update(table):
+    mod_cls=ModelClassFactory(table).create()
+    data_model=dict_to_model(mod_cls, request.json)
+    #data_model.save(force_insert=True)
+    data_model.save()
+    logger.info('id created after save => %s' % str(data_model.id))
+
+    for wsock in connections:
+        wsock.send(json.dumps({'publisher':'save','target': table, 'message': {"id":data_model.id} } ))
+
+    return Response({"id":data_model.id})
+
+
+@app.route('/api/v1.0/tuxlog/<table>/<page>/<pagesize>', methods=['GET'])
+@app.route('/api/v1.0/tuxlog/<table>/<pagesize>', methods=['GET'])
+@app.route('/api/v1.0/tuxlog/<table>', methods=['GET'])
+def get_dataset(table, page=1, pagesize=0):
+    order=""
+    where=""
+
+    if request.args.get("order") != None:
+        order = request.args.get("order")
+
+    if request.args.get("where") != None:
+        where = request.args.get("where")
+    
+    from usecases.datamodel import get_modellist_by_raw
+    tmp = get_modellist_by_raw(table, where=where, order=order, pagesize=pagesize)
+    tmp=json.dumps(tmp, default=typeformatter)
+    return Response(
+            tmp,
+            mimetype="text/json",
+            headers={
+                "dk9mbs": "yes"
+            }
+        )     
+
+@app.route('/api/v1.0/tuxlog/<table>/<recordid>', methods=['GET'])
+def get_record(table, recordid):
+
+    mod=ModelClassFactory(table).create()
+    data = model_to_dict(mod.get(mod.id==recordid))
+    
+    if len(data) == 0:
+        logger.error("No record found!")
+        return
+        
+    #data=json.dumps( data, default=JsonTypeConverter().typeformatter )
+    data=json.dumps( data, default=typeformatter )
+ 
+    return Response(
+            data,
+            mimetype="text/json",
+            headers={
+                "dk9mbs": "yes"
+            }
+        )     
+
+# dataimport api
+@app.route('/api/v1.0/import/<table>', methods=['POST'])
+def adif_import(table):
     if request.headers.get("content-type")=="text/adif":
         from usecases.adifimport import AdifImportLogic
         
         if request.args.get("logbook_id") != None:
             logbook_id = request.args.get("logbook_id")
         else:
-            abort(500, 'Cannot find logbook_id in querystring!!!')
-
+            return Response(json.dumps({'error':'Cannot find logbook_id in querystring!!!'}), 500)
         content=request.data.decode()
-        print(content)
+        logger.info(content)
         saved_rec=[]
 
         parser = AdifImportLogic(table,logbook_id)
@@ -157,7 +219,7 @@ def save_or_update(database, table):
             )
 
             if log_exists != None:
-                print('Found duplicate logentry => %s' % log_exists.id)
+                logger.info('Found duplicate logentry => %s' % log_exists.id)
                 log.id=log_exists.id
 
             pass
@@ -165,71 +227,64 @@ def save_or_update(database, table):
         parser.adif_import(content)
         return Response(json.dumps(saved_rec))
 
-    mod_cls=ModelClassFactory(table).create()
-    data_model=dict_to_model(mod_cls, request.json)
-    #data_model.save(force_insert=True)
-    data_model.save()
-    print(data_model.id)
 
-    for wsock in connections:
-        wsock.send(json.dumps({'publisher':'save','target': table, 'message': {"id":data_model.id} } ))
-
-    return Response({"id":data_model.id})
-
-
-@app.route('/api/v1.0/<database>/<table>/<page>/<pagesize>', methods=['GET'])
-@app.route('/api/v1.0/<database>/<table>/<pagesize>', methods=['GET'])
-@app.route('/api/v1.0/<database>/<table>', methods=['GET'])
-def get_dataset(database, table, page=1, pagesize=0):
-    order=""
-    where=""
-
-    if request.args.get("order") != None:
-        order = request.args.get("order")
-
-    if request.args.get("where") != None:
-        where = request.args.get("where")
-    
-    from usecases.datamodel import get_modellist_by_raw
-    tmp = get_modellist_by_raw(table, where=where, order=order, pagesize=pagesize)
-    tmp=json.dumps(tmp, default=typeformatter)
-    return Response(
-            tmp,
-            mimetype="text/json",
-            headers={
-                "dk9mbs": "yes"
-            }
-        )     
-
-@app.route('/api/v1.0/<database>/<table>/<recordid>', methods=['GET'])
-def get_record(database, table, recordid):
-
-    mod=ModelClassFactory(table).create()
-    data = model_to_dict(mod.get(mod.id==recordid))
-    
-    if len(data) == 0:
-        print ("FEHLER")
-        return
-        
-    #data=json.dumps( data, default=JsonTypeConverter().typeformatter )
-    data=json.dumps( data, default=typeformatter )
- 
-    print(data)
-
-    return Response(
-            data,
-            mimetype="text/json",
-            headers={
-                "dk9mbs": "yes"
-            }
-        )     
-
+# callbook api
 @app.route('/api/v1.0/callbook/<provider>/<call>', methods=['GET'])
 def get_ham_info(provider, call):
     result=callbook.init_haminfo_dict()
     callbook.HamInfoProviderFactory.create(provider).read(call, result)
-    print("HamInfo => "+str(result))
+    logger.info('HamInfo => %s' % str(result))
     return Response(json.dumps(result), mimetype="text/json")
+
+
+
+@app.errorhandler(ConnectionRefusedError)
+def handle_error(error):
+    message = [str(x) for x in error.args]
+    #status_code = error.status_code
+    status_code=500
+    success = False
+    response = {
+        'success': success,
+        'error': {
+            'type': error.__class__.__name__,
+            'message': message,
+            'traceback': None
+        }
+    }
+    logger.exception(error)
+    return jsonify(response), status_code
+
+
+# rig api
+@app.route('/api/v1.0/rigctl/<rig_id>/<command>', methods=['GET'])
+def get_rig(rig_id, command):
+    from usecases.rigctl import RigCtl
+    from model.model import LogRigs
+    
+    rig=LogRigs.get_or_none(LogRigs.id==rig_id)
+
+    if rig==None:
+        return Response( json.dumps( {'error': 'Rig not found in LogRigs table!' }) , 500)
+
+    rig_ctl=RigCtl( {"host": rig.remote_host, "port": rig.remote_port } )
+    result=rig_ctl.get_rig(command)
+    return Response(json.dumps({"response": result}) ,mimetype="text/json")
+
+@app.route('/api/v1.0/rigctl/<rig_id>/<command>/<value>', methods=['GET'])
+def set_rig(rig_id, command, value):
+    from usecases.rigctl import RigCtl
+    from model.model import LogRigs
+    
+    rig=LogRigs.get_or_none(LogRigs.id==rig_id)
+
+    if rig==None:
+        return Response( json.dumps( {'error': 'Rig not found in LogRigs table!' }) , 500)
+
+    rig_ctl=RigCtl( {"host": rig.remote_host, "port": rig.remote_port } )
+    result=rig_ctl.set_rig(command, value)
+    return Response(json.dumps({"response": result}) ,mimetype="text/json")
+
 
 #server = WSGIServer((cfg['httpcfg']['host'], int(cfg['httpcfg']['port'])), app, handler_class=WebSocketHandler)
 #server.serve_forever()
