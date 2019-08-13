@@ -25,12 +25,12 @@ class TestRigCtl(unittest.TestCase):
     def test_set_rig(self):
 
         #correct result
-        response=RigCtl(self.cfg, mock=TestRigCtl.MockRig('RPRT 0')).set_rig("F", "27000000")
+        response=RigCtl(self.cfg, mock=TestRigCtl.MockRig('RPRT 0')).set_rig("F", ['27000000'])
         print ("\nResponse set => "+response)
 
         # wrong result
         try:
-            response=RigCtl(self.cfg, mock=TestRigCtl.MockRig('0')).set_rig("F", "28000000")
+            response=RigCtl(self.cfg, mock=TestRigCtl.MockRig('0')).set_rig("F", ['28000000'])
             print ("\nResponse set => "+response)
             raise Exception('TEST Error: no errorwas arraised ...')
         except Exception:
@@ -39,7 +39,9 @@ class TestRigCtl(unittest.TestCase):
 
     def test_get_rig(self):
         # retrieve an parameter from rig        
-        response=RigCtl(self.cfg, mock=TestRigCtl.MockRig('FM\n3000')).get_rig("m")
+        
+
+        response=RigCtl(self.cfg, mock=TestRigCtl.MockRig('get_mode:\nMode: FM\nPassband: 15000\nRPRT 0')).get_rig("m")
         print ("Response get => "+str(response))
         pass
 

@@ -58,7 +58,7 @@ def handler_int(signum, frame):
 signal.signal(signal.SIGINT, handler_int)
 signal.signal(signal.SIGTERM, handler)
 
-app = Flask(__name__, template_folder='htdocs', static_url_path='/htdocs/')
+app = Flask(__name__, template_folder='htdocs', static_url_path='/static')
 app.config['SECRET_KEY'] = 'secret!'
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.jinja_env.auto_reload = True
@@ -72,7 +72,7 @@ app.threaded=True
 # UI
 @app.route('/')
 def index():
-    return render_template('index.htm', config=config.DatabaseConfig.get_current_cfg() )
+    return render_template('index1.htm', config=config.DatabaseConfig.get_current_cfg() )
 
 @app.route('/js/<file>', methods=['GET'])
 def get_js_file(file):
@@ -136,12 +136,18 @@ def save_or_update(table):
     return Response({"id":data_model.id})
 
 
-@app.route('/api/v1.0/tuxlog/<table>/<page>/<pagesize>', methods=['GET'])
-@app.route('/api/v1.0/tuxlog/<table>/<pagesize>', methods=['GET'])
 @app.route('/api/v1.0/tuxlog/<table>', methods=['GET'])
-def get_dataset(table, page=1, pagesize=0):
+def get_dataset(table):
     order=""
     where=""
+    pagesize=0
+    page=1
+
+    if request.args.get("page") != None:
+        page=request.args.get("page")
+
+    if request.args.get("pagesize") != None:
+        page=request.args.get("pagesize")
 
     if request.args.get("order") != None:
         order = request.args.get("order")
@@ -269,20 +275,23 @@ def get_rig(rig_id, command):
 
     rig_ctl=RigCtl( {"host": rig.remote_host, "port": rig.remote_port } )
     result=rig_ctl.get_rig(command)
-    return Response(json.dumps({"response": result}) ,mimetype="text/json")
+    return Response(json.dumps(result) ,mimetype="text/json")
 
 @app.route('/api/v1.0/rigctl/<rig_id>/<command>/<value>', methods=['GET'])
-def set_rig(rig_id, command, value):
+@app.route('/api/v1.0/rigctl/<rig_id>/<command>/<value>/<value2>', methods=['GET'])
+def set_rig(rig_id, command, value, value2=None):
     from usecases.rigctl import RigCtl
     from model.model import LogRigs
     
+    value_list=[value, value2]
+
     rig=LogRigs.get_or_none(LogRigs.id==rig_id)
 
     if rig==None:
         return Response( json.dumps( {'error': 'Rig not found in LogRigs table!' }) , 500)
 
     rig_ctl=RigCtl( {"host": rig.remote_host, "port": rig.remote_port } )
-    result=rig_ctl.set_rig(command, value)
+    result=rig_ctl.set_rig(command, value_list)
     return Response(json.dumps({"response": result}) ,mimetype="text/json")
 
 

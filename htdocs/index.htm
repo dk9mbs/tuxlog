@@ -14,23 +14,6 @@
 
 <body style="background-color:silver">
 
-  <style>
-    .parent{
-    width: max-width;
-    background: red;
-}
-.child{
-    float: left;
-    height: max-height;
-    width: 20%
-}
-.child1{
-    float: left;
-    height: max-height;
-    width: max-width
-}
-  </style>
-
   <!--<script src="js/scripts.js"></script>-->
   <script src="https://cdn.jsdelivr.net/npm/vue"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
@@ -55,7 +38,7 @@
   <!-- end boostrap-vue -->
 
 <div class="parent" id="app">
-  <!--
+  
   <b-navbar toggleable="lg" type="dark" variant="dark">
     <b-navbar-brand href="#">DK9MBS</b-navbar-brand>
 
@@ -79,180 +62,187 @@
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
--->
 
-  <div class="child">
-  <b-table striped hover small :items="history" :fields="historyfields" ></b-table>
+
+  <div>
   </div>
 
   <!--
   <b-tabs style="float:right;">
       <b-tab title="Logentry" active>
 -->
-<div class="child1">
-          <b-container fluid>
-              <b-row class="my-1" key="type">
-                  <b-col>
-                      <label for="logbook_id" size="sm">Logbook</label>
-                      <b-form-select v-model="logentry['logbook']['id']" class="mb-3" size="sm">
-                        <option v-for="n in logbooks" :value="n.id">{% raw %}{{ n.description }}{% endraw %}</option>
-                      </b-form-select>
-
-                  </b-col>
-                  <b-col>
-                      <label for="mode_id">Mode</label>
-                      <b-form-select v-model="logentry.mode.id" class="mb-3" size="sm">
-                        <option v-for="n in modes" :value="n.id">{% raw %}{{ n.description }}{% endraw %}</option>
-                      </b-form-select>
-                    </b-col>
-                  <b-col>
-                      <label for="rig_id">Rig</label>
-                      <b-form-select v-model="logentry.rig.id" class="mb-3" size="sm">
-                        <option v-for="n in rigs" :value="n.id">{% raw %}{{ n.description }}{% endraw %}</option>
-                      </b-form-select>
-                  </b-col>
-              </b-row>
-
-              <b-row class="my-1" key="type">
-                <b-col>
-                    <label for="power">Power</label>
-                    <b-form-input id="power" type="number" v-model="logentry.power" size="sm"></b-form-input>
-                </b-col>
-                <b-col>
-                    <label for="frequency">QRG</label>
-                    <b-form-input id="frequency" type="number" v-model="logentry.frequency" size="sm"></b-form-input>
-                </b-col>
-                <b-col>
-                  <label for="logdate_utc">Date</label>
-                  <b-form-input id="logdate_utc" type="date" v-model="logentry.logdate_utc" size="sm"></b-form-input>
-              </b-col>
-              <b-col>
-                  <label for="start_utc">UTC</label>
-                  <b-form-input id="start_utc" type="text" v-model="logentry.start_utc" size="sm"></b-form-input>
-              </b-col>
-          </b-row>
 
 
-              <b-row class="my-1" key="type">
-                  <b-col>
-                      <label for="yourcall">Call</label>
-                      <b-form-input id="yourcall" type="text" @change="yourcall_onchange" v-model="logentry.yourcall" size="sm"></b-form-input>
-                  </b-col>
-                  <b-col>
-                    <label for="rxrst">RX&nbsp;RST</label>
-                    <b-form-input id="rxrst" type="number" v-model="logentry.rxrst" size="sm"></b-form-input>
-                </b-col>
-                <b-col>
-                    <label for="txrst">TX&nbsp;RST</label>
-                    <b-form-input id="txrst" type="number" v-model="logentry.txrst" size="sm"></b-form-input>
-                </b-col>
-              </b-row>
-  
+  <div>
+    <b-container fluid>
+      <b-row class="my-1" key="type">
+        <b-col>
+          <b-table striped hover small :items="history" :fields="historyfields" ></b-table>
+        </b-col>
 
-  
-                <b-row class="my-1" key="type">
-                    <b-col>
-                        <label for="locator">Loc</label>
-                        <b-form-input id="locator" type="text" v-model="logentry.locator" size="sm"></b-form-input>
-                    </b-col>
-                    <b-col>
-                      <label for="qth">QTH</label>
-                      <b-form-input id="qth" type="text" v-model="logentry.qth" size="sm"></b-form-input>
-                  </b-col>
-                  <b-col>
-                        <label for="country">Country</label>
-                        <b-form-input id="country" type="text" v-model="logentry.country" size="sm"></b-form-input>
-                    </b-col>
-                </b-row>
+        <b-col>
 
-                <b-row class="my-1" key="type">
-                  <b-col>
-                    <label for="name">Name</label>
-                    <b-form-input id="name" type="text" v-model="logentry.name" size="sm"></b-form-input>
-                </b-col>
-                <b-col>
-                        <label for="comment">Comment</label>
-                        <b-form-input id="comment" type="text" v-model="logentry.comment" size="sm"></b-form-input>
-                    </b-col>
-                </b-row>                
-
-
-
-                <b-row class="my-1" key="type">
-                    <b-col>
-                        <label for="itu_prefix">Prefix</label>
-                        <b-form-input id="itu_prefix" type="text" v-model="logentry.itu_prefix" size="sm"></b-form-input>
-                    </b-col>
-                    <b-col>
-                        <label for="dxcc">DXCC</label>
-                        <b-form-input id="dxcc" type="text" v-model="logentry.dxcc" size="sm"></b-form-input>
-                    </b-col>
-                    <b-col>
-                        <label for="cq">CQ</label>
-                        <b-form-input id="cq" type="text" v-model="logentry.cq" size="sm"></b-form-input>
-                    </b-col>
-                    <b-col>
-                        <label for="itu">ITU</label>
-                        <b-form-input id="itu" type="text" v-model="logentry.itu" size="sm"></b-form-input>
-                    </b-col>
-                    <b-col>
-                        <label for="dok">DOK</label>
-                        <b-form-input id="dok" type="text" v-model="logentry.dok" size="sm"></b-form-input>
-                    </b-col>
-                  </b-row>
-
-
-                  <b-row class="my-1" key="type">
-                    <b-col>
-                      <label for="viacall">via</label>
-                      <b-form-input id="viacall" type="text" v-model="logentry.viacall" size="sm"></b-form-input>
-                    </b-col>
-                    <b-col>
-                      <label for="qsl_shipmentmode">Shipment</label>
-                      <b-form-select v-model="logentry.qsl_shipmentmode.id" class="mb-3" size="sm">
-                        <option v-for="n in qslshipmentmodes" :value="n.id">{% raw %}{{ n.description }}{% endraw %}</option>
-                      </b-form-select>
-                  </b-col>
-                </b-row>
-  
-
-                  <b-row class="my-1" key="type">
-                      <b-col>
-                          <label for="qslsend">Send</label>
-                          <b-form-checkbox id="qslsend" unchecked-value="0" value="1" v-model="logentry.qslsend" size="sm"></b-form-checkbox>
-                      </b-col>
-                      <b-col>
-                          <label for="qslrecv">Recv</label>
-                          <b-form-checkbox id="qslrecv" unchecked-value="0" value="1" v-model="logentry.qslrecv" size="sm"></b-form-checkbox>
-                      </b-col>
-                  </b-row>                  
-
-                  <b-row class="my-1" key="type">
-                    <b-col>
-                      <b-button v-on:click="clearForm()" size="sm">Neu</b-button>
-                      <b-button v-on:click="save()" size="sm">Speichern</b-button>
-
-
-                      <b-alert
-                      :show="alert.dismissCountDown"
-                      dismissible
-                      v-bind:variant="alert.type"
-                      @dismissed="alert.dismissCountDown=0"
-                      @dismiss-count-down="countDownChanged">
-                      <p>{% raw %}{{ alert.message }}{% endraw %}</p>
-                      </b-alert>
-                
-                    </b-col>
-                </b-row>        
-              </b-container>
-            </div>
-
-<!--           
-      </b-tab>
     
-    </b-tabs>
--->
 
+    <b-container fluid>
+      <b-row class="my-1" key="type" style="width: 50%;">
+          <b-col>
+              <label for="logbook_id" size="sm">Logbook</label>
+              <b-form-select v-model="logentry['logbook']['id']" class="mb-1" size="sm">
+                <option v-for="n in logbooks" :value="n.id">{% raw %}{{ n.description }}{% endraw %}</option>
+              </b-form-select>
+
+          </b-col>
+          <b-col>
+              <label for="mode_id">Mode</label>
+              <b-form-select v-model="logentry.mode.id" class="mb-3" size="sm">
+                <option v-for="n in modes" :value="n.id">{% raw %}{{ n.description }}{% endraw %}</option>
+              </b-form-select>
+            </b-col>
+          <b-col>
+              <label for="rig_id">Rig</label>
+              <b-form-select v-model="logentry.rig.id" class="mb-3" size="sm">
+                <option v-for="n in rigs" :value="n.id">{% raw %}{{ n.description }}{% endraw %}</option>
+              </b-form-select>
+          </b-col>
+      </b-row>
+
+      <b-row class="my-1" key="type" style="width: 50%;">
+        <b-col>
+            <label for="power">Power</label>
+            <b-form-input id="power" type="number" v-model="logentry.power" size="sm"></b-form-input>
+        </b-col>
+        <b-col>
+            <label for="frequency">QRG</label>
+            <b-form-input id="frequency" type="number" v-model="logentry.frequency" size="sm"></b-form-input>
+        </b-col>
+        <b-col>
+          <label for="logdate_utc">Date</label>
+          <b-form-input id="logdate_utc" type="date" v-model="logentry.logdate_utc" size="sm"></b-form-input>
+      </b-col>
+      <b-col>
+          <label for="start_utc">UTC</label>
+          <b-form-input id="start_utc" type="text" v-model="logentry.start_utc" size="sm"></b-form-input>
+      </b-col>
+    </b-row>
+
+    <b-row class="my-1" key="type" style="width: 50%;">
+        <b-col>
+            <label for="yourcall">Call</label>
+            <b-form-input id="yourcall" type="text" @change="yourcall_onchange" v-model="logentry.yourcall" size="sm"></b-form-input>
+        </b-col>
+        <b-col>
+          <label for="rxrst">RX&nbsp;RST</label>
+          <b-form-input id="rxrst" type="number" v-model="logentry.rxrst" size="sm"></b-form-input>
+      </b-col>
+      <b-col>
+          <label for="txrst">TX&nbsp;RST</label>
+          <b-form-input id="txrst" type="number" v-model="logentry.txrst" size="sm"></b-form-input>
+      </b-col>
+    </b-row>
+
+    <b-row class="my-1" key="type" style="width: 50%;">
+        <b-col>
+            <label for="locator">Loc</label>
+            <b-form-input id="locator" type="text" v-model="logentry.locator" size="sm"></b-form-input>
+        </b-col>
+        <b-col>
+          <label for="qth">QTH</label>
+          <b-form-input id="qth" type="text" v-model="logentry.qth" size="sm"></b-form-input>
+      </b-col>
+      <b-col>
+            <label for="country">Country</label>
+            <b-form-input id="country" type="text" v-model="logentry.country" size="sm"></b-form-input>
+        </b-col>
+    </b-row>
+
+    <b-row class="my-1" key="type" style="width: 50%;">
+      <b-col>
+        <label for="name">Name</label>
+        <b-form-input id="name" type="text" v-model="logentry.name" size="sm"></b-form-input>
+    </b-col>
+    <b-col>
+            <label for="comment">Comment</label>
+            <b-form-input id="comment" type="text" v-model="logentry.comment" size="sm"></b-form-input>
+        </b-col>
+    </b-row>                
+
+    <b-row class="my-1" key="type" style="width: 50%;">
+        <b-col>
+            <label for="itu_prefix">Prefix</label>
+            <b-form-input id="itu_prefix" type="text" v-model="logentry.itu_prefix" size="sm"></b-form-input>
+        </b-col>
+        <b-col>
+            <label for="dxcc">DXCC</label>
+            <b-form-input id="dxcc" type="text" v-model="logentry.dxcc" size="sm"></b-form-input>
+        </b-col>
+        <b-col>
+            <label for="cq">CQ</label>
+            <b-form-input id="cq" type="text" v-model="logentry.cq" size="sm"></b-form-input>
+        </b-col>
+        <b-col>
+            <label for="itu">ITU</label>
+            <b-form-input id="itu" type="text" v-model="logentry.itu" size="sm"></b-form-input>
+        </b-col>
+        <b-col>
+            <label for="dok">DOK</label>
+            <b-form-input id="dok" type="text" v-model="logentry.dok" size="sm"></b-form-input>
+        </b-col>
+      </b-row>
+
+
+      <b-row class="my-1" key="type" style="width: 50%;">
+        <b-col>
+          <label for="viacall">via</label>
+          <b-form-input id="viacall" type="text" v-model="logentry.viacall" size="sm"></b-form-input>
+        </b-col>
+        <b-col>
+          <label for="qsl_shipmentmode">Shipment</label>
+          <b-form-select v-model="logentry.qsl_shipmentmode.id" class="mb-3" size="sm">
+            <option v-for="n in qslshipmentmodes" :value="n.id">{% raw %}{{ n.description }}{% endraw %}</option>
+          </b-form-select>
+      </b-col>
+    </b-row>
+
+
+    <b-row class="my-1" key="type" style="width: 50%;">
+        <b-col>
+            <label for="qslsend">Send</label>
+            <b-form-checkbox id="qslsend" unchecked-value="0" value="1" v-model="logentry.qslsend" size="sm"></b-form-checkbox>
+        </b-col>
+        <b-col>
+            <label for="qslrecv">Recv</label>
+            <b-form-checkbox id="qslrecv" unchecked-value="0" value="1" v-model="logentry.qslrecv" size="sm"></b-form-checkbox>
+        </b-col>
+    </b-row>                  
+
+    <b-row class="my-1" key="type" style="width: 50%;">
+      <b-col>
+        <b-button v-on:click="clearForm()" size="sm">Neu</b-button>
+        <b-button v-on:click="save()" size="sm">Speichern</b-button>
+
+
+        <b-alert
+        :show="alert.dismissCountDown"
+        dismissible
+        v-bind:variant="alert.type"
+        @dismissed="alert.dismissCountDown=0"
+        @dismiss-count-down="countDownChanged">
+        <p>{% raw %}{{ alert.message }}{% endraw %}</p>
+        </b-alert>
+  
+        </b-col>
+      </b-row>        
+    </b-container>
+
+
+
+  </b-col>
+</b-row>
+</b-container>
+
+
+  </div>
 </div>
 
 <script>
@@ -269,7 +259,7 @@ vue = new Vue({
       alert: {message: null, type: 'warning',dismissSecs: 10,dismissCountDown: 0,showDismissibleAlert: false}, 
       auth: {username: 'guest', password:null},
       history: [],
-      historyfields: ["id", "yourcall", "start_utc","txrst","rxrst"]
+      historyfields: ["id", "yourcall", "start_utc","logdate_utc","frequency","rxrst"]
     }
   },
   mounted () {
