@@ -40,7 +40,7 @@
 <div class="parent" id="app">
   
   <b-navbar toggleable="lg" type="dark" variant="dark">
-    <b-navbar-brand href="#">DK9MBS</b-navbar-brand>
+    <b-navbar-brand href="#">tuxlog</b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -77,22 +77,45 @@
     <b-container fluid>
       <b-row class="my-1" key="type">
         <b-col>
-          <b-table 
-            striped hover small
-            bordered="true" 
-            v-bind:items="history" 
-            v-bind:fields="historyfields" 
-            @row-clicked="onclick_history">
-          </b-table></b-card>
+          
+          <b-button variant="outline-secondary" v-b-toggle.collapse-rigctl size="sm" style="margin-top:10px;margin-bottom:5px;">Rig control</b-button>
+          <b-collapse id="collapse-rigctl" visible="true" class="mt-2">
+            <b-card>
+            <tuxlog-rigctl
+              rig="ic735">
+            </tuxlog-rigctl>
+            </b-card>
+          </b-collapse>
+
+          <div>
+          <tuxlog-call-history 
+          style="padding-top:5px;"
+          v-bind:items="history" 
+          v-bind:fields="historyfields" 
+          v-bind:id="history" 
+          v-bind:pending="appstatus.loadhistory"
+          @onclick_row="onclick_history">
+          </tuxlog-call-history>
+        </div>
+
+          <b-button variant="outline-secondary" v-b-toggle.collapse-1 size="sm" stye="margin-bottom: 5px;">Call history filter</b-button>
+          <b-collapse id="collapse-1" class="mt-2">
+              <b-card>
+              <tuxlog-call-history-filter 
+                v-model="callhistory"
+              >
+              </tuxlog-call-history-filter>
+            </b-card>
+          </b-collapse>
         </b-col>
 
+  
         <b-col>
-
-    
-          
           <b-card>
-            <div v-if="loaddata===true"><img src="https://pressengers.de/wp-content/uploads/2014/09/avatar-black.gif" style="width: 100px;"></div>
-            <b-container fluid v-if="loaddata===false">
+            <div v-if="appstatus.processdatadetail===true" class="d-flex justify-content-center mb-3">
+                <b-spinner label="Loading..."></b-spinner>
+            </div>
+            <b-container fluid v-if="appstatus.processdatadetail===false">
             <b-row class="my-1" key="type">
               <b-col>
                 <tuxlog-option id="lookbook" v-bind:values="logbooks" v-if="logentry.logbook" v-model="logentry.logbook.id" label="My call"></tuxlog-option>
@@ -193,24 +216,12 @@
       
           <b-row class="my-1" key="type" style="width: 50%;">
             <b-col>
-              <b-button v-on:click="clearForm()" size="sm">Neu</b-button>
-              <b-button v-on:click="save()" size="sm">Speichern</b-button>
+              <b-button v-on:click="clearForm()" size="sm">New</b-button>
+              <b-button v-on:click="save()" size="sm" v-if="this.appstatus.processdatadetail===false">Save and new</b-button>
       
-      
-              <b-alert
-              :show="alert.dismissCountDown"
-              dismissible
-              v-bind:variant="alert.type"
-              @dismissed="alert.dismissCountDown=0"
-              @dismiss-count-down="countDownChanged">
-              <p>{% raw %}{{ alert.message }}{% endraw %}</p>
-              </b-alert>
-        
               </b-col>
             </b-row>        
           </b-container></b-card>
-      
-
 
   </b-col>
 </b-row>
@@ -223,9 +234,17 @@
 <script>
 Vue.component('tuxlog-input', {
   props: ["label","value", "type", "id", "readonly"],
-  template: '<div style="margin-top:0px;"><label style="display: block;">{% raw %}{{ label }}{% endraw %}\
+  template: '<div style="margin-top:0px;">\
+    <b-form-group\
+      id="fieldset-horizontal"\
+      label-cols-sm="0"\
+      label-cols-lg="0"\
+      v-bind:description="label"\
+      v-bind:lab="label"\
+      label-for="input-horizontal"\
+    >\
   <b-form-input v-bind:readonly="readonly" v-bind:id="id" v-bind:type="type" v-model="value" size="sm" @input="handleInput" @change="onchange_value"></b-form-input>\
-  </label>\
+  </b-form-group>\
   </div>',
 
   methods: {
@@ -238,12 +257,22 @@ Vue.component('tuxlog-input', {
   }
 });
 
+
 Vue.component('tuxlog-option', {
   props: ["values", "value", "label", "id", "readonly"],
-  template: '<div><label for="logbook_id" size="sm">{% raw %}{{ label }}{% endraw %}\
+  template: '<div><b-form-group\
+      id="fieldset-horizontal"\
+      label-cols-sm="0"\
+      label-cols-lg="0"\
+      v-bind:description="label"\
+      v-bind:lab="label"\
+      label-for="input-horizontal"\
+    >\
 <b-form-select v-bind:disabled="readonly" v-bind:id="id" v-model="value" class="mb-1" size="sm" @input="handleInput" @change="onchange_value">\
 <option v-for="n in values" :value="n.id">{% raw %}{{ n.description }}{% endraw %}</option>\
-</b-form-select></label></div>',
+</b-form-select>\
+</b-form-group>\
+</div>',
 
 methods: {
     onchange_value(e) {
@@ -258,12 +287,125 @@ methods: {
 Vue.component('tuxlog-checkbox', {
   props: ["value", "label", "id"],
   template: '<div><label for="logbook_id" size="sm">{% raw %}{{ label }}{% endraw %}\
-  <b-form-checkbox v-bind:id="id" unchecked-value="0" value="1" v-model="value" size="sm"></b-form-checkbox>\
+  <b-form-checkbox v-bind:id="id" unchecked-value="0" value="1" v-model="value" size="sm" @input="handleInput"></b-form-checkbox>\
 </label></div>',
 
 methods: {
     handleInput (e) {
-      this.$emit('input', this.value)
+      this.$emit('input', e)
+    }
+  }
+});
+
+Vue.component('tuxlog-call-history', {
+  props: ["fields", "items", "id", "pending"],
+  template: '<div>\
+  <div  v-if="pending===true" class="d-flex justify-content-center mb-3">\
+          <b-spinner label="Loading..."></b-spinner>\
+      </div>\
+      <b-table v-if="pending===false"\
+        striped hover small\
+        bordered="true" v-bind:items="items" v-bind:fields="fields"\ @row-clicked="handleClick">\
+      </b-table></b-card>\
+</div>',
+
+methods: {
+    handleClick (record, index) {
+      this.$emit('onclick_row', record, index)
+    }
+  }
+});
+
+
+Vue.component('tuxlog-call-history-filter', {
+  props: ["value"],
+  template: '<div style="margin-top:0px;">\
+  <b-form-input placeholder="Call" size="sm" v-model="search.call" @input="handleInput($event, \'call\')" ></b-form-input>\
+  <b-button v-on:click="resetFilter()" size="sm" style="margin-top: 10px;">Reset</b-button>\
+  </div>',
+  data() { return{
+    "search": {"call": null, "comment": null}
+  }},
+  methods: {
+    handleInput (e, field) {
+      this.search[field]=e;
+      this.execute();
+    },
+    resetFilter() {
+      this.value.listuri=null;
+      this.search.call=null;
+    },
+    execute() {
+    var orderby="logdate_utc desc, start_utc desc";
+    var where="";
+    var pagesize=10;
+
+    if (this.search['call'] != null) {
+      where=where+"yourcall like '" + this.search['call'] + "%%'";
+    }
+
+    var paras='order='+encodeURI(orderby)+"&"+'where='+encodeURI(where);
+    this.value.listuri=paras;
+    this.$emit('input', this.value)
+
+    }
+  },
+});
+
+Vue.component('tuxlog-rigctl', {
+  data() {
+      return {
+        freq: 0,
+        error: null,
+        error_text: "",
+        timer_id: 0,
+        timer_interval: 1000
+    }
+  },
+  props: ["qrg", "mode", "rig"],
+  template: '<div>\
+    <!--<b-form-input placeholder="QRG" size="sm" v-model="freq" readonly="true"></b-form-input>-->\
+    <tuxlog-input id="qrg" type="number" v-model="freq" label="QRG" readonly="true"></tuxlog-input>\
+    <div style="background-color:lightgrey;padding-top: 11px; padding-bottom:10px;padding-left:5px;">\
+    <b-button pill variant="success" style="margin-bottom: 0px" v-on:click="startInterval()" v-bind:disabled="timer_id != 0" size="sm">></b-button>\
+    <b-button pill variant="danger" style="margin-bottom: 0px" v-on:click="stopInterval()" v-bind:disabled="timer_id === 0" size="sm">||</b-button>\
+    <span style="background-color: red; text-align: left; padding:10px;" v-if="error != null">{% raw %}{{ error_text }}{%endraw %}</span>\
+    <span style="background-color: LightGreen ; text-align: left; padding:10px;" v-if="error === null">{% raw %}{{ rig }}{%endraw %} successfully connected</span>\
+    <span style="background-color: DarkOrange; text-align: left; padding:10px;" v-if="timer_id === 0">{% raw %}{{ rig }}{%endraw %} connection stopped</span>\
+    </div>\
+</div>',
+mounted() {
+  this.startInterval();
+},
+methods: {
+      handleInput (event, field) {
+        this.$emit('ongetrigdata', field, event)
+      },
+      stopInterval: function () {
+        clearInterval(this.timer_id);
+        this.timer_id=0;
+      },
+      startInterval: function() {
+        // use arrow function
+        intervalId=setInterval(() => {
+          this.clearError();
+          axios.get('/api/v1.0/rigctl/'+this.rig+'/f').then(response => {
+            this.freq=response.data['response']['Frequency']
+            this.error=null
+          }).catch( response => {
+            console.log(response.response.data['error']);
+            this.error= response.response.data;
+            this.error_text= response.response.data['error'];
+            this.freq=0;
+            this.stopInterval();
+          })
+      },this.timer_interval )
+      this.timer_id=intervalId;
+      return intervalId;
+    },
+    clearError: function() {
+      this.error=null;
+      this.error_text="";
     }
   }
 });
@@ -273,7 +415,7 @@ vue = new Vue({
   el: '#app',
   data () {
     return {
-      loaddata: false,
+      appstatus: {"processdatadetail": false, "loadhistory": false},
       alert: {message: null, type: 'warning',dismissSecs: 10,dismissCountDown: 0,showDismissibleAlert: false},
       logentry: {},
       rigs: [],
@@ -283,7 +425,8 @@ vue = new Vue({
       alert: {message: null, type: 'warning',dismissSecs: 10,dismissCountDown: 0,showDismissibleAlert: false}, 
       auth: {username: 'guest', password:null},
       history: [],
-      historyfields: ["id", "yourcall", "start_utc","logdate_utc","frequency","rxrst"]
+      historyfields: ["id", "yourcall", "start_utc","logdate_utc","frequency","rxrst"],
+      callhistory: {"listuri": null, "defaultlisturl": "order=id desc&pagesize=10"}
     }
   },
   mounted () {
@@ -314,6 +457,21 @@ vue = new Vue({
     
     this.loadHistory();
   },
+  watch: {
+    'callhistory.listuri': function (newValue) {
+      debugger;
+      this.appstatus.loadHistory=true;
+
+      if(newValue==null) {
+        newValue=this.callhistory.defaultlisturl;
+      }
+
+      axios.get('/api/v1.0/tuxlog/LogLogs?'+newValue).then( (response) => {
+      this.history=response.data;
+      this.appstatus.loadhistory=false;
+      }).catch((response)=> {alert('Fehler')})
+    }
+  },
    filters:{
       getconfigkey: function(value,key){
       	if(value==null) return null;
@@ -325,9 +483,17 @@ vue = new Vue({
       console.log('selected record => '+record);
       this.initEntry(record.id);
     },
-    loadHistory: function() {
-        axios.get('/api/v1.0/tuxlog/LogLogs?order=id desc&pagesize=10').then( (response) => {
+    loadHistory: function(callsign="") {
+        var paras = "";
+        if (this.callhistory.listuri==null) {
+          paras=this.callhistory.defaultlisturl;
+        } else {
+          paras=this.callhistory.listuri;
+        }
+        
+        axios.get('/api/v1.0/tuxlog/LogLogs?'+paras).then( (response) => {
         this.history=response.data;
+        this.appstatus.loadhistory=false;
       }).catch((response)=> {alert('Fehler')})
     },
      makeToast(append = false, text) {
@@ -340,7 +506,7 @@ vue = new Vue({
       },
     yourcall_onchange: function(event) {
       this.makeToast(true, 'Reading from callbook...')
-      //console.log(this.logentry.name)
+      this.loadHistory(event);
       axios.get('/api/v1.0/callbook/hamdb/'+event).then((response)=>{
         this.logentry.name=response.data.haminfo.name
         this.logentry.country=response.data.haminfo.country
@@ -357,13 +523,13 @@ vue = new Vue({
     })
     },
     initEntry: function (id) {
-      this.loaddata=true;
+      this.appstatus.processdatadetail=true;
       if (id==0) {
         this.clearForm();
       } else {axios.get('/api/v1.0/tuxlog/LogLogs/'+id).then( (response) => {
           this.logentry=response.data;
           console.log(this.logentry);
-          this.loaddata=false;
+          this.appstatus.processdatadetail=false;
         }).catch( (response) => { alert('Fehler'); this.clearForm(); } )
       }
     },
@@ -371,7 +537,7 @@ vue = new Vue({
       now = new Date();
       utcTime = now.getUTCHours()+":"+now.getUTCMinutes();
       this.loadHistory();
-      this.loaddata=false;
+      this.appstatus.processdatadetail=false;
       
       this.logentry={"rig": {"id": "ic735"}, "mode": {"id": "SSTV"}, 
       "logbook": {"id":"dk9mbs"}, "qsl_shipmentmode": {"id":"bureau"}, "logdate_utc": new Date().toISOString().slice(0,10), 
@@ -382,7 +548,7 @@ vue = new Vue({
         console.log(this.logentry);
         this.clearForm();
         this.makeToast(true, 'New entry saved!');
-      }).catch((response)=>{alert('Fehler'); this.loaddata=false; })
+      }).catch((response)=>{alert('Fehler'); this.appstatus.processdatadetail=false; })
     },
     countDownChanged: function(dismissCountDown) {
       this.alert.dismissCountDown = dismissCountDown

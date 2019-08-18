@@ -138,6 +138,7 @@ def save_or_update(table):
 
 @app.route('/api/v1.0/tuxlog/<table>', methods=['GET'])
 def get_dataset(table):
+    import urllib.parse
     order=""
     where=""
     pagesize=0
@@ -147,13 +148,13 @@ def get_dataset(table):
         page=request.args.get("page")
 
     if request.args.get("pagesize") != None:
-        page=request.args.get("pagesize")
+        pagesize=request.args.get("pagesize")
 
     if request.args.get("order") != None:
-        order = request.args.get("order")
+        order = urllib.parse.unquote(request.args.get("order"))
 
     if request.args.get("where") != None:
-        where = request.args.get("where")
+        where = urllib.parse.unquote(request.args.get("where"))
     
     from usecases.datamodel import get_modellist_by_raw
     tmp = get_modellist_by_raw(table, where=where, order=order, pagesize=pagesize)
@@ -271,11 +272,14 @@ def get_rig(rig_id, command):
     rig=LogRigs.get_or_none(LogRigs.id==rig_id)
 
     if rig==None:
-        return Response( json.dumps( {'error': 'Rig not found in LogRigs table!' }) , 500)
+        return Response( json.dumps( {'error': 'Rig not found in LogRigs table!' }), content_type="text/json" , status=500)
 
-    rig_ctl=RigCtl( {"host": rig.remote_host, "port": rig.remote_port } )
-    result=rig_ctl.get_rig(command)
-    return Response(json.dumps(result) ,mimetype="text/json")
+    try:
+        rig_ctl=RigCtl( {"host": rig.remote_host, "port": rig.remote_port } )
+        result=rig_ctl.get_rig(command)
+        return Response(json.dumps(result) ,mimetype="text/json")
+    except Exception as e:
+        return Response(json.dumps( {'error': 'Error while reading data from rig!' }), content_type="text/json" , status=500)
 
 @app.route('/api/v1.0/rigctl/<rig_id>/<command>/<value>', methods=['GET'])
 @app.route('/api/v1.0/rigctl/<rig_id>/<command>/<value>/<value2>', methods=['GET'])
