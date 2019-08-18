@@ -565,17 +565,18 @@ vue = new Vue({
 
 
 
-/*listener=new ServerMessageListener();
+listener=new ServerMessageListener();
 
 foo=new class extends BaseListener { execute(){}; }
 foo.setVue(vue);
 
 listener.addListener(foo);
-listener.addListener( new class { execute() {} }    );
+listener.addListener( new class { execute() {console.log('Log aus dem Plugin')} }    );
+listener.addListener( new class { execute() {  } }    );
 listener.connect();
 
 listener.execListener();
-*/
+
 
 </script>
 

@@ -36,17 +36,11 @@ from model.model import LogLogs
 from model import model
 import config
 
-logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 #logging.basicConfig(filename='/tmp/tuxlog.log')
+logger = logging.getLogger(__name__)
 
-
-
-environment=os.getenv("tuxlog_environment", default="prod")
-if environment==None or environment=="":
-    environment="prod"
-
-config.DatabaseConfig.open(model.database, config.DatabaseConfig.read_from_file(environment))
-
+config.DatabaseConfig.open(model.database, config.DatabaseConfig.read_from_file(os.getenv("tuxlog_environment")))
 
 def handler(signum, frame):
     pass

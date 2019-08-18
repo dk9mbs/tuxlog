@@ -1,7 +1,10 @@
+import logging
 import json
 import os
 from model import model
 from peewee import MySQLDatabase
+
+logger = logging.getLogger(__name__)
 
 current_cfg={}
 
@@ -20,10 +23,16 @@ class DatabaseConfig:
     @classmethod
     def read_from_file(cls, environment="", file="/etc/tuxlog/tuxlog_cfg.json"):
 
-        print('current environment => %s' % environment)
-
         with open(file) as json_file:
-            cfg=json.load(json_file)[environment]
+            cfg=json.load(json_file)
+
+        if environment==None:
+            logger.info('no envoronment in args found.')
+            environment=cfg['default']
+
+        logger.info('current environment => %s' % environment)
+
+        cfg=cfg[environment]
 
         cls._current_cfg=cfg
         return cfg

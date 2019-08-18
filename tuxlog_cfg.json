@@ -1,4 +1,5 @@
 {
+    "default": "prod",
     "build":{
         "mysqlcfg": {"host":"localhost", "port":"3306","database":"database", "username":"username", "password":"password"}
     },
