@@ -65,14 +65,18 @@ app.threaded=True
 
 # UI
 @app.route('/')
-def index():
-    return render_template('index1.htm', config=config.DatabaseConfig.get_current_cfg() )
+@app.route('/<file>')
+def index(file="index.htm"):
+    if file=='favicon.ico':
+        return Response(status=404)
+    
+    return render_template(file, config=config.DatabaseConfig.get_current_cfg() )
 
 @app.route('/js/<file>', methods=['GET'])
 def get_js_file(file):
     logger.info('get file: %s' % file)
     try:
-        return render_template(file, config=config.current_cfg)
+        return Response(render_template(file, config=config.current_cfg), status=200, content_type="text/javascript", mimetype="test/javascript")
     except Exception as e:
         logger.exception(e)
         return Response( json.dumps( { 'error': 'not found'} ), 404)
