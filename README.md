@@ -15,7 +15,8 @@ cd tuxlog
 # configure manually /etc/tuxlog/tuxlog_cfg.json
 #
 cd setup
-./pipeline
+./integrationtest.sh
+./install.sh
 ```
 
 
@@ -24,6 +25,7 @@ cd setup
 * pip3 install venv
 * pip3 install pexpect
 * apt-get install rigctld
+* apt-get install mod-wsgi
 
 
 ## How to import adif data
