@@ -14,7 +14,6 @@
 
 <body>
 
-  <!--<script src="js/scripts.js"></script>-->
   <script src="https://cdn.jsdelivr.net/npm/vue"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
 
@@ -231,9 +230,16 @@
   </div>
 </div>
 
-<!--<script type="module" src="/js/tuxlog-input.js"></script>-->
+
+<script type="module">
+  import Vue from 'https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.esm.browser.js'
+  //import BootstrapVue from 'https://unpkg.com/bootstrap-vue@2.0.0-rc.28/dist/bootstrap-vue.esm.js'
+  //Vue.use(BootstrapVue)
+  var test= new Vue({});
+</script>
 
 <script>
+
 Vue.component('tuxlog-input', {
     props: ["label","value", "type", "id", "readonly"],
     template: '<div style="margin-top:0px;">\
@@ -410,9 +416,8 @@ Vue.component('tuxlog-input', {
       }
     }
   });
-  
 
-  vue = new Vue({
+var vue=new Vue({
     el: '#app',
     data () {
       return {
@@ -565,7 +570,7 @@ Vue.component('tuxlog-input', {
 </script>
 
 <script>
-listener=new ServerMessageListener();
+/*listener=new ServerMessageListener();
 
 foo=new class extends BaseListener { execute(){}; }
 foo.setVue(vue);
@@ -575,7 +580,7 @@ listener.addListener( new class { execute() {console.log('Log aus dem Plugin')} 
 listener.addListener( new class { execute() {  } }    );
 listener.connect();
 
-listener.execListener();
+listener.execListener();*/
 </script>
 
 </body>
