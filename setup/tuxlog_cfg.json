@@ -1,0 +1,19 @@
+{
+    "default": "prod",
+    "build":{
+        "mysqlcfg": {"host":"localhost", "port":"3306","database":"database", "username":"username", "password":"password"},
+	"security": {"secret_key": "mykey"}
+    },
+    "dev":{
+        "mysqlcfg": {"host":"localhost", "port":"3306","database":"database", "username":"username", "password":"password"},
+	"security": {"secret_key": "mykey"}
+    },
+    "test":{
+        "mysqlcfg": {"host":"localhost", "port":"3306","database":"database", "username":"username", "password":"password"},
+	"security": {"secret_key": "mykey"}
+    },
+    "prod":{
+        "mysqlcfg": {"host":"localhost", "port":"3306","database":"database", "username":"username", "password":"password"},
+	"security": {"secret_key": "mykey"}
+    }
+}
