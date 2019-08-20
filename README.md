@@ -26,6 +26,11 @@ cd setup
 * pip3 install pexpect
 * apt-get install rigctld
 * apt-get install mod-wsgi
+* Install nodejs / npm: https://debianforum.de/forum/viewtopic.php?t=172240
+* npm install -g @vue/cli
+* vue create vue-proj
+* npm run build && npm run serve 
+
 
 
 ## How to import adif data
