@@ -12,6 +12,9 @@
 </template>
 
 <script>
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+
 export default {
   name: 'tuxlog-rigctl',
  data() {
@@ -37,7 +40,7 @@ export default {
         },
         startInterval: function() {
           // use arrow function
-          intervalId=setInterval(() => {
+          var intervalId=setInterval(() => {
             this.clearError();
             axios.get('/api/v1.0/rigctl/'+this.rig+'/f').then(response => {
               this.freq=response.data['response']['Frequency']
