@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "postbuild": "rm -r ../htdocs/img/ && rm -r ../htdocs/css/ && rm -r ../htdocs/js/ && cp -r dist/* ../htdocs/"
+    "postbuild": "rm -fr ../htdocs/img/ && rm -fr ../htdocs/css/ && rm -fr ../htdocs/js/ && cp -r dist/* ../htdocs/"
   },
   "dependencies": {
     "@vue/cli": "^3.10.0",
