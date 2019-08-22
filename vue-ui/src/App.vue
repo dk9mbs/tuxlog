@@ -200,8 +200,8 @@
 </template>
 
 <script>
-//import Vue from 'vue'
-import Vue from 'vue/dist/vue.esm.js'
+import Vue from 'vue'
+//import Vue from 'vue/dist/vue.esm.js'
 import tuxlogInput from './components/tuxlog-input.vue'
 import tuxlogOption from './components/tuxlog-option.vue'
 import tuxlogCheckbox from './components/tuxlog-checkbox.vue'

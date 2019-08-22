@@ -1,5 +1,5 @@
-//import Vue from 'vue'
-import Vue from 'vue/dist/vue.esm.js'
+import Vue from 'vue'
+//import Vue from 'vue/dist/vue.esm.js'
 import App from './App.vue'
 
 //Vue.config.productionTip = false
