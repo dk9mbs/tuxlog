@@ -5,7 +5,7 @@
         </div>
         <b-table v-if="pending===false"
           striped hover small
-          bordered="true" v-bind:items="items" v-bind:fields="fields" @row-clicked="handleClick">
+          v-bind:bordered="true" v-bind:items="items" v-bind:fields="fields" @row-clicked="handleClick">
         </b-table>
   </div>
 </template>

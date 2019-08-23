@@ -1,8 +1,5 @@
 <template>
 <div class="parent" id="app">
-  
-    {{ this.auth.username }}
-
   <b-navbar toggleable="lg" type="dark" variant="dark">
     <b-navbar-brand href="#">tuxlog</b-navbar-brand>
 
@@ -43,7 +40,7 @@
         <b-col>
           
           <b-button variant="outline-secondary" v-b-toggle.collapse-rigctl size="sm" style="margin-top:10px;margin-bottom:5px;">Rig control</b-button>
-          <b-collapse id="collapse-rigctl" visible="true" class="mt-2">
+          <b-collapse id="collapse-rigctl" v-bind:visible="true" class="mt-2">
             <b-card>
             <tuxlog-rigctl
               rig="ic735">
@@ -201,6 +198,7 @@
 
 <script>
 import Vue from 'vue'
+import axios from 'axios'
 //import Vue from 'vue/dist/vue.esm.js'
 import tuxlogInput from './components/tuxlog-input.vue'
 import tuxlogOption from './components/tuxlog-option.vue'
@@ -222,7 +220,25 @@ import { BCard } from 'bootstrap-vue'
 import { BContainer } from 'bootstrap-vue'
 import { BCol } from 'bootstrap-vue'
 import { BRow } from 'bootstrap-vue'
+import { BNavbar,BNavbarBrand,BNavbarToggle,BNavbarNav  } from 'bootstrap-vue'
+import { BNav,BNavItem, BNavText,BNavForm,BNavItemDropdown} from 'bootstrap-vue'
+import { BDropdown } from 'bootstrap-vue'
+import { BDropdownItem } from 'bootstrap-vue'
+import { BToggle } from 'bootstrap-vue'
 
+Vue.component('b-toggle', BToggle)
+Vue.component('b-dropdown', BDropdown)
+Vue.component('b-dropdown-item', BDropdownItem)
+Vue.component('b-nav', BNav)
+Vue.component('b-nav-item', BNavItem)
+Vue.component('b-nav-text', BNavText)
+Vue.component('b-nav-form', BNavForm)
+Vue.component('b-nav-item-dropdown', BNavItemDropdown)
+
+Vue.component('b-navbar', BNavbar)
+Vue.component('b-navbar-brand', BNavbarBrand)
+Vue.component('b-navbar-toggle', BNavbarToggle)
+Vue.component('b-navbar-nav', BNavbarNav)
 Vue.component('b-row', BRow)
 Vue.component('b-col', BCol)
 Vue.component('b-container', BContainer)
@@ -241,8 +257,12 @@ Vue.component('tuxlog-input', tuxlogInput);
 Vue.component('tuxlog-option', tuxlogOption);
 Vue.component('tuxlog-checkbox', tuxlogCheckbox);
 Vue.component('tuxlog-call-history', tuxlogCallHistory);
-Vue.component('tuxlog-call-history', tuxlogCallHistoryFilter);
+Vue.component('tuxlog-call-history-filter', tuxlogCallHistoryFilter);
 Vue.component('tuxlog-rigctl', tuxlogRigctl);
+
+import { VBToggle } from 'bootstrap-vue'
+// Note: Vue automatically prefixes the directive name with 'v-'
+Vue.directive('b-toggle', VBToggle)
 
 
 export default {

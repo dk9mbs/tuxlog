@@ -1,6 +1,6 @@
 <template>
 <div>
-      <tuxlog-input id="qrg" type="number" v-model="freq" label="QRG" readonly="true"></tuxlog-input>
+      <tuxlog-input id="qrg" type="number" v-model="freq" label="QRG" v-bind:readonly="true"></tuxlog-input>
       <div style="background-color:lightgrey;padding-top: 11px; padding-bottom:10px;padding-left:5px;">
       <b-button pill variant="success" style="margin-bottom: 0px" v-on:click="startInterval()" v-bind:disabled="timer_id != 0" size="sm">></b-button>
       <b-button pill variant="danger" style="margin-bottom: 0px" v-on:click="stopInterval()" v-bind:disabled="timer_id === 0" size="sm">||</b-button>
