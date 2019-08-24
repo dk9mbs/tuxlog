@@ -66,7 +66,7 @@ app.threaded=True
 # UI
 @app.route('/')
 @app.route('/<file>')
-def index(file="index.htm"):
+def index(file="index.html"):
     if file=='favicon.ico':
         return Response(status=404)
     
@@ -76,7 +76,7 @@ def index(file="index.htm"):
 def get_js_file(file):
     logger.info('get file: %s' % file)
     try:
-        return Response(render_template(file, config=config.current_cfg), status=200, content_type="text/javascript", mimetype="test/javascript")
+        return Response(render_template('js/'+file, config=config.current_cfg), status=200, content_type="text/javascript", mimetype="test/javascript")
     except Exception as e:
         logger.exception(e)
         return Response( json.dumps( { 'error': 'not found'} ), 404)
@@ -175,7 +175,6 @@ def get_record(table, recordid):
         logger.error("No record found!")
         return
         
-    #data=json.dumps( data, default=JsonTypeConverter().typeformatter )
     data=json.dumps( data, default=typeformatter )
  
     return Response(
@@ -218,7 +217,6 @@ def adif_import(table):
             log=kwargs['model']
             log_exists=LogLogs.get_or_none((LogLogs.logbook==kwargs['logbook_id']) 
                 & (LogLogs.yourcall==log.yourcall)
-                & (LogLogs.mode==log.mode_id)
                 & (LogLogs.logdate_utc==log.logdate_utc)
                 & (LogLogs.start_utc==log.start_utc)
             )

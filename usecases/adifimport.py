@@ -43,6 +43,8 @@ class AdifImportLogic(BaseUseCase):
 
                 if fld_def!=None:
                     internal=str(fld_def.internal_fieldname).lower()
+                    if internal.endswith('_id'):
+                        internal=internal[:-3]
                     log.__data__[internal]=adif_rec[adif_fld]
 
             log.logbook_id=self._logbook_id
