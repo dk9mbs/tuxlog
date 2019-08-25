@@ -43,6 +43,7 @@ class AdifImportLogic(BaseUseCase):
 
                 if fld_def!=None:
                     internal=str(fld_def.internal_fieldname).lower()
+                    #print(internal)
                     if internal.endswith('_id'):
                         internal=internal[:-3]
                     log.__data__[internal]=adif_rec[adif_fld]
@@ -86,7 +87,8 @@ class AdifParserLib:
         adif_recs=list()
 
         for rec in records:
-            adif_rec=self._extract_fields(rec)
+            adif_rec=self._extract_fields(rec+' <DUMMY:2: DUMMY')
+            #print(adif_rec)
             if len(adif_rec) >0:
 
                 edit_adif_rec=self.fn(adif_rec, **kwargs)
