@@ -38,10 +38,34 @@ cd setup
 * vue create vue-proj
 * npm run build && npm run serve 
 
+## How to run as apache2 www-server
+
+```bash
+<VirtualHost *:80>
+     # Add machine's IP address (use ifconfig command)
+     ServerName tuxlog.servername.de
+     # Give an alias to to start your website url with
+     WSGIScriptAlias / /var/www/tuxlog/app.wsgi
+     <Directory /var/www/tuxlog/>
+                # set permissions as per apache2.conf file
+            Options FollowSymLinks
+            AllowOverride None
+
+            AuthType Basic
+            AuthName "Private Documentation Repository"
+            AuthUserFile /etc/.htusers
+            Require valid-user
+            #Require all granted
+     </Directory>
+     ErrorLog ${APACHE_LOG_DIR}/error.log
+     LogLevel warn
+     CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+```
 
 
 ## How to import adif data
 
 ```bash
-wget --debug --header "content-type:text/adif" --post-file /tmp/wsjtx_log.adi -O - http://localhost:8081/api/v1.0/import/LogLogs?logbook_id=dk9mbs 
+wget --debug --header "content-type:text/adif" --post-file /tmp/wsjtx_log.adi -O - http://username:password@localhost:80/api/v1.0/import/LogLogs?logbook_id=dk9mbs 
 ```
