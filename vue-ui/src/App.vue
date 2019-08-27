@@ -1,5 +1,6 @@
 <template>
-<div class="parent" id="app">
+<div>
+  <!--
   <b-navbar toggleable="lg" type="dark" variant="dark">
     <b-navbar-brand href="#">tuxlog</b-navbar-brand>
 
@@ -23,11 +24,9 @@
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
-
-
   <div>
   </div>
-
+-->
   <!--
   <b-tabs style="float:right;">
       <b-tab title="Logentry" active>
@@ -62,6 +61,9 @@
           <b-button variant="outline-secondary" v-b-toggle.collapse-1 size="sm" stye="margin-bottom: 5px;">Call history filter</b-button>
           <b-collapse id="collapse-1" class="mt-2">
               <b-card>
+                <div style="background-color:yellow">
+                <router-link to="/foo">Go to Foo</router-link>
+                </div>
               <tuxlog-call-history-filter 
                 v-model="callhistory"
               >
@@ -225,7 +227,10 @@ import { BNav,BNavItem, BNavText,BNavForm,BNavItemDropdown} from 'bootstrap-vue'
 import { BDropdown } from 'bootstrap-vue'
 import { BDropdownItem } from 'bootstrap-vue'
 import { BToggle } from 'bootstrap-vue'
+import { RouterLink, RouterView } from 'vue-router'
 
+Vue.component('router-link', RouterLink)
+Vue.component('router-view', RouterView)
 Vue.component('b-toggle', BToggle)
 Vue.component('b-dropdown', BDropdown)
 Vue.component('b-dropdown-item', BDropdownItem)
