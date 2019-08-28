@@ -16,6 +16,7 @@ BASEDIR=$(dirname "$0")
 SCRIPT=$(readlink -f $0)
 APPDIR=$(dirname $SCRIPT)
 APPDIR=$(dirname $APPDIR)
+UIBASEDIR="$APPDIR/vue-ui/"
 CFG_FILE="/etc/tuxlog/tuxlog_cfg.json"
 KEY=$($PYTHON ./cfgreader.py $CFG_FILE "$ENVIRONMENT" "security" "secret_key")
 DATABASE=$($PYTHON ./cfgreader.py $CFG_FILE "$ENVIRONMENT" mysqlcfg database)
@@ -25,18 +26,20 @@ HOST=$($PYTHON ./cfgreader.py $CFG_FILE "$ENVIRONMENT" mysqlcfg host)
 
 echo ""
 echo "========================================================"
-echo "Environment.....:$ENVIRONMENT"
-echo "Script base dir.:$BASEDIR"
-echo "App base dir....:$APPDIR"
-echo "Secret Key......:$KEY"
-echo "Database........:$DATABASE"
-echo "Hot.............:$HOST"
-echo "Username........:$USERNAME"
-echo "Password........:*********"
+echo "Environment..........:$ENVIRONMENT"
+echo "Script base dir......:$BASEDIR"
+echo "UI Script base dir...:UI$BASEDIR"
+echo "App base dir.........:$APPDIR"
+echo "Secret Key...........:$KEY"
+echo "Database.............:$DATABASE"
+echo "Hot..................:$HOST"
+echo "Username.............:$USERNAME"
+echo "Password.............:*********"
 echo "========================================================"
 
 
 mkdir -p /etc/tuxlog
+mkdir -p $APPDIR/htdocs
 
 if [ ! -f /etc/tuxlog/tuxlog_cfg.json ]; then
     cp "$BASEDIR/tuxlog_cfg.json" /etc/tuxlog/
@@ -54,8 +57,10 @@ from app import app as application
 application.secret_key = "$KEY"
 EOF
 
+cd $UIBASEDIR
+npm run build
 
 
-cd $BASEDIR
+cd $APPDIR/setup/
 $BASEDIR/pwizproxy.py $PYTHON $HOST $DATABASE $USERNAME $PASSWORD "../model/model.py"
 
