@@ -17,6 +17,8 @@ SCRIPT=$(readlink -f $0)
 APPDIR=$(dirname $SCRIPT)
 APPDIR=$(dirname $APPDIR)
 CFG_FILE="/etc/tuxlog/tuxlog_cfg.json"
+
+cd $APPDIR/setup/
 KEY=$($PYTHON ./cfgreader.py $CFG_FILE "$ENVIRONMENT" "security" "secret_key")
 DATABASE=$($PYTHON ./cfgreader.py $CFG_FILE "$ENVIRONMENT" mysqlcfg database)
 USERNAME=$($PYTHON ./cfgreader.py $CFG_FILE "$ENVIRONMENT" mysqlcfg username)
@@ -27,7 +29,6 @@ echo ""
 echo "========================================================"
 echo "Environment..........:$ENVIRONMENT"
 echo "Script base dir......:$BASEDIR"
-echo "UI Script base dir...:UI$BASEDIR"
 echo "App base dir.........:$APPDIR"
 echo "Secret Key...........:$KEY"
 echo "Database.............:$DATABASE"
@@ -62,5 +63,5 @@ npm run build
 
 
 cd $APPDIR/setup/
-$BASEDIR/pwizproxy.py $PYTHON $HOST $DATABASE $USERNAME $PASSWORD "../model/model.py"
+./pwizproxy.py $PYTHON $HOST $DATABASE $USERNAME $PASSWORD "../model/model.py"
 
