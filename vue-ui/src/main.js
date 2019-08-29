@@ -1,10 +1,13 @@
 import Vue from 'vue'
-//import Vue from 'vue/dist/vue.esm.js'
 import App from './App.vue'
 
 import VueRouter from 'vue-router';
-
 Vue.use(VueRouter);
+
+import VueSidebarMenu from 'vue-sidebar-menu'
+import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
+Vue.use(VueSidebarMenu)
+
 
 export const router = new VueRouter({
   mode: 'history',
@@ -28,6 +31,21 @@ export const router = new VueRouter({
 
 new Vue({
   router,
+  data() { return {
+    menu: [
+      {
+          href: '/',
+          title: 'Dashboard',
+          icon: 'fa fa-user'
+      },
+      {
+          href: '#',
+          title: 'Charts',
+          icon: 'fa fa-chart-area'
+      },
+  ]
+  }
+  },
   template: `
   <div>
     <b-navbar toggleable="lg" type="dark" variant="dark">
@@ -61,6 +79,7 @@ new Vue({
     </b-collapse>
   </b-navbar>
 
+  <sidebar-menu :menu="menu" />
     <router-view class="view"></router-view>
   </div>
 `

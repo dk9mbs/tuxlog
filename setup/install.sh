@@ -16,7 +16,6 @@ BASEDIR=$(dirname "$0")
 SCRIPT=$(readlink -f $0)
 APPDIR=$(dirname $SCRIPT)
 APPDIR=$(dirname $APPDIR)
-UIBASEDIR="$APPDIR/vue-ui/"
 CFG_FILE="/etc/tuxlog/tuxlog_cfg.json"
 KEY=$($PYTHON ./cfgreader.py $CFG_FILE "$ENVIRONMENT" "security" "secret_key")
 DATABASE=$($PYTHON ./cfgreader.py $CFG_FILE "$ENVIRONMENT" mysqlcfg database)
@@ -57,7 +56,8 @@ from app import app as application
 application.secret_key = "$KEY"
 EOF
 
-cd $UIBASEDIR
+cd $APPDIR/vue-ui/
+npm install
 npm run build
 
 
