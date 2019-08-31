@@ -4,52 +4,94 @@ import App from './App.vue'
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 
-import VueSidebarMenu from 'vue-sidebar-menu'
-import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
-Vue.use(VueSidebarMenu)
+import axios from 'axios'
+import tuxlogInput from './components/tuxlog-input.vue'
+import tuxlogOption from './components/tuxlog-option.vue'
+import tuxlogCheckbox from './components/tuxlog-checkbox.vue'
+import tuxlogCallHistory from './components/tuxlog-call-history.vue'
+import tuxlogCallHistoryFilter from './components/tuxlog-call-history-filter.vue'
+import tuxlogRigctl from './components/tuxlog-rigctl.vue'
+import tuxlogMenu from './components/tuxlog-menu.vue'
+
+import { BFormInput } from 'bootstrap-vue'
+import { BFormGroup } from 'bootstrap-vue'
+import { BFormSelect } from 'bootstrap-vue'
+import { BFormCheckboxGroup } from 'bootstrap-vue'
+import { BFormCheckbox } from 'bootstrap-vue'
+import { BTable } from 'bootstrap-vue'
+import { BSpinner } from 'bootstrap-vue'
+import { BButton } from 'bootstrap-vue'
+import { BCollapse } from 'bootstrap-vue'
+import { BCard } from 'bootstrap-vue'
+import { BContainer } from 'bootstrap-vue'
+import { BCol } from 'bootstrap-vue'
+import { BRow } from 'bootstrap-vue'
+import { BNavbar,BNavbarBrand,BNavbarToggle,BNavbarNav  } from 'bootstrap-vue'
+import { BNav,BNavItem, BNavText,BNavForm,BNavItemDropdown} from 'bootstrap-vue'
+import { BDropdown } from 'bootstrap-vue'
+import { BDropdownItem } from 'bootstrap-vue'
+import { BToggle } from 'bootstrap-vue'
+import { RouterLink, RouterView } from 'vue-router'
+
+Vue.component('router-link', RouterLink)
+Vue.component('router-view', RouterView)
+Vue.component('b-toggle', BToggle)
+Vue.component('b-dropdown', BDropdown)
+Vue.component('b-dropdown-item', BDropdownItem)
+Vue.component('b-nav', BNav)
+Vue.component('b-nav-item', BNavItem)
+Vue.component('b-nav-text', BNavText)
+Vue.component('b-nav-form', BNavForm)
+Vue.component('b-nav-item-dropdown', BNavItemDropdown)
+
+Vue.component('b-navbar', BNavbar)
+Vue.component('b-navbar-brand', BNavbarBrand)
+Vue.component('b-navbar-toggle', BNavbarToggle)
+Vue.component('b-navbar-nav', BNavbarNav)
+Vue.component('b-row', BRow)
+Vue.component('b-col', BCol)
+Vue.component('b-container', BContainer)
+Vue.component('b-card', BCard)
+Vue.component('b-collapse', BCollapse)
+Vue.component('b-button', BButton)
+Vue.component('b-spinner', BSpinner)
+Vue.component('b-table', BTable)
+Vue.component('b-form-checkbox-group', BFormCheckboxGroup)
+Vue.component('b-form-checkbox', BFormCheckbox)
+Vue.component('b-form-select', BFormSelect)
+Vue.component('b-form-input', BFormInput);
+Vue.component('b-form-group', BFormGroup);
+
+Vue.component('tuxlog-input', tuxlogInput);
+Vue.component('tuxlog-option', tuxlogOption);
+Vue.component('tuxlog-checkbox', tuxlogCheckbox);
+Vue.component('tuxlog-call-history', tuxlogCallHistory);
+Vue.component('tuxlog-call-history-filter', tuxlogCallHistoryFilter);
+Vue.component('tuxlog-rigctl', tuxlogRigctl);
+Vue.component('tuxlog-menu', tuxlogMenu);
+
+import { VBToggle } from 'bootstrap-vue'
+Vue.directive('b-toggle', VBToggle)
 
 
 export const router = new VueRouter({
   mode: 'history',
   base: __dirname,
   routes: [
-    { path: '/', component: {template: '<div>home</div>'} },
-    { path: '/about', component: {template: '<div>about</div>'} },
-    { path: '/contact', component: {template: '<div>contact</div>'} },
-    { path: '/qso', component: App }
+    { name: 'home', path: '/', component: {template: '<div>home</div>'} },
+    { name: 'about', path: '/about', component: {template: '<div>about</div>'} },
+    { name: 'contact', path: '/contact', component: {template: '<div>contact</div>'} },
+    { name: 'qso', path: '/qso', component: App }
     ]
   });
 
 
-//Vue.config.productionTip = false
-
-//new Vue({
-//  render: h => h(App),
-//}).$mount('#app')
-
-
-
 new Vue({
   router,
-  data() { return {
-    menu: [
-      {
-          href: '/',
-          title: 'Dashboard',
-          icon: 'fa fa-user'
-      },
-      {
-          href: '#',
-          title: 'Charts',
-          icon: 'fa fa-chart-area'
-      },
-  ]
-  }
-  },
   template: `
   <div>
     <b-navbar toggleable="lg" type="dark" variant="dark">
-    <b-navbar-brand href="#">tuxlog</b-navbar-brand>
+    <b-navbar-brand :to="{name: 'home'}">tuXlog</b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -59,16 +101,17 @@ new Vue({
       </b-navbar-nav>
 
       <b-navbar-nav class="ml-auto">
-        <b-nav-item-dropdown text="Log" right>
-        <b-dropdown-item href="#"><router-link to="/qso">Log QSO</router-link></b-dropdown-item>
+
+        <b-nav-item-dropdown text="QSO" right>
+        <b-dropdown-item :to="{name: 'qso'}">Add / edit / search a qso</b-dropdown-item>
+        </b-nav-item-dropdown>
+
+        <b-nav-item-dropdown text="System" right>
+          <b-dropdown-item :to="{name: 'rig'}">Rigs</b-dropdown-item>
         </b-nav-item-dropdown>
 
         <b-nav-item-dropdown text="Help" right>
-        <b-dropdown-item href="#"><router-link to="/about">About</router-link></b-dropdown-item>
-        </b-nav-item-dropdown>
-
-        <b-nav-item-dropdown text="Lang" right>
-          <b-dropdown-item href="#">DE</b-dropdown-item>
+        <b-dropdown-item :to="{name: 'about'}">About</b-dropdown-item>
         </b-nav-item-dropdown>
 
         <b-nav-item-dropdown right>
@@ -78,9 +121,8 @@ new Vue({
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
-
-  <sidebar-menu :menu="menu" />
-    <router-view class="view"></router-view>
-  </div>
+  <router-view class="view"></router-view>
+  
+</div>
 `
 }).$mount('#app');

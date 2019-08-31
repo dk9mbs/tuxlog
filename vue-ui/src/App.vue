@@ -1,38 +1,5 @@
 <template>
 <div>
-  <!--
-  <b-navbar toggleable="lg" type="dark" variant="dark">
-    <b-navbar-brand href="#">tuxlog</b-navbar-brand>
-
-    <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-
-    <b-collapse id="nav-collapse" is-nav>
-      <b-navbar-nav>
-        <b-nav-item href="#">dk9mbs.de</b-nav-item>
-      </b-navbar-nav>
-
-      <b-navbar-nav class="ml-auto">
-
-        <b-nav-item-dropdown text="Lang" right>
-          <b-dropdown-item href="#">DE</b-dropdown-item>
-        </b-nav-item-dropdown>
-
-        <b-nav-item-dropdown right>
-          <template slot="button-content"><em>User</em></template>
-          <b-dropdown-item href="#">Sign Out</b-dropdown-item>
-        </b-nav-item-dropdown>
-      </b-navbar-nav>
-    </b-collapse>
-  </b-navbar>
-  <div>
-  </div>
--->
-  <!--
-  <b-tabs style="float:right;">
-      <b-tab title="Logentry" active>
--->
-
-
   <div>
     <b-container fluid>
       <b-row class="my-1" key="type">
@@ -47,7 +14,7 @@
             </b-card>
           </b-collapse>
 
-          <div>
+          <div style="height: 400px; overflow: auto;">
           <tuxlog-call-history 
           style="padding-top:5px;"
           v-bind:items="history" 
@@ -56,14 +23,11 @@
           v-bind:pending="appstatus.loadhistory"
           @onclick_row="onclick_history">
           </tuxlog-call-history>
-        </div>
+          </div>
 
           <b-button variant="outline-secondary" v-b-toggle.collapse-1 size="sm" stye="margin-bottom: 5px;">Call history filter</b-button>
           <b-collapse id="collapse-1" class="mt-2">
               <b-card>
-                <div style="background-color:yellow">
-                <router-link to="/foo">Go to Foo</router-link>
-                </div>
               <tuxlog-call-history-filter 
                 v-model="callhistory"
               >
@@ -186,89 +150,19 @@
             </b-row>        
           </b-container></b-card>
 
-  </b-col>
-</b-row>
+        </b-col>
+      </b-row>
 </b-container>
 
 
   </div>
-
 
 </div>
 
 </template>
 
 <script>
-import Vue from 'vue'
 import axios from 'axios'
-//import Vue from 'vue/dist/vue.esm.js'
-import tuxlogInput from './components/tuxlog-input.vue'
-import tuxlogOption from './components/tuxlog-option.vue'
-import tuxlogCheckbox from './components/tuxlog-checkbox.vue'
-import tuxlogCallHistory from './components/tuxlog-call-history.vue'
-import tuxlogCallHistoryFilter from './components/tuxlog-call-history-filter.vue'
-import tuxlogRigctl from './components/tuxlog-rigctl.vue'
-
-import { BFormInput } from 'bootstrap-vue'
-import { BFormGroup } from 'bootstrap-vue'
-import { BFormSelect } from 'bootstrap-vue'
-import { BFormCheckboxGroup } from 'bootstrap-vue'
-import { BFormCheckbox } from 'bootstrap-vue'
-import { BTable } from 'bootstrap-vue'
-import { BSpinner } from 'bootstrap-vue'
-import { BButton } from 'bootstrap-vue'
-import { BCollapse } from 'bootstrap-vue'
-import { BCard } from 'bootstrap-vue'
-import { BContainer } from 'bootstrap-vue'
-import { BCol } from 'bootstrap-vue'
-import { BRow } from 'bootstrap-vue'
-import { BNavbar,BNavbarBrand,BNavbarToggle,BNavbarNav  } from 'bootstrap-vue'
-import { BNav,BNavItem, BNavText,BNavForm,BNavItemDropdown} from 'bootstrap-vue'
-import { BDropdown } from 'bootstrap-vue'
-import { BDropdownItem } from 'bootstrap-vue'
-import { BToggle } from 'bootstrap-vue'
-import { RouterLink, RouterView } from 'vue-router'
-
-Vue.component('router-link', RouterLink)
-Vue.component('router-view', RouterView)
-Vue.component('b-toggle', BToggle)
-Vue.component('b-dropdown', BDropdown)
-Vue.component('b-dropdown-item', BDropdownItem)
-Vue.component('b-nav', BNav)
-Vue.component('b-nav-item', BNavItem)
-Vue.component('b-nav-text', BNavText)
-Vue.component('b-nav-form', BNavForm)
-Vue.component('b-nav-item-dropdown', BNavItemDropdown)
-
-Vue.component('b-navbar', BNavbar)
-Vue.component('b-navbar-brand', BNavbarBrand)
-Vue.component('b-navbar-toggle', BNavbarToggle)
-Vue.component('b-navbar-nav', BNavbarNav)
-Vue.component('b-row', BRow)
-Vue.component('b-col', BCol)
-Vue.component('b-container', BContainer)
-Vue.component('b-card', BCard)
-Vue.component('b-collapse', BCollapse)
-Vue.component('b-button', BButton)
-Vue.component('b-spinner', BSpinner)
-Vue.component('b-table', BTable)
-Vue.component('b-form-checkbox-group', BFormCheckboxGroup)
-Vue.component('b-form-checkbox', BFormCheckbox)
-Vue.component('b-form-select', BFormSelect)
-Vue.component('b-form-input', BFormInput);
-Vue.component('b-form-group', BFormGroup);
-
-Vue.component('tuxlog-input', tuxlogInput);
-Vue.component('tuxlog-option', tuxlogOption);
-Vue.component('tuxlog-checkbox', tuxlogCheckbox);
-Vue.component('tuxlog-call-history', tuxlogCallHistory);
-Vue.component('tuxlog-call-history-filter', tuxlogCallHistoryFilter);
-Vue.component('tuxlog-rigctl', tuxlogRigctl);
-
-import { VBToggle } from 'bootstrap-vue'
-// Note: Vue automatically prefixes the directive name with 'v-'
-Vue.directive('b-toggle', VBToggle)
-
 
 export default {
   name: 'app',
@@ -284,7 +178,7 @@ export default {
       auth: {username: 'guest', password:null},
       history: [],
       historyfields: ["id", "yourcall", "start_utc","logdate_utc","frequency","rxrst"],
-      callhistory: {"listuri": null, "defaultlisturl": "order=id desc&pagesize=10"}
+      callhistory: {"listuri": null, "defaultlisturl": "order=id desc&pagesize=100"}
     }
   },
   mounted () {
