@@ -69,3 +69,6 @@ cd setup
 ```bash
 wget --debug --header "content-type:text/adif" --post-file /tmp/wsjtx_log.adi -O - http://username:password@localhost:80/api/v1.0/import/LogLogs?logbook_id=dk9mbs 
 ```
+## what is RST(TX) and RST(RX) 
+
+TX(RST) is "sent". RX(RST) is "received". So your outgoing RST goes in TX(RST). Your incoming RST, as given by the other station, goes in RX(RST).
