@@ -156,10 +156,15 @@ def get_dataset(table):
     
     from usecases.datamodel import get_modellist_by_raw
     tmp = get_modellist_by_raw(table, where=where, order=order, pagesize=pagesize)
+
+    if len(tmp) == 0:
+        Response(json.dumps( {'error': 'No Data found!' }), content_type="text/json" , status=404)
+
     tmp=json.dumps(tmp, default=typeformatter)
     return Response(
             tmp,
             mimetype="text/json",
+            content_type="text/json",
             headers={
                 "dk9mbs": "yes"
             }

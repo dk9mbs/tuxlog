@@ -140,88 +140,27 @@ CREATE TABLE IF NOT EXISTS log_logs(
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-
-/*
-I will create the meta data tables
-*/
-CREATE TABLE IF NOT EXISTS meta_urlclassloaders(
-    classname varchar(250) NOT NULL COMMENT 'classname to load via url',
-    classpath varchar(500) NOT NULL COMMENT 'path or .jar filename with path',
-    PRIMARY KEY(classname)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS meta_datasources(
-    id varchar(250) NOT NULL COMMENT 'Unique Value',
-    bound_column int NOT NULL default '0' COMMENT 'Zero based index!',
-    select_clause LONGTEXT NULL COMMENT 'Complete SELECT clause whith keyword SELECT',
-    where_clause LONGTEXT NULL COMMENT 'WHERE SQL clause without keyword WHERE!',
-    orderby_clause LONGTEXT NULL COMMENT 'ORDER BY sql clause without keyword ORDER BY',
-    empty_item TINYINT NOT NULL default 0,
-    empty_item_text varchar(50) NULL default '-- Select item! --',
-    PRIMARY KEY(id) ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS meta_forms(
-    id varchar(250) NOT NULL,
-    classname varchar(250) NOT NULL,
-    description varchar(50) NOT NULL,
-    PRIMARY KEY(id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS meta_subforms(
-    id varchar(250) NOT NULL,
-    form_id varchar(250) NOT NULL,
-    classname varchar(250) NOT NULL,
-    position int NOT NULL default '0',
-    description varchar(50) NOT NULL,
-    topic varchar(500) NOT NULL,
-    parent_container_name varchar(50) NOT NULL,
+CREATE TABLE IF NOT EXISTS meta_dataviews(
+    id int NOT NULL AUTO_INCREMENT COMMENT 'Unique ID',
+    table_name varchar(250) NOT NULL COMMENT 'Name of Table',
+    view_name varchar(250) NOT NULL COMMENT 'name of the view',
+    fields text NULL COMMENT 'Fields object (json)',
+    id_field_name varchar(250) NOT NULL DEFAULT 'id' COMMENT 'name of the id field',
+    where_clause text NULL COMMENT 'WHERE Clause (sql)',
+    filter_clause text NULL COMMENT 'additive where clause for search',
+    order_by text NULL COMMENT 'order by sql clause',
+    page_size int NOT NULL default '5000' COMMENT 'Pagesize',
+    open_path text NULL COMMENT 'On activation redirect to this path ($1 will replace with the selected id)',
     PRIMARY KEY(id),
-    FOREIGN KEY(form_id) REFERENCES meta_forms(id)
+    UNIQUE KEY (table_name, view_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 CREATE TABLE IF NOT EXISTS meta_database_fieldtypes(
     type_name varchar(50) NOT NULL,
     internal_type int NOT NULL default '0' COMMENT '0=String 1=Number 2=Date',
     PRIMARY KEY(type_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-DROP TABLE IF EXISTS meta_subform_fields;
-/*
-CREATE TABLE IF NOT EXISTS meta_subform_fields(
-    subform_id varchar(250) NOT NULL,
-    fieldname varchar(250) NOT NULL,
-    component_type varchar(250) NOT NULL default 'JTextField',
-    database_field varchar(50) NULL,
-    database_fieldtype varchar(50) NULL,
-    PRIMARY KEY(subform_id, fieldname),
-    FOREIGN KEY(subform_id) REFERENCES meta_subforms(id),
-    FOREIGN KEY(database_fieldtype) REFERENCES meta_database_fieldtypes(type_name)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-*/
-
-CREATE TABLE IF NOT EXISTS meta_subform_components(
-    subform_id varchar(250) NOT NULL,
-    component_name varchar(250) NOT NULL,
-    component_classname varchar(250) NOT NULL,
-    component_value varchar(250) NULL,
-    gridx int NOT NULL default '0',
-    gridy int NOT NULL default '0',
-    gridwidth int NOT NULL default '0',
-    gridheight int NOT NULL default '0',
-    weightx int NOT NULL default '0',
-    weighty int NOT NULL default '0',
-	insets_top int NOT NULL default '0',
-	insets_left int NOT NULL default '0',
-	insets_bottom int NOT NULL default '0',
-	insets_right int NOT NULL default '0',
-    database_field varchar(50) NULL,
-    database_fieldtype varchar(50) NULL,
-    PRIMARY KEY(subform_id, component_name),
-    FOREIGN KEY(subform_id) REFERENCES meta_subforms(id),
-    FOREIGN KEY(database_fieldtype) REFERENCES meta_database_fieldtypes(type_name)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 
 CREATE TABLE IF NOT EXISTS  meta_callbook_providers(
@@ -233,7 +172,6 @@ CREATE TABLE IF NOT EXISTS  meta_callbook_providers(
     offline_mode TINYINT NOT NULL default false,
     PRIMARY KEY(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 
 CREATE TABLE IF NOT EXISTS meta_data_exchange_converters(
@@ -257,29 +195,6 @@ CREATE TABLE IF NOT EXISTS meta_data_exchange_fields(
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-CREATE TABLE IF NOT EXISTS meta_backgroundtasks (
-    id varchar(50) NOT NULL COMMENT 'Unique id.',
-    classname varchar(250) NOT NULL COMMENT 'Full classname.',
-    description varchar(50) NOT NULL COMMENT 'Description for this record.',
-    PRIMARY KEY(id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS meta_classtypes(
-    id varchar(50) NOT NULL,
-    description varchar(50) NOT NULL,
-    PRIMARY KEY(id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS meta_autostart(
-    id int NOT NULL COMMENT 'Unique numeric id. This is the start order for the processes.',
-    profile varchar(50) NOT NULL default '*' COMMENT 'Comma seperated list.',
-    description varchar(50) NOT NULL COMMENT 'The description.',
-    object_id varchar(50) NULL COMMENT 'ID from the referencetable for example meta_forms or meta_backgroundtasks.',
-    classtype_id varchar(50) NOT NULL COMMENT 'Reference type. See meta_classtypes.',
-    enabled TINYINT NOT NULL default true COMMENT '1=enabled 0=not enabled.',
-    PRIMARY KEY(id),
-    FOREIGN KEY(classtype_id) REFERENCES meta_classtypes(id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 CREATE TABLE IF NOT EXISTS meta_sys_dbversion (
@@ -449,46 +364,6 @@ delimiter ;
 
 
 
-/* Create datasources */
-DELETE FROM meta_datasources;
-
-INSERT INTO meta_datasources(id,bound_column,select_clause,where_clause,empty_item, empty_item_text) 
-    VALUES 
-    ('all_import_converters',0, 'SELECT id,description FROM meta_data_exchange_converters', 'classname_in IS NOT NULL AND enabled=true', 1,'pse select an import provider');
-
-INSERT INTO meta_datasources(id,bound_column,select_clause,where_clause,empty_item, empty_item_text) 
-    VALUES 
-    ('all_export_converters',0, 'SELECT id,description FROM meta_data_exchange_converters', 'classname_out IS NOT NULL AND enabled=true', 1,'pse select an import provider');
-    
-
-INSERT INTO meta_datasources(id,bound_column,select_clause,where_clause,empty_item, empty_item_text) 
-    VALUES 
-    ('all_logbooks',0, 'SELECT id,description FROM log_logbooks', 'id <>\'*\'', 1,''  );
-
-INSERT INTO meta_datasources(id,bound_column,select_clause) 
-    VALUES 
-    ('all_qslshipmentmodes',0, 'SELECT id,description FROM log_qslshipmentmodes');
-
-INSERT INTO meta_datasources(id,bound_column,select_clause) 
-    VALUES 
-    ('all_modes',0, 'SELECT id,description FROM log_modes');
-
-INSERT INTO meta_datasources(id,bound_column,select_clause) 
-    VALUES 
-    ('all_rigs',0, 'SELECT id,description FROM log_rigs');
-
-INSERT INTO meta_datasources(id,bound_column,select_clause,where_clause,orderby_clause) VALUES ('logs',0, 'SELECT 
-log.id,logbook.description Logbook,log.logdate_utc Date,start_utc UTC, m.description Mode,log.yourcall Sign,log.locator Loc
-,log.comment Comment,log.viacall Via,log.rxrst RXRST
-,log.txrst TXRST, log.frequency f,log.name Name,log.qth QTH, 
-case log.qslsend when \'1\' then \'true\' else \'false\' end QSLout,
-case log.qslrecv when \'1\' then \'true\' else \'false\' end QSLin
-FROM log_logs log 
-INNER JOIN log_modes m ON log.mode_id=m.id 
-INNER JOIN log_logbooks logbook ON logbook.id=log.logbook_id
-', 'logbook_id=\'$current_logbook_id$\'', 'logdate_utc desc, start_utc desc');
-
-
 
 
 
@@ -540,26 +415,8 @@ INSERT INTO meta_database_fieldtypes(type_name,internal_type) VALUES ('bit',1);
 INSERT INTO meta_database_fieldtypes(type_name,internal_type) VALUES ('time',2);
 INSERT INTO meta_database_fieldtypes(type_name,internal_type) VALUES ('date',2);
 
-
-INSERT INTO meta_backgroundtasks(id,description,classname) VALUES ('msgqueue','MsqQueue','de.dk9mbs.tuxlog.backgroundtasks.server.MsgQueue');
-INSERT INTO meta_backgroundtasks(id,description,classname) VALUES ('adif','Adif TCP Socket Import','de.dk9mbs.tuxlog.backgroundtasks.server.Adif');
-INSERT INTO meta_backgroundtasks(id,description,classname) VALUES ('rest','REST','de.dk9mbs.tuxlog.backgroundtasks.server.Rest');
-INSERT INTO meta_backgroundtasks(id,description,classname) VALUES ('dxcluster','DX Cluster','de.dk9mbs.tuxlog.backgroundtasks.server.Cluster');
-
-INSERT INTO meta_classtypes(id,description) VALUES ('BACKGROUNDTASK', 'Background Thread');
-INSERT INTO meta_classtypes(id,description) VALUES ('FORM', 'Form');
-
-INSERT INTO meta_autostart(id,profile,description,object_id,classtype_id) VALUES (10,'GUI,CLI','MsqQueue','msgqueue','BACKGROUNDTASK');
-INSERT INTO meta_autostart(id,profile,description,object_id,classtype_id) VALUES (20,'GUI,CLI','Adif TCP Socket Import','adif','BACKGROUNDTASK');
-INSERT INTO meta_autostart(id,profile,description,object_id,classtype_id) VALUES (30,'GUI,CLI','REST','rest','BACKGROUNDTASK');
-INSERT INTO meta_autostart(id,profile,description,object_id,classtype_id) VALUES (40,'GUI,CLI','DX Cluster','dxcluster','BACKGROUNDTASK');
-INSERT INTO meta_autostart(id,profile,description,object_id,classtype_id) VALUES (50,'GUI','LogMain','LogMain','FORM');
-
 INSERT INTO meta_data_exchange_converters(id,description,classname_in,classname_out) 
-VALUES('adif_v2','ADIFV2','de.dk9mbs.tuxlog.app.dataexchange.dataimport.AdifImport','de.dk9mbs.tuxlog.app.dataexchange.dataexport.AdifExport');
-
-INSERT INTO meta_data_exchange_converters(id,description,classname_in) 
-VALUES('xlog','Xlog','de.dk9mbs.tuxlog.app.dataimport.XlogImport');
+VALUES('adif_v2','ADIFV2','','');
 
 
 INSERT INTO meta_data_exchange_fields(converter_id,external_fieldname,internal_fieldname,internal_datatype) 
@@ -1006,97 +863,15 @@ call proc_install_basedata();
 
 
 
-
+/*
 DROP PROCEDURE IF EXISTS proc_install_callbookprovider;
+
 delimiter //
 CREATE PROCEDURE proc_install_callbookprovider()
 BEGIN
     IF NOT EXISTS (SELECT * FROM meta_callbook_providers) THEN
 		call proc_printf ('meta_callbook_provider installieren ...!');
 
-/*
-* Create the callbook provider ...
-*/
-INSERT INTO meta_callbook_providers(id,description,classname,position,enabled,offline_mode) 
-VALUES (
-'hamqth','HamQTH.com','de.dk9mbs.tuxlog.app.callbook.HamQth',100,1,0);
-
-INSERT INTO meta_callbook_providers(id,description,classname,position,enabled,offline_mode) 
-VALUES (
-'qrz','QRZ.com','de.dk9mbs.tuxlog.app.callbook.Qrz',110,1,0);
-
-INSERT INTO meta_callbook_providers(id,description,classname,position,enabled,offline_mode) 
-VALUES (
-'local','Local callbook','de.dk9mbs.tuxlog.app.callbook.Local',120,1,1);
-	
-	END IF;
-END//
-delimiter ;
-call proc_install_callbookprovider();
-
-
-
-
-DROP PROCEDURE IF EXISTS proc_install_forms;
-delimiter //
-CREATE PROCEDURE proc_install_forms()
-BEGIN
-    IF NOT EXISTS (SELECT * FROM meta_forms WHERE id='fileexport') THEN
-		call proc_printf ('meta_forms installieren ...!');
-
-
-/*
-* forms and subforms
-*/
-INSERT INTO meta_forms (id,classname,description) VALUES ('LogMain','de.dk9mbs.tuxlog.app.gui.log.LogMain','Log Window');
-
-INSERT INTO meta_subforms(id,form_id,classname,position,description,parent_container_name,topic) VALUES (
-'logmain.LogNewEntry','LogMain','de.dk9mbs.tuxlog.app.gui.log.NewLogEntry',100,'New Log','tab_bl','LogMain.LogNewEntry');
-
-INSERT INTO meta_subforms(id,form_id,classname,position,description,parent_container_name,topic) VALUES (
-'logmain.ImportStatus','LogMain','de.dk9mbs.tuxlog.app.gui.dataimport.ImportStatus',999,'Import Status','tab_bl','App.Import');
-
-INSERT INTO meta_subforms(id,form_id,classname,position,description,parent_container_name,topic) VALUES (
-'logmain.LogList','LogMain','de.dk9mbs.tuxlog.app.gui.log.LogList',110,'Log List','tab_tl','LogMain.LogList');
-
-INSERT INTO meta_subforms(id,form_id,classname,position,description,parent_container_name,topic) VALUES (
-'logmain.DEBUG','LogMain','de.dk9mbs.tuxlog.app.gui.log.MsgBusDebug',100,'Debug','tab_br','LogMain.Debug');
-
-
-/* Dataexport */
-INSERT INTO meta_forms (id,classname,description) VALUES ('fileexport','de.dk9mbs.tuxlog.gui.CommonFormOneTab','Export');
-
-INSERT INTO meta_subforms(id,form_id,classname,position,description,parent_container_name,topic) VALUES (
-'fileexport.adif','fileexport','de.dk9mbs.tuxlog.app.gui.dataexport.Export',100,'Export','tab_b','Dataexport.Adif');
-
-/* Import */
-INSERT INTO meta_forms (id,classname,description) VALUES ('fileimport','de.dk9mbs.tuxlog.gui.CommonFormOneTab','Import');
-
-INSERT INTO meta_subforms(id,form_id,classname,position,description,parent_container_name,topic) VALUES (
-'fileimport.xlogimport','fileimport','de.dk9mbs.tuxlog.app.gui.dataimport.Import',100,'Import','tab_b','LogMain.LogNewEntry');
-
-INSERT INTO meta_subforms(id,form_id,classname,position,description,parent_container_name,topic) VALUES (
-'fileimport.DEBUG','fileimport','de.dk9mbs.tuxlog.app.gui.log.MsgBusDebug',10000,'Debug','tab_b','LogMain.Debug');
-
-
-/* subform components */
-INSERT INTO meta_subform_components (subform_id,component_name,component_classname,component_value,gridx,gridy,gridwidth,gridheight,weightx,weighty) 
-VALUES (
-    'logmain.LogNewEntry','labLogbook','de.dk9mbs.sys.gui.components.Label','Logbook',0,0,2,1,1,0);
-
-INSERT INTO meta_subform_components (subform_id,component_name,component_classname,component_value,gridx,gridy,gridwidth,gridheight,weightx,weighty) 
-VALUES (
-    'logmain.LogNewEntry','labMode','de.dk9mbs.sys.gui.components.Label','Mode',2,0,2,1,1,0);
-
-INSERT INTO meta_subform_components (subform_id,component_name,component_classname,component_value,gridx,gridy,gridwidth,gridheight,weightx,weighty) 
-VALUES (
-    'logmain.LogNewEntry','labRig','de.dk9mbs.sys.gui.components.Label','Rig',4,0,2,1,1,0);
-
-
-	END IF;
-END//
-delimiter ;
-call proc_install_forms();
 
 
 /*

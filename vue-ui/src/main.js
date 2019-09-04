@@ -1,5 +1,6 @@
 import Vue from 'vue'
-import App from './App.vue'
+import Qso from './components/tuxlog-qso.vue'
+import Rig from './components/tuxlog-rig.vue'
 
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
@@ -12,6 +13,7 @@ import tuxlogCallHistory from './components/tuxlog-call-history.vue'
 import tuxlogCallHistoryFilter from './components/tuxlog-call-history-filter.vue'
 import tuxlogRigctl from './components/tuxlog-rigctl.vue'
 import tuxlogMenu from './components/tuxlog-menu.vue'
+import tuxlogDataView from './components/tuxlog-dataview.vue'
 
 import { BFormInput } from 'bootstrap-vue'
 import { BFormGroup } from 'bootstrap-vue'
@@ -73,15 +75,19 @@ Vue.component('tuxlog-menu', tuxlogMenu);
 import { VBToggle } from 'bootstrap-vue'
 Vue.directive('b-toggle', VBToggle)
 
+import { ToastPlugin } from 'bootstrap-vue'
+Vue.use(ToastPlugin)
 
 export const router = new VueRouter({
   mode: 'history',
   base: __dirname,
   routes: [
-    { name: 'home', path: '/', component: {template: '<div>home</div>'} },
-    { name: 'about', path: '/about', component: {template: '<div>about</div>'} },
-    { name: 'contact', path: '/contact', component: {template: '<div>contact</div>'} },
-    { name: 'qso', path: '/qso', component: App }
+    { path: '/ui', component: {template: '<div>home</div>'} },
+    { path: '/ui/about', component: {template: '<div>about</div>'} },
+    { path: '/ui/contact', component: {template: '<div>contact</div>'} },
+    { path: '/ui/qso', component: Qso },
+    { path: '/ui/dataview/:table/:view', component: tuxlogDataView, props:true },
+    { path: '/ui/rig/:id', component: Rig, props: true}
     ]
   });
 
@@ -91,7 +97,7 @@ new Vue({
   template: `
   <div>
     <b-navbar toggleable="lg" type="dark" variant="dark">
-    <b-navbar-brand :to="{name: 'home'}">tuXlog</b-navbar-brand>
+    <b-navbar-brand :to="{path: '/ui'}">tuXlog</b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -103,15 +109,18 @@ new Vue({
       <b-navbar-nav class="ml-auto">
 
         <b-nav-item-dropdown text="QSO" right>
-        <b-dropdown-item :to="{name: 'qso'}">Add / edit / search a qso</b-dropdown-item>
+        <b-dropdown-item :to="{path: '/ui/qso'}">Add / edit / search a qso</b-dropdown-item>
         </b-nav-item-dropdown>
 
         <b-nav-item-dropdown text="System" right>
-          <b-dropdown-item :to="{name: 'rig'}">Rigs</b-dropdown-item>
+          <b-dropdown-item :to="{path: '/ui/dataview/LogRigs/default'}">Rigs</b-dropdown-item>
+          <b-dropdown-item :to="{path: '/ui/dataview/LogLogbooks/default'}">Logbooks</b-dropdown-item>
+          <b-dropdown-item :to="{path: '/ui/dataview/LogModes/default'}">Modes</b-dropdown-item>
+          <b-dropdown-item :to="{path: '/ui/dataview/LogQslshipmentmodes/default'}">Shipmentmodes</b-dropdown-item>
         </b-nav-item-dropdown>
 
         <b-nav-item-dropdown text="Help" right>
-        <b-dropdown-item :to="{name: 'about'}">About</b-dropdown-item>
+        <b-dropdown-item :to="{path: '/ui/about'}">About</b-dropdown-item>
         </b-nav-item-dropdown>
 
         <b-nav-item-dropdown right>
@@ -121,7 +130,7 @@ new Vue({
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
-  <router-view class="view"></router-view>
+  <router-view class="view" :key="$route.fullPath"></router-view>
   
 </div>
 `

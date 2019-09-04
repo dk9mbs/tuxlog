@@ -165,7 +165,7 @@
 import axios from 'axios'
 
 export default {
-  name: 'app',
+  name: 'qso',
   data() { return {
       appstatus: {"processdatadetail": false, "loadhistory": false},
       alert: {message: null, type: 'warning',dismissSecs: 10,dismissCountDown: 0,showDismissibleAlert: false},
@@ -260,6 +260,7 @@ export default {
         })
       },
     yourcall_onchange: function(event) {
+      debugger;
       this.makeToast(true, 'Reading from callbook...')
       this.loadHistory(event);
       axios.get('/api/v1.0/callbook/hamdb/'+event).then((response)=>{
