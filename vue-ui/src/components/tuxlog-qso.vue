@@ -43,7 +43,7 @@
                 <b-spinner label="Loading..."></b-spinner>
             </div>
             <b-container fluid v-if="appstatus.processdatadetail===false">
-            <b-row class="my-1" key="type">
+            <b-row class="mb-1" key="type">
               <b-col>
                 <tuxlog-option id="lookbook" v-bind:values="logbooks" v-if="logentry.logbook" v-model="logentry.logbook.id" label="My call"></tuxlog-option>
               </b-col>
@@ -55,13 +55,16 @@
               </b-col>
             </b-row>
       
-            <b-row class="my-1" key="type">
+            <b-row class="mb-1" key="type">
               <b-col>
                 <tuxlog-input id="power" type="number" v-model="logentry.power" label="Pwr"></tuxlog-input>
               </b-col>
               <b-col>
                   <tuxlog-input id="frequency" type="number" v-model="logentry.frequency" label="QRG"></tuxlog-input>
-                </b-col>
+              </b-col>
+          </b-row>
+
+          <b-row class="mb-1" key="type">
               <b-col>
                 <tuxlog-input id="logdata_utc" type="date" v-model="logentry.logdate_utc" label="Date"></tuxlog-input>
             </b-col>
@@ -69,8 +72,9 @@
                 <tuxlog-input id="start_utc" type="text" v-model="logentry.start_utc" label="UTC"></tuxlog-input>
             </b-col>
           </b-row>
-      
-          <b-row class="my-1" key="type">
+
+
+          <b-row class="mb-1" key="type">
               <b-col>
                   <tuxlog-input id="yourcall" type="text" @onchange_value="yourcall_onchange" v-model="logentry.yourcall" label="Call"></tuxlog-input>
                 </b-col>
@@ -82,7 +86,7 @@
               </b-col>
           </b-row>
       
-          <b-row class="my-1" key="type">
+          <b-row class="mb-1" key="type">
               <b-col>
                   <tuxlog-input id="locator" type="text" v-model="logentry.locator" label="LOC"></tuxlog-input>
               </b-col>
@@ -94,7 +98,7 @@
             </b-col>
           </b-row>
       
-          <b-row class="my-1" key="type">
+          <b-row class="mb-1" key="type">
             <b-col>
               <tuxlog-input id="name" type="text" v-model="logentry.name" label="Name"></tuxlog-input>
             </b-col>
@@ -103,7 +107,7 @@
             </b-col>
           </b-row>                
       
-          <b-row class="my-1" key="type">
+          <b-row class="mb-1" key="type">
               <b-col>
                   <tuxlog-input id="itu_prefix" type="text" v-model="logentry.itu_prefix" label="Prefix"></tuxlog-input>
                 </b-col>
@@ -122,7 +126,7 @@
             </b-row>
       
       
-            <b-row class="my-1" key="type">
+            <b-row class="mb-1" key="type">
               <b-col>
                 <tuxlog-input id="viacall" type="text" v-model="logentry.viacall" label="via"></tuxlog-input>
               </b-col>
@@ -132,7 +136,7 @@
           </b-row>
       
       
-          <b-row class="my-1" key="type" style="width: 50%;">
+          <b-row class="mb-1" key="type" style="width: 50%;">
               <b-col>
                   <tuxlog-checkbox id="qslsend" v-model="logentry.qslsend" label="Send"></tuxlog-checkbox>
                 </b-col>
@@ -141,14 +145,20 @@
                 </b-col>
           </b-row>                  
       
-          <b-row class="my-1" key="type" style="width: 50%;">
+          <b-row class="mb-1" key="type" style="width: 50%;">
+
+            
             <b-col>
-              <b-button v-on:click="clearForm()" size="sm">New</b-button>
-              <b-button v-on:click="save()" size="sm" v-if="this.appstatus.processdatadetail===false">Save and new</b-button>
-      
-              </b-col>
-            </b-row>        
-          </b-container></b-card>
+              <tuxlog-button label="New" @click="clearForm()"/>
+            </b-col>
+            <b-col>
+              <tuxlog-button label="Save and new" @click="save()" v-if="this.appstatus.processdatadetail===false"/>
+            </b-col>
+
+          </b-row>        
+          
+          
+            </b-container></b-card>
 
         </b-col>
       </b-row>

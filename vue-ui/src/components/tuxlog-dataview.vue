@@ -5,6 +5,17 @@
     </div>
 
     <b-container fluid>
+      <b-row class="my-1" key="type" style="background-color: light-grey; padding-bottom:0px">
+        <b-col>
+          <b-button variant="outline-secondary"  size="sm" style="margin-top:0px;margin-bottom:0px;">+ new</b-button>
+          <b-button variant="outline-secondary"  size="sm" style="margin-top:0px;margin-bottom:0px;">+ new</b-button>
+        </b-col>  
+
+        <b-col>
+          <tuxlog-input label="Search" style="margin:0px;"></tuxlog-input>
+        </b-col>  
+
+      </b-row>
       <b-row class="my-1" key="type">
         <b-col>
           <div style="height:500px; overflow: auto;">
@@ -90,7 +101,6 @@ export default {
       this.$emit('basedata_list_on_click', record, index);
     },
     handleDblClick: function(record, index) {
-      //this.$router.push( {path: 'ui/rig/'+record.id } );
       this.$router.push( {path: this.open_path.replace("$1", record.id) } );
       this.$emit('basedata_list_on_dblclick', record, index);
     }

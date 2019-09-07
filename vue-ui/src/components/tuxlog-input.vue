@@ -1,17 +1,30 @@
 <template>
-<div style="margin-top:0px;">
+<div>
+      <!--
       <b-form-group
         id="fieldset-horizontal"
         label-cols-sm="0"
-        label-cols-lg="0"
-        v-bind:description="label"
-        v-bind:lab="label"
+        label-cols-lg="5"
+        v-bind:descriptio="label"
+        v-bind:label="label"
         label-for="input-horizontal"
-      >
+        class="my-1"
+      > 
+      -->
+    <b-input-group size="sm" class="mb-0">
+
+    <template v-slot:prepend>
+      <b-input-group-text 
+        style="border-radius: 25px;background-color:silver;min-width: 70px;margin-right:3px;padding-top: 8px;padding-left:5px;font-size:10px;">
+        <div>{% raw %}{{ label }}{% endraw %}</div>
+        </b-input-group-text>
+    </template>  
+
     <b-form-input v-bind:readonly="readonly" v-bind:id="id" v-bind:type="type" v-model="value" 
-            size="sm" @input="handleInput" @change="onchange_value">
+            size="sm" @input="handleInput" @change="onchange_value" class="mb-0" style="border-radius: 25px">
     </b-form-input>
-    </b-form-group>
+    </b-input-group>
+    <!-- </b-form-group> --> 
     </div>
 </template>
 
@@ -34,5 +47,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
+.input-group-addon {
+    min-width:60%;
+    text-align:left;
+}
 </style>

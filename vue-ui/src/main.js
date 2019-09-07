@@ -9,6 +9,7 @@ import axios from 'axios'
 import tuxlogInput from './components/tuxlog-input.vue'
 import tuxlogOption from './components/tuxlog-option.vue'
 import tuxlogCheckbox from './components/tuxlog-checkbox.vue'
+import tuxlogButton from './components/tuxlog-button.vue'
 import tuxlogCallHistory from './components/tuxlog-call-history.vue'
 import tuxlogCallHistoryFilter from './components/tuxlog-call-history-filter.vue'
 import tuxlogRigctl from './components/tuxlog-rigctl.vue'
@@ -34,7 +35,9 @@ import { BDropdown } from 'bootstrap-vue'
 import { BDropdownItem } from 'bootstrap-vue'
 import { BToggle } from 'bootstrap-vue'
 import { RouterLink, RouterView } from 'vue-router'
+import { BInputGroup } from 'bootstrap-vue'
 
+Vue.component('b-input-group', BInputGroup);
 Vue.component('router-link', RouterLink)
 Vue.component('router-view', RouterView)
 Vue.component('b-toggle', BToggle)
@@ -71,6 +74,7 @@ Vue.component('tuxlog-call-history', tuxlogCallHistory);
 Vue.component('tuxlog-call-history-filter', tuxlogCallHistoryFilter);
 Vue.component('tuxlog-rigctl', tuxlogRigctl);
 Vue.component('tuxlog-menu', tuxlogMenu);
+Vue.component('tuxlog-button', tuxlogButton);
 
 import { VBToggle } from 'bootstrap-vue'
 Vue.directive('b-toggle', VBToggle)
