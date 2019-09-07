@@ -36,7 +36,9 @@ import { BDropdownItem } from 'bootstrap-vue'
 import { BToggle } from 'bootstrap-vue'
 import { RouterLink, RouterView } from 'vue-router'
 import { BInputGroup } from 'bootstrap-vue'
+import { PopoverPlugin } from 'bootstrap-vue'
 
+Vue.use(PopoverPlugin)
 Vue.component('b-input-group', BInputGroup);
 Vue.component('router-link', RouterLink)
 Vue.component('router-view', RouterView)
@@ -78,6 +80,9 @@ Vue.component('tuxlog-button', tuxlogButton);
 
 import { VBToggle } from 'bootstrap-vue'
 Vue.directive('b-toggle', VBToggle)
+
+import { VBPopover } from 'bootstrap-vue'
+Vue.directive('b-popover', VBPopover)
 
 import { ToastPlugin } from 'bootstrap-vue'
 Vue.use(ToastPlugin)

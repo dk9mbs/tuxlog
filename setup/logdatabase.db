@@ -849,6 +849,7 @@ INSERT INTO log_modes (id,description) VALUES ('VOI','VOI');
 INSERT INTO log_modes (id,description) VALUES ('WINMOR','WINMOR');
 INSERT INTO log_modes (id,description) VALUES ('WSPR','WSPR');
 
+INSERT INTO log_qslshipmentmodes (id,description) VALUES ('no', 'No QSL card');
 INSERT INTO log_qslshipmentmodes (id,description) VALUES ('bureau', 'bureau');
 INSERT INTO log_qslshipmentmodes (id,description) VALUES ('eqsl', 'eQsl');
 INSERT INTO log_qslshipmentmodes (id,description) VALUES ('lotw', 'LotW');

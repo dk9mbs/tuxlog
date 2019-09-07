@@ -1,12 +1,12 @@
 <template>
 <div>
       <tuxlog-input id="qrg" type="number" v-model="freq" label="QRG" v-bind:readonly="true"></tuxlog-input>
-      <div style="background-color:lightgrey;padding-top: 11px; padding-bottom:10px;padding-left:5px;">
+      <div style="border-radius: 10px;padding-top: 11px; padding-bottom:10px;padding-left:5px;margin-top: 3px;">
       <b-button pill variant="success" style="margin-bottom: 0px" v-on:click="startInterval()" v-bind:disabled="timer_id != 0" size="sm">></b-button>
       <b-button pill variant="danger" style="margin-bottom: 0px" v-on:click="stopInterval()" v-bind:disabled="timer_id === 0" size="sm">||</b-button>
-      <span style="background-color: red; text-align: left; padding:10px;" v-if="error != null">{% raw %}{{ error_text }}{%endraw %}</span>
-      <span style="background-color: LightGreen ; text-align: left; padding:10px;" v-if="error === null">{% raw %}{{ rig }}{%endraw %} successfully connected</span>
-      <span style="background-color: DarkOrange; text-align: left; padding:10px;" v-if="timer_id === 0">{% raw %}{{ rig }}{%endraw %} connection stopped</span>
+      <span style="border-radius:10px;font-size:10px;background-color: red; text-align: left; padding:10px;margin-left:3px;" v-if="error != null">{% raw %}{{ error_text }}{%endraw %}</span>
+      <span style="border-radius:10px;font-size:10px ; text-align: left; padding:10px;margin-left:3px;" v-if="error === null && timer_id!=0">{% raw %}{{ rig }}{%endraw %} successfully connected</span>
+      <span style="border-radius:10px;font-size:10px;background-color: DarkOrange; text-align: left; padding:10px;margin-left:3px;" v-if="timer_id === 0">{% raw %}{{ rig }}{%endraw %} connection stopped</span>
       </div>
   </div>
 </template>
@@ -45,6 +45,7 @@ export default {
             axios.get('/api/v1.0/rigctl/'+this.rig+'/f').then(response => {
               this.freq=response.data['response']['Frequency']
               this.error=null
+              this.$emit('onget_qrg', this.freq);
             }).catch( response => {
               console.log(response.response.data['error']);
               this.error= response.response.data;

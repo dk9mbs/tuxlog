@@ -2,7 +2,11 @@
 <div>
 
 
-    <b-button pill variant="outline-secondary" v-on:click="handleClick()" size="sm">{% raw %}{{ label }}{% endraw %}</b-button>
+    <b-button pill 
+      variant="outline-secondary" v-on:click="handleClick()" size="sm"
+      v-bind:disabled="readonly"
+    >{% raw %}{{ label }}{% endraw %}
+    </b-button>
 
 
     </div>
@@ -13,7 +17,7 @@
 
 export default {
   name: 'tuxlog-input',
-  props: ["label","value", "type", "id", "readonly"],
+  props: ["label","value", "type", "id", "readonly", "tooltip"],
   methods: {
       handleClick (e) {
         this.$emit('click', e)

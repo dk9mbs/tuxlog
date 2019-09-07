@@ -14,7 +14,7 @@
 export default {
   name: 'tuxlog-call-history',
   props: ["fields", "items", "id", "pending"],
-methods: {
+  methods: {
       handleClick (record, index) {
         this.$emit('onclick_row', record, index)
       }
