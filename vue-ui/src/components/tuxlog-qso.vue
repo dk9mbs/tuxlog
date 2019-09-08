@@ -4,43 +4,39 @@
   <div>
     <b-container fluid>
       <b-row class="my-1" key="type">
-        <b-col style="max-width:25%">
-          
-          <div class="mb-1" style="height: 400px; overflow: auto;font-size:10px;">
-          <tuxlog-call-history 
-          style="padding-top:5px;"
-          v-bind:items="history" 
-          v-bind:fields="historyfields" 
-          v-bind:id="history" 
-          v-bind:pending="appstatus.loadhistory"
-          @onclick_row="onclick_history">
-          </tuxlog-call-history>
-          </div>
-
-          <!--
-          <b-button pill variant="outline-secondary" v-b-toggle.collapse-1 size="sm" stye="margin-bottom: 5px;">Call history filter</b-button>
-          <b-collapse id="collapse-1" class="mb-1"> -->
-              <b-card>
-              <tuxlog-call-history-filter 
-                v-model="callhistory"
-              >
-              </tuxlog-call-history-filter>
-            </b-card>
-          <!--</b-collapse>-->
-
-
-        </b-col>
-
-        <!-- 2. Spalte -->
+        <!-- 1. Spalte -->
         <b-col style="min-width: 75%; max-width: 100%">
           <b-card class="mb-1">
-            <table border="0">
-              <tr>
-                <td><tuxlog-button label="Start" @click="newRecord()" style="min-width:200px;"/></td>
-                <td><tuxlog-button label="Save" @click="save()" style="min-width:200px;"/></td>
-                <td><tuxlog-button label="Cancel" @click="cancel()" style="min-width:200px;"/></td>
-              </tr>
-            </table>
+
+            <b-container fluid style="font-size:10px;">
+              <b-row>
+                <b-col><tuxlog-button label="Start" @click="newRecord()" style="min-width:200px;"/></b-col>
+                <b-col><tuxlog-button label="Save" @click="save()" style="min-width:200px;"/></b-col>
+                <b-col><tuxlog-button label="Cancel" @click="cancel()" style="min-width:200px;"/></b-col>
+                <b-col>
+                  <div style="border-radius:10px;" v-show="isNewRecordMode()">
+                    QSO&nbsp;running&nbsp;...{% raw %}{{ validateForm() }}{% endraw %}
+                  </div>          
+                </b-col>
+                <b-col>
+                    <tuxlog-rigctl
+                    v-if="logentry.rig"
+                    :rig="logentry.rig.id"
+                    :showpanel="false"
+                    :showstatus="true"
+                    @onget_qrg="on_get_qrg">
+                  </tuxlog-rigctl>
+                </b-col>
+                <b-col>
+                  <tuxlog-call-history-filter 
+                    v-model="callhistory">
+                  </tuxlog-call-history-filter>
+
+                </b-col>
+                <b-col></b-col>
+              </b-row>
+            </b-container>
+
           </b-card>  
 
 
@@ -156,23 +152,25 @@
             </b-container>
             </b-card>
 
-            <b-card>
-              <div style="border-radius:10px;background-color: white;font-size:10px;" v-show="isNewRecordMode()">
-                      QSO&nbsp;running&nbsp;...{% raw %}{{ validateForm() }}{% endraw %}
-              </div>          
 
-              <tuxlog-rigctl
-                v-if="logentry.rig"
-                :rig="logentry.rig.id"
-                :showpanel="false"
-                :showstatus="true"
-                @onget_qrg="on_get_qrg"
-                >
-            </tuxlog-rigctl>
+          <div class="mb-1" style="height: 100px; overflow: auto;font-size:10px;">
+          <tuxlog-call-history 
+          style="padding-top:5px;"
+          v-bind:items="history" 
+          v-bind:fields="historyfields" 
+          v-bind:id="history" 
+          v-bind:pending="appstatus.loadhistory"
+          @onclick_row="onclick_history">
+          </tuxlog-call-history>
+          </div>
 
-            </b-card>
 
         </b-col>
+
+        <!-- 2. Spalte History -->
+        <b-col style="max-width:25%"   v-if="1===0">
+        </b-col>
+
       </b-row>
 </b-container>
 
