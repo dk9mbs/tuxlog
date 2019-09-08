@@ -15,6 +15,8 @@ import tuxlogCallHistoryFilter from './components/tuxlog-call-history-filter.vue
 import tuxlogRigctl from './components/tuxlog-rigctl.vue'
 import tuxlogMenu from './components/tuxlog-menu.vue'
 import tuxlogDataView from './components/tuxlog-dataview.vue'
+import tuxlogDataForm from './components/tuxlog-dataform.vue';
+import tuxlogRig from './components/tuxlog-rig.vue';
 
 import { BFormInput } from 'bootstrap-vue'
 import { BFormGroup } from 'bootstrap-vue'
@@ -77,7 +79,8 @@ Vue.component('tuxlog-call-history-filter', tuxlogCallHistoryFilter);
 Vue.component('tuxlog-rigctl', tuxlogRigctl);
 Vue.component('tuxlog-menu', tuxlogMenu);
 Vue.component('tuxlog-button', tuxlogButton);
-
+Vue.component('tuxlog-dataform', tuxlogDataForm);
+Vue.component('tuxlog-rig', tuxlogRig)
 import { VBToggle } from 'bootstrap-vue'
 Vue.directive('b-toggle', VBToggle)
 
@@ -96,6 +99,7 @@ export const router = new VueRouter({
     { path: '/ui/contact', component: {template: '<div>contact</div>'} },
     { path: '/ui/qso', component: Qso },
     { path: '/ui/dataview/:table/:view', component: tuxlogDataView, props:true },
+    { path: '/ui/dataform/:table/:form/:id', component: tuxlogDataForm, props:true },
     { path: '/ui/rig/:id', component: Rig, props: true}
     ]
   });
