@@ -1,46 +1,33 @@
 <template>
 <div>
+
   <div>
     <b-container fluid>
       <b-row class="my-1" key="type">
         <b-col style="max-width:25%">
           
-          <b-button pill variant="outline-secondary" v-b-toggle.collapse-rigctl size="sm" style="margin-top:10px;margin-bottom:5px;">Rig control</b-button>
-          <b-collapse id="collapse-rigctl" v-bind:visible="false" class="mb-1">
-            <b-card>
-            <tuxlog-rigctl
-              v-if="logentry.rig"
-              :rig="logentry.rig.id"
-              @onget_qrg="on_get_qrg"
-            >
-            </tuxlog-rigctl>
+          <div class="mb-1" style="height: 400px; overflow: auto;font-size:10px;">
+          <tuxlog-call-history 
+          style="padding-top:5px;"
+          v-bind:items="history" 
+          v-bind:fields="historyfields" 
+          v-bind:id="history" 
+          v-bind:pending="appstatus.loadhistory"
+          @onclick_row="onclick_history">
+          </tuxlog-call-history>
+          </div>
+
+          <!--
+          <b-button pill variant="outline-secondary" v-b-toggle.collapse-1 size="sm" stye="margin-bottom: 5px;">Call history filter</b-button>
+          <b-collapse id="collapse-1" class="mb-1"> -->
+              <b-card>
+              <tuxlog-call-history-filter 
+                v-model="callhistory"
+              >
+              </tuxlog-call-history-filter>
             </b-card>
-          </b-collapse>
+          <!--</b-collapse>-->
 
-          <b-button pill variant="outline-secondary" v-b-toggle.collapse-history size="sm" style="margin-top:10px;margin-bottom:5px;">History</b-button>
-          <b-collapse id="collapse-history" v-bind:visible="false" class="mb-1">
-            <div style="height: 400px; overflow: auto;font-size:10px;">
-            <tuxlog-call-history 
-            style="padding-top:5px;"
-            v-bind:items="history" 
-            v-bind:fields="historyfields" 
-            v-bind:id="history" 
-            v-bind:pending="appstatus.loadhistory"
-            @onclick_row="onclick_history">
-            </tuxlog-call-history>
-            </div>
-
-            <b-button pill variant="outline-secondary" v-b-toggle.collapse-1 size="sm" stye="margin-bottom: 5px;">Call history filter</b-button>
-            <b-collapse id="collapse-1" class="mb-1">
-                <b-card>
-                <tuxlog-call-history-filter 
-                  v-model="callhistory"
-                >
-                </tuxlog-call-history-filter>
-              </b-card>
-            </b-collapse>
-
-          </b-collapse>
 
         </b-col>
 
@@ -173,6 +160,16 @@
               <div style="border-radius:10px;background-color: white;font-size:10px;" v-show="isNewRecordMode()">
                       QSO&nbsp;running&nbsp;...{% raw %}{{ validateForm() }}{% endraw %}
               </div>          
+
+              <tuxlog-rigctl
+                v-if="logentry.rig"
+                :rig="logentry.rig.id"
+                :showpanel="false"
+                :showstatus="true"
+                @onget_qrg="on_get_qrg"
+                >
+            </tuxlog-rigctl>
+
             </b-card>
 
         </b-col>

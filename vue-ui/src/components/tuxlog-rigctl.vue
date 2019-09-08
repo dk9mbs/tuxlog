@@ -1,13 +1,26 @@
 <template>
 <div>
+
+      <div
+        v-if="showpanel===true"
+        style="border-radius: 10px;padding-top: 11px; padding-bottom:10px;padding-left:5px;margin-top: 3px;">
       <tuxlog-input id="qrg" type="number" v-model="freq" label="QRG" v-bind:readonly="true"></tuxlog-input>
-      <div style="border-radius: 10px;padding-top: 11px; padding-bottom:10px;padding-left:5px;margin-top: 3px;">
       <b-button pill variant="success" style="margin-bottom: 0px" v-on:click="startInterval()" v-bind:disabled="timer_id != 0" size="sm">></b-button>
       <b-button pill variant="danger" style="margin-bottom: 0px" v-on:click="stopInterval()" v-bind:disabled="timer_id === 0" size="sm">||</b-button>
       <span style="border-radius:10px;font-size:10px;background-color: red; text-align: left; padding:10px;margin-left:3px;" v-if="error != null">{% raw %}{{ error_text }}{%endraw %}</span>
       <span style="border-radius:10px;font-size:10px ; text-align: left; padding:10px;margin-left:3px;" v-if="error === null && timer_id!=0">{% raw %}{{ rig }}{%endraw %} successfully connected</span>
       <span style="border-radius:10px;font-size:10px;background-color: DarkOrange; text-align: left; padding:10px;margin-left:3px;" v-if="timer_id === 0">{% raw %}{{ rig }}{%endraw %} connection stopped</span>
       </div>
+
+
+      <div
+        v-if="showstatus===true"
+        style="border-radius: 10px;padding-top: 11px; padding-bottom:10px;padding-left:5px;margin-top: 3px;">
+      <span style="min-width: 25px;border-radius:10px;font-size:10px;background-color: red; text-align: left; padding:10px;margin-left:3px;" v-if="error != null"></span>
+      <span style="min-width: 25px;border-radius:10px;font-size:10px;background-color: green; text-align: left; padding:10px;margin-left:3px;" v-if="error === null && timer_id!=0"></span>
+      <span style="min-width: 25px;border-radius:10px;font-size:10px;background-color: DarkOrange; text-align: left; padding:10px;margin-left:3px;" v-if="timer_id === 0"></span>
+      </div>
+
   </div>
 </template>
 
@@ -26,9 +39,15 @@ export default {
           timer_interval: 1000
       }
     },
-    props: ["qrg", "mode", "rig"],
+    props: {qrg: {}, mode:{}, rig:{}, showpanel:{default: true}, showstatus:{default: false}},
      mounted() {
     this.startInterval();
+  },
+  watch: {
+    rig: function(newRig) {
+      //alert('Rig changed');
+      this.startInterval();
+    }
   },
   methods: {
         handleInput (event, field) {
