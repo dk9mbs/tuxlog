@@ -17,6 +17,10 @@ import tuxlogMenu from './components/tuxlog-menu.vue'
 import tuxlogDataView from './components/tuxlog-dataview.vue'
 import tuxlogDataForm from './components/tuxlog-dataform.vue';
 import tuxlogRig from './components/tuxlog-rig.vue';
+import tuxlogQslshipmentmode from './components/tuxlog-qslshipmentmode';
+import tuxlogMode from './components/tuxlog-mode';
+import tuxlogLogbook from './components/tuxlog-logbook';
+
 
 import { BFormInput } from 'bootstrap-vue'
 import { BFormGroup } from 'bootstrap-vue'
@@ -81,6 +85,11 @@ Vue.component('tuxlog-menu', tuxlogMenu);
 Vue.component('tuxlog-button', tuxlogButton);
 Vue.component('tuxlog-dataform', tuxlogDataForm);
 Vue.component('tuxlog-rig', tuxlogRig)
+Vue.component('tuxlog-mode', tuxlogMode)
+Vue.component('tuxlog-logbook', tuxlogLogbook)
+Vue.component('tuxlog-qslshipmentmode', tuxlogQslshipmentmode)
+
+
 import { VBToggle } from 'bootstrap-vue'
 Vue.directive('b-toggle', VBToggle)
 

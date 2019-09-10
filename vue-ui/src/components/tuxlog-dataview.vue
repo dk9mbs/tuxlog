@@ -7,8 +7,7 @@
     <b-container fluid>
       <b-row class="my-1" key="type" style="background-color: light-grey; padding-bottom:0px">
         <b-col>
-          <b-button variant="outline-secondary"  size="sm" style="margin-top:0px;margin-bottom:0px;">+ new</b-button>
-          <b-button variant="outline-secondary"  size="sm" style="margin-top:0px;margin-bottom:0px;">+ new</b-button>
+          <b-button pill variant="outline-secondary"  size="sm" style="margin-top:0px;margin-bottom:0px;">+ new</b-button>
         </b-col>  
 
         <b-col>
@@ -53,9 +52,8 @@ export default {
   mounted () {
 
 
-    var where=encodeURI("table_name='"+this.table+"' AND view_name='"+this.view+"'");
+    var where=encodeURI("model_name='"+this.table+"' AND view_name='"+this.view+"'");
     axios.get('/api/v1.0/tuxlog/MetaDataviews?where='+where).then ( (response) => {
-      debugger;
       this.resetErrors();
       this.fields=JSON.parse(response.data[0].fields);
       this.id_field_name=response.data[0].id_field_name;
@@ -101,7 +99,8 @@ export default {
       this.$emit('basedata_list_on_click', record, index);
     },
     handleDblClick: function(record, index) {
-      this.$router.push( {path: this.open_path.replace("$1", record.id) } );
+
+this.$router.push( {path: this.open_path.replace("$1",  record.id.replace('/','%2F')   ) } );
       this.$emit('basedata_list_on_dblclick', record, index);
     }
 
@@ -112,12 +111,5 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
 </style>

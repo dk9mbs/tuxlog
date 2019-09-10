@@ -69,26 +69,48 @@ BEGIN
     call proc_printf('installing upd20190903 ...');
 
     delete from meta_dataviews;
-    
-    IF NOT EXISTS (select id from meta_dataviews where table_name='LogLogs') THEN
-        INSERT INTO meta_dataviews (table_name, view_name, fields, where_clause,filter_clause, id_field_name, open_path, order_by) VALUES (
+    delete from meta_dataforms;
+
+    IF NOT EXISTS (select id from meta_dataviews where model_name='LogLogs') THEN
+        INSERT INTO meta_dataviews (model_name, view_name, fields, where_clause,filter_clause, id_field_name, open_path, order_by) VALUES (
             'LogRigs', 'default', '["id","description", "hamlib_id","remote_host","remote_port"]', 
                 '','description like \'$1\'','id','/ui/dataform/LogRigs/default/$1','description');
 
 
-        INSERT INTO meta_dataviews (table_name, view_name, fields, where_clause,filter_clause, id_field_name, open_path, order_by) VALUES (
+        INSERT INTO meta_dataviews (model_name, view_name, fields, where_clause,filter_clause, id_field_name, open_path, order_by) VALUES (
             'LogLogbooks', 'default', '["id","mycall","description"]', 
-                '','description like \'$1\'','id','/ui/lookbook/$1','description');
+                '','description like \'$1\'','id','/ui/dataform/LogLogbooks/default/$1','description');
 
-        INSERT INTO meta_dataviews (table_name, view_name, fields, where_clause,filter_clause, id_field_name, open_path, order_by) VALUES (
+        INSERT INTO meta_dataviews (model_name, view_name, fields, where_clause,filter_clause, id_field_name, open_path, order_by) VALUES (
             'LogModes', 'default', '["id","description"]', 
-                '','description like \'$1\'','id','/ui/mode/$1','description');
+                '','description like \'$1\'','id','/ui/dataform/LogModes/default/$1','description');
 
-        INSERT INTO meta_dataviews (table_name, view_name, fields, where_clause,filter_clause, id_field_name, open_path, order_by) VALUES (
+        INSERT INTO meta_dataviews (model_name, view_name, fields, where_clause,filter_clause, id_field_name, open_path, order_by) VALUES (
             'LogQslshipmentmodes', 'default', '["id","description"]', 
-                '','description like \'$1\'','id','/ui/qslshipmentmode/$1','description');
+                '','description like \'$1\'','id','/ui/dataform/LogQslshipmentmodes/default/$1','description');
 
     END IF;
+
+
+    IF NOT EXISTS (select id from meta_dataforms where model_name='LogRigs' and form_name='default') THEN
+        INSERT INTO meta_dataforms(model_name,form_name, datacomponent) VALUES (
+            'LogRigs','default','tuxlog-rig'
+        );
+        INSERT INTO meta_dataforms(model_name,form_name, datacomponent) VALUES (
+            'LogLogbooks','default','tuxlog-logbook'
+        );
+        INSERT INTO meta_dataforms(model_name,form_name, datacomponent) VALUES (
+            'LogModes','default','tuxlog-mode'
+        );
+        INSERT INTO meta_dataforms(model_name,form_name, datacomponent) VALUES (
+            'LogQslshipmentmodes','default','tuxlog-qslshipmentmode'
+        );
+
+    END IF;
+
+
+
+
 
     IF NOT EXISTS (SELECT version FROM meta_sys_dbversion WHERE version='upd20190903') THEN 
         INSERT INTO meta_sys_dbversion(version,description) VALUES ('upd20190903','upd20190903');

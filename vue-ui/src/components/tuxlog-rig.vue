@@ -6,6 +6,9 @@
         <tuxlog-input class="mb-1" v-model="value['hamlib_id']" label="Hamlib ID" type="number" id="id" />
         <tuxlog-input class="mb-1" v-model="value['remote_host']" label="Host" type="text" id="id" />
         <tuxlog-input class="mb-1" v-model="value['remote_port']" label="Port" type="number" id="id" />
+
+        <tuxlog-rigctl :rig="value['id']" :showpanel="true" :showstatus="false"/>
+
     </div>
 
 </template>
