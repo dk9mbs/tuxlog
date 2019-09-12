@@ -15,14 +15,14 @@
     <template v-slot:prepend>
       <b-input-group-text  v-b-popover.hover.left="tooltip" :title="label"
         style="border-radius: 25px;background-color:silver;min-width: 70px;margin-right:3px;padding-top: 8px;padding-left:5px;font-size:10px;">
-        <div v-if="mandatory!==true">{% raw %}{{ label }}{% endraw %}</div>
-        <div v-if="mandatory===true" >{% raw %}{{ label }}*{% endraw %}</div>
+        <div v-if="mandatory!==true">{{ label }}</div>
+        <div v-if="mandatory===true" >{{ label }}*</div>
         </b-input-group-text>
     </template>  
 
   <b-form-select v-bind:disabled="readonly" v-bind:id="id" v-model="value" class="mb-0" size="sm" 
         @input="handleInput" @change="onchange_value" style="border-radius: 25px">
-  <option v-bind:key="n" v-for="n in values" v-bind:value="n.id">{% raw %}{{ n.description }}{% endraw %}</option>
+  <option v-bind:key="n" v-for="n in values" v-bind:value="n.id">{{ n.description }}</option>
   </b-form-select>
   
   </b-input-group>  

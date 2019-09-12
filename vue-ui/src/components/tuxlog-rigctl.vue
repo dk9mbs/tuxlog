@@ -7,9 +7,9 @@
       <tuxlog-input id="qrg" type="number" v-model="freq" label="QRG" v-bind:readonly="true"></tuxlog-input>
       <b-button pill variant="success" style="margin-bottom: 0px" v-on:click="startInterval()" v-bind:disabled="timer_id != 0" size="sm">></b-button>
       <b-button pill variant="danger" style="margin-bottom: 0px" v-on:click="stopInterval()" v-bind:disabled="timer_id === 0" size="sm">||</b-button>
-      <span style="border-radius:10px;font-size:10px;background-color: red; text-align: left; padding:10px;margin-left:3px;" v-if="error != null">{% raw %}{{ error_text }}{%endraw %}</span>
-      <span style="border-radius:10px;font-size:10px ; text-align: left; padding:10px;margin-left:3px;" v-if="error === null && timer_id!=0">{% raw %}{{ rig }}{%endraw %} successfully connected</span>
-      <span style="border-radius:10px;font-size:10px;background-color: DarkOrange; text-align: left; padding:10px;margin-left:3px;" v-if="timer_id === 0">{% raw %}{{ rig }}{%endraw %} connection stopped</span>
+      <span style="border-radius:10px;font-size:10px;background-color: red; text-align: left; padding:10px;margin-left:3px;" v-if="error != null">{{ error_text }}</span>
+      <span style="border-radius:10px;font-size:10px ; text-align: left; padding:10px;margin-left:3px;" v-if="error === null && timer_id!=0">{{ rig }} successfully connected</span>
+      <span style="border-radius:10px;font-size:10px;background-color: DarkOrange; text-align: left; padding:10px;margin-left:3px;" v-if="timer_id === 0">{{ rig }} connection stopped</span>
       </div>
 
 
@@ -40,8 +40,12 @@ export default {
       }
     },
     props: {qrg: {}, mode:{}, rig:{}, showpanel:{default: true}, showstatus:{default: false}},
-     mounted() {
+    mounted() {
     this.startInterval();
+  },
+  destroyed() {
+    debugger;
+    this.stopInterval();
   },
   watch: {
     rig: function(newRig) {

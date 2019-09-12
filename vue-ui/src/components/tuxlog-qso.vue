@@ -15,7 +15,7 @@
                 <b-col><tuxlog-button label="Cancel" @click="cancel()" style="min-width:200px;"/></b-col>
                 <b-col>
                   <div style="border-radius:10px;" v-show="isNewRecordMode()">
-                    QSO&nbsp;running&nbsp;...{% raw %}{{ validateForm() }}{% endraw %}
+                    QSO&nbsp;running&nbsp;...{{ validateForm() }}
                   </div>          
                 </b-col>
                 <b-col>

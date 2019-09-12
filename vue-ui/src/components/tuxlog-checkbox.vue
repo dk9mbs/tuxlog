@@ -6,8 +6,8 @@
     <template v-slot:prepend>
       <b-input-group-text  v-b-popover.hover.left="tooltip" :title="label"
         style="border-radius: 25px;background-color:silver;min-width: 70px;margin-right:3px;padding-top: 8px;padding-left:5px;font-size:10px;">
-        <div v-if="mandatory!==true">{% raw %}{{ label }}{% endraw %}</div>
-        <div v-if="mandatory===true" >{% raw %}{{ label }}*{% endraw %}</div>
+        <div v-if="mandatory!==true">{{ label }}</div>
+        <div v-if="mandatory===true" >{{ label }}*</div>
 
         </b-input-group-text>
     </template>  

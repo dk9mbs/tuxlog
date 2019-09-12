@@ -5,7 +5,7 @@
     <b-button pill 
       variant="outline-secondary" v-on:click="handleClick()" size="sm"
       v-bind:disabled="readonly"
-    >{% raw %}{{ label }}{% endraw %}
+    >{{ label }}
     </b-button>
 
 
