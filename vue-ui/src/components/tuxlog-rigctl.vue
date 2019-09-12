@@ -50,6 +50,7 @@ export default {
   watch: {
     rig: function(newRig) {
       //alert('Rig changed');
+	this.stopInterval();
       this.startInterval();
     }
   },
