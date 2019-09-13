@@ -48,12 +48,7 @@ export default {
   },
   watch: {
     rig: function(newRig) {
-<<<<<<< HEAD
       this.stopInterval();
-=======
-      //alert('Rig changed');
-	this.stopInterval();
->>>>>>> 5969e7eb1f08a214664d5506e0d5c208bce3a0b6
       this.startInterval();
     }
   },
