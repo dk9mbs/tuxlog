@@ -7,7 +7,7 @@
         <tuxlog-input class="mb-1" v-model="value['remote_host']" label="Host" type="text" id="id" />
         <tuxlog-input class="mb-1" v-model="value['remote_port']" label="Port" type="number" id="id" />
 
-        <tuxlog-rigctl :rig="value['id']" :showpanel="true" :showstatus="false"/>
+        <tuxlog-rigctl v-if="value['id']" :rig="value['id']" :showpanel="true" :showstatus="false"/>
 
     </div>
 

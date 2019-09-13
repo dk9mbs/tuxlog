@@ -3,16 +3,18 @@
 
   <div>
     <b-container fluid>
-      <b-row class="my-1" key="type">
+      <b-row class="my-1">
         <!-- 1. Spalte -->
         <b-col style="min-width: 75%; max-width: 100%">
           <b-card class="mb-1">
 
             <b-container fluid style="font-size:10px;">
               <b-row>
-                <b-col><tuxlog-button label="Start" @click="newRecord()" style="min-width:200px;"/></b-col>
-                <b-col><tuxlog-button label="Save" @click="save()" style="min-width:200px;"/></b-col>
-                <b-col><tuxlog-button label="Cancel" @click="cancel()" style="min-width:200px;"/></b-col>
+                <b-col>
+                  <tuxlog-button label="Start" @click="newRecord()" style="min-width:200px;"/>
+                  <tuxlog-button label="Save" @click="save()" style="min-width:200px;"/>
+                  <tuxlog-button label="Cancel" @click="cancel()" style="min-width:200px;"/>
+                </b-col>
                 <b-col>
                   <div style="border-radius:10px;" v-show="isNewRecordMode()">
                     QSO&nbsp;running&nbsp;...{{ validateForm() }}
@@ -47,7 +49,7 @@
 
             <b-container fluid v-if="appstatus.processdatadetail===false">
 
-            <b-row class="mb-1" key="type">
+            <b-row class="mb-1">
               <b-col>
                 <tuxlog-option id="lookbook" tooltip="Select the current loogbook. You can manage more the one logbook in one database." v-bind:values="logbooks" v-if="logentry.logbook" v-model="logentry.logbook.id" label="My call"></tuxlog-option>
               </b-col>
@@ -59,7 +61,7 @@
               </b-col>
             </b-row>
       
-            <b-row class="mb-1" key="type">
+            <b-row class="mb-1">
               <b-col>
                 <tuxlog-input id="power" type="number" v-model="logentry.power" label="Pwr"></tuxlog-input>
               </b-col>
@@ -68,7 +70,7 @@
               </b-col>
           </b-row>
 
-          <b-row class="mb-1" key="type">
+          <b-row class="mb-1">
               <b-col>
                 <tuxlog-input id="logdata_utc" type="date" v-model="logentry.logdate_utc" label="Date"></tuxlog-input>
             </b-col>
@@ -78,7 +80,7 @@
           </b-row>
 
 
-          <b-row class="mb-1" key="type">
+          <b-row class="mb-1">
               <b-col>
                   <tuxlog-input id="yourcall" mandatory type="text" @onchange_value="yourcall_onchange" v-model="logentry.yourcall" label="Call"></tuxlog-input>
                 </b-col>
@@ -90,7 +92,7 @@
               </b-col>
           </b-row>
       
-          <b-row class="mb-1" key="type">
+          <b-row class="mb-1">
               <b-col>
                   <tuxlog-input id="locator" type="text" v-model="logentry.locator" label="LOC"></tuxlog-input>
               </b-col>
@@ -102,7 +104,7 @@
             </b-col>
           </b-row>
       
-          <b-row class="mb-1" key="type">
+          <b-row class="mb-1">
             <b-col>
               <tuxlog-input id="name" type="text" v-model="logentry.name" label="Name"></tuxlog-input>
             </b-col>
@@ -111,7 +113,7 @@
             </b-col>
           </b-row>                
       
-          <b-row class="mb-1" key="type">
+          <b-row class="mb-1">
               <b-col>
                   <tuxlog-input id="itu_prefix" type="text" v-model="logentry.itu_prefix" label="Prefix"></tuxlog-input>
                 </b-col>
@@ -130,7 +132,7 @@
             </b-row>
       
       
-            <b-row class="mb-1" key="type">
+            <b-row class="mb-1">
               <b-col>
                 <tuxlog-input tooltip="Enter here the via call for qsl routing." id="viacall" type="text" v-model="logentry.viacall" label="via"></tuxlog-input>
               </b-col>
@@ -140,7 +142,7 @@
           </b-row>
       
       
-          <b-row class="mb-1" key="type" >
+          <b-row class="mb-1">
               <b-col>
                   <tuxlog-checkbox id="qslsend" tooltip="Switch on when you have send your QSL card." v-model="logentry.qslsend" label="Send"></tuxlog-checkbox>
                 </b-col>
@@ -182,9 +184,10 @@
 </template>
 
 <script>
-import axios from 'axios'
+//import axios from 'axios'
 import { debuglog } from 'util';
 import { truncate } from 'fs';
+import  {Tuxlog, ifnull}  from '../common.js'
 
 export default {
   name: 'qso',
@@ -204,49 +207,43 @@ export default {
     }
   },
   mounted () {
-    //debugger;
     
     var recordId=0;
     var para= new URLSearchParams(window.location.search);
     if(para.has('recordid')) recordId=para.get('recordid');
     this.initEntry(recordId);
 
-    axios.get('/api/v1.0/tuxlog/LogLogbooks').then( (response) => {
+    Tuxlog.webRequestAsync('GET','/api/v1.0/tuxlog/LogLogbooks?where='+encodeURI('id <> \'*\''), undefined,(response) => {
       this.logbooks=response.data;
-    }
-    ).catch( (response) => { alert('Error loading lookbooks') } )
+    },(response) => { alert('Error loading lookbooks') })
 
-    axios.get('/api/v1.0/tuxlog/LogRigs').then( (response) => {
+    Tuxlog.webRequestAsync('GET','/api/v1.0/tuxlog/LogRigs', undefined,(response) => {
       this.rigs=response.data;
-    }
-    ).catch( (response) => { alert('Error loading rigs') } )
+    },(response) => { alert('Error loading qslshipmentmodes') })
 
-    axios.get('/api/v1.0/tuxlog/LogModes').then( (response) => {
+    Tuxlog.webRequestAsync('GET','/api/v1.0/tuxlog/LogModes', undefined,(response) => {
       this.modes=response.data;
-    }
-    ).catch( (response) => { alert('Error loading modes') } )
+    },(response) => { alert('Error loading qslshipmentmodes') })
 
-    axios.get('/api/v1.0/tuxlog/LogQslshipmentmodes').then( (response) => {
+    Tuxlog.webRequestAsync('GET','/api/v1.0/tuxlog/LogQslshipmentmodes', undefined,(response) => {
       this.qslshipmentmodes=response.data;
-    }
-    ).catch( (response) => { alert('Error loading qslshipmentmodes') } )
+    },(response) => { alert('Error loading qslshipmentmodes') })
     
     this.loadHistory();
     
   },
   watch: {
     'callhistory.listuri': function (newValue) {
-      //debugger;
       this.appstatus.loadHistory=true;
 
       if(newValue==null) {
         newValue=this.callhistory.defaultlisturl;
       }
 
-      axios.get('/api/v1.0/tuxlog/LogLogs?'+newValue).then( (response) => {
+      Tuxlog.webRequestAsync('GET','/api/v1.0/tuxlog/LogLogs?'+newValue, undefined,(response) => {
       this.history=response.data;
       this.appstatus.loadhistory=false;
-      }).catch((response)=> {alert('Fehler')})
+      },(response)=> {alert('Fehler')} );
     }
   },
    filters:{
@@ -272,10 +269,18 @@ export default {
           paras=this.callhistory.listuri;
         }
         
-        axios.get('/api/v1.0/tuxlog/LogLogs?'+paras).then( (response) => {
-        this.history=response.data;
-        this.appstatus.loadhistory=false;
-      }).catch((response)=> {alert('Fehler')})
+        //this.history=await Tuxlog.webRequestSync('GET','/api/v1.0/tuxlog/LogLogs?'+paras);
+        //this.appstatus.loadhistory=false;
+
+        Tuxlog.webRequestAsync('GET','/api/v1.0/tuxlog/LogLogs?'+paras,undefined,
+        (response) => {
+          this.history=response.data;
+          this.appstatus.loadhistory=false;
+        },
+        (response)=> {
+          alert('Fehler')
+          } 
+        )
     },
     makeToast(append = false, text, variant='default') {
         this.toastCount++
@@ -289,30 +294,39 @@ export default {
     yourcall_onchange: function(event) {
       this.makeToast(true, 'Reading from callbook...')
       this.loadHistory(event);
-      axios.get('/api/v1.0/callbook/hamdb/'+event).then((response)=>{
+      Tuxlog.webRequestAsync('GET','/api/v1.0/callbook/hamdb/'+event,undefined,
+      (response)=>{
         this.logentry.name=response.data.haminfo.name
         this.logentry.country=response.data.haminfo.country
         this.logentry.qth=response.data.haminfo.qth
         this.logentry.locator=response.data.haminfo.locator
         this.$forceUpdate();
-    }).catch((response) => {
-      this.logentry.name=""
-      this.logentry.country=""
-      this.logentry.qth=""
-      this.logentry.locator=""
-      this.$forceUpdate();
-      this.showAlert('Error loading haminfo => '+response, "warning")
-    })
+        },
+        (response) => {
+          this.logentry.name=""
+          this.logentry.country=""
+          this.logentry.qth=""
+          this.logentry.locator=""
+          this.$forceUpdate();
+          this.showAlert('Error loading haminfo => '+response, "warning")
+        })
     },
     initEntry: function (id) {
       this.appstatus.processdatadetail=true;
       if (id==0) {
         this.clearForm();
-      } else {axios.get('/api/v1.0/tuxlog/LogLogs/'+id).then( (response) => {
-          this.logentry=response.data;
-          console.log(this.logentry);
-          this.appstatus.processdatadetail=false;
-        }).catch( (response) => { alert('Fehler'); this.clearForm(); } )
+      } else {
+          Tuxlog.webRequestAsync('GET','/api/v1.0/tuxlog/LogLogs/'+id,undefined,
+            (response) => {
+              this.logentry=response.data;
+              console.log(this.logentry);
+              this.appstatus.processdatadetail=false;
+          },
+          (response) => { 
+            alert('Fehler'); 
+            this.clearForm(); }
+          );
+
       }
     },
     clearForm: function() {
@@ -343,12 +357,23 @@ export default {
         this.makeToast(true,"fill all mandatory fields!", 'danger');
         return;
       }
-      axios.post('/api/v1.0/tuxlog/LogLogs', this.logentry).then((response) => {
-        //console.log(this.logentry);
+
+      var callBackOk=(response) => {
         this.clearForm();
         this.makeToast(true, 'record saved!', 'success');
         this.endQso();
-      }).catch((response)=>{alert('Fehler'); this.appstatus.processdatadetail=false; })
+      }
+
+      var callBackErr=(response) => {
+        debugger;
+        alert('Fehler'); 
+        this.appstatus.processdatadetail=false;    
+      }
+
+      Tuxlog.webRequestAsync(ifnull(this.logentry.id,'POST', 'PUT') ,
+        '/api/v1.0/tuxlog/LogLogs'+ifnull(this.logentry.id,'', '/'+this.logentry.id), 
+        this.logentry, callBackOk, callBackErr);
+
     },
     countDownChanged: function(dismissCountDown) {
       this.alert.dismissCountDown = dismissCountDown

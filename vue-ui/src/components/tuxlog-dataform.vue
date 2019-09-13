@@ -40,8 +40,13 @@ export default {
   mounted () {
     var where=encodeURI("id='"+this.id+"'");
     axios.get('/api/v1.0/tuxlog/'+this.table+'?where='+where).then ( (response) => {
-        this.datasource=response.data;
-        this.currentrecord=this.datasource[0];
+        if(response.data.length==0) {
+          this.currentrecord={};
+          this.datasource=[];
+        } else {
+          this.datasource=response.data;
+          this.currentrecord=this.datasource[0];
+        }
     }).catch((response) => { debugger;alert('Error in dataform'+where); })
 
     var where=encodeURI("model_name='"+this.table+"' AND form_name='"+this.form+"'");

@@ -1,13 +1,14 @@
 <template>
 <div>
     <div v-if="dataview_def_not_found===true" style="background-color: orange;width:100%;">
-      No definition found for View: {% raw %}{{ table }} {{ view }}{% endraw %} 
+      No definition found for View: {{ table }} {{ view }} 
     </div>
 
     <b-container fluid>
-      <b-row class="my-1" key="type" style="background-color: light-grey; padding-bottom:0px">
+      <b-row class="my-1" style="background-color: light-grey; padding-bottom:0px">
         <b-col>
-          <b-button pill variant="outline-secondary"  size="sm" style="margin-top:0px;margin-bottom:0px;">+ new</b-button>
+          <b-button pill variant="outline-secondary" @click="handleNewClick"  size="sm" style="margin-top:0px;margin-bottom:0px;">+ new</b-button>
+          <b-button pill v-if="selected_id!==undefinied" variant="outline-secondary" @click="handleDelClick"  size="sm" style="margin-top:0px;margin-bottom:0px;">Trash</b-button>
         </b-col>  
 
         <b-col>
@@ -15,7 +16,7 @@
         </b-col>  
 
       </b-row>
-      <b-row class="my-1" key="type">
+      <b-row class="my-1" >
         <b-col>
           <div style="height:500px; overflow: auto;">
             <b-table
@@ -46,7 +47,8 @@ export default {
       id_field_name: "id",
       open_path: "",
       order_by: "",
-      callhistory: {"listuri": null, "defaultlisturl": "order=id desc&pagesize=100"}
+      callhistory: {"listuri": null, "defaultlisturl": "order=id desc&pagesize=100"},
+      selected_id: undefined
     }
   },
   mounted () {
@@ -84,6 +86,9 @@ export default {
       }
   },
   methods: {
+    handleNewClick() {
+      this.$router.push('/ui/dataform/LogRigs/default/');
+    },
     resetErrors() {
       this.dataview_def_not_found=false;
     },
@@ -96,12 +101,17 @@ export default {
       })
     },
     handleClick: function(record, index) {
+      this.selected_id=record.id;
       this.$emit('basedata_list_on_click', record, index);
     },
     handleDblClick: function(record, index) {
 
-this.$router.push( {path: this.open_path.replace("$1",  record.id.replace('/','%2F')   ) } );
+      this.$router.push( {path: this.open_path.replace("$1",  record.id.replace('/','%2F')   ) } );
       this.$emit('basedata_list_on_dblclick', record, index);
+    },
+    handleDelClick: function () {
+      axios.delete('/api/v1.0/tuxlog/'+this.table+'/'+this.selected_id);
+      this.$router.go();
     }
 
 

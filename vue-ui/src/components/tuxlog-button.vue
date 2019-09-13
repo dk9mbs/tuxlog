@@ -1,5 +1,5 @@
 <template>
-<div>
+<span>
 
 
     <b-button pill 
@@ -9,7 +9,7 @@
     </b-button>
 
 
-    </div>
+    </span>
 </template>
 
 <script>

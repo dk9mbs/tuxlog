@@ -44,47 +44,46 @@ export default {
     this.startInterval();
   },
   destroyed() {
-    debugger;
     this.stopInterval();
   },
   watch: {
     rig: function(newRig) {
-      //alert('Rig changed');
+      this.stopInterval();
       this.startInterval();
     }
   },
   methods: {
-        handleInput (event, field) {
-          this.$emit('ongetrigdata', field, event)
-        },
-        stopInterval: function () {
-          clearInterval(this.timer_id);
-          this.timer_id=0;
-        },
-        startInterval: function() {
-          // use arrow function
-          var intervalId=setInterval(() => {
-            this.clearError();
-            axios.get('/api/v1.0/rigctl/'+this.rig+'/f').then(response => {
-              this.freq=response.data['response']['Frequency']
-              this.error=null
-              this.$emit('onget_qrg', this.freq);
-            }).catch( response => {
-              console.log(response.response.data['error']);
-              this.error= response.response.data;
-              this.error_text= response.response.data['error'];
-              this.freq=0;
-              this.stopInterval();
-            })
-        },this.timer_interval )
-        this.timer_id=intervalId;
-        return intervalId;
+      handleInput (event, field) {
+        this.$emit('ongetrigdata', field, event)
       },
-      clearError: function() {
-        this.error=null;
-        this.error_text="";
-      }
+      stopInterval: function () {
+        clearInterval(this.timer_id);
+        this.timer_id=0;
+      },
+      startInterval: function() {
+        // use arrow function
+        var intervalId=setInterval(() => {
+          this.clearError();
+          axios.get('/api/v1.0/rigctl/'+this.rig+'/f').then(response => {
+            this.freq=response.data['response']['Frequency']
+            this.error=null
+            this.$emit('onget_qrg', this.freq);
+          }).catch( response => {
+            console.log(response.response.data['error']);
+            this.error= response.response.data;
+            this.error_text= response.response.data['error'];
+            this.freq=0;
+            this.stopInterval();
+          })
+      },this.timer_interval )
+      this.timer_id=intervalId;
+      return intervalId;
+    },
+    clearError: function() {
+      this.error=null;
+      this.error_text="";
     }
+  }
 
 }
 </script>

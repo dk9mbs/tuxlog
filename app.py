@@ -132,12 +132,17 @@ def typeformatter(obj):
         #return json.JSONEncoder.default(obj)
         pass
 
-@app.route('/api/v1.0/tuxlog/<table>', methods=['POST'])
-def save_or_update(table):
+@app.route('/api/v1.0/tuxlog/<table>', methods=['POST', 'PUT'])
+@app.route('/api/v1.0/tuxlog/<table>/<id>', methods=['POST', 'PUT'])
+def save_or_update(table, id=None):
     mod_cls=ModelClassFactory(table).create()
     data_model=dict_to_model(mod_cls, request.json)
-    #data_model.save(force_insert=True)
-    data_model.save()
+    
+    if request.method=='POST':
+        data_model.save(force_insert=True)
+    else:
+        data_model.save()
+
     logger.info('id created after save => %s' % str(data_model.id))
 
     for wsock in connections:
@@ -201,6 +206,23 @@ def get_record(table, recordid):
                 "dk9mbs": "yes"
             }
         )     
+
+@app.route('/api/v1.0/tuxlog/<table>/<recordid>', methods=['DELETE'])
+def del_record(table, recordid):
+
+    mod=ModelClassFactory(table).create()
+    #data = model_to_dict(mod.get(mod.id==recordid))
+    query=mod.delete().where(mod.id == recordid)
+    query.execute()
+    #logger.error("DELETE")
+    return Response(
+            {},
+            mimetype="text/json",
+            headers={
+                "dk9mbs": "yes"
+            }
+        )     
+
 
 # dataimport api
 @app.route('/api/v1.0/import/<table>', methods=['POST'])

@@ -22,7 +22,7 @@ import tuxlogMode from './components/tuxlog-mode';
 import tuxlogLogbook from './components/tuxlog-logbook';
 
 
-import { BFormInput } from 'bootstrap-vue'
+import { BFormInput, BInputGroupText } from 'bootstrap-vue'
 import { BFormGroup } from 'bootstrap-vue'
 import { BFormSelect } from 'bootstrap-vue'
 import { BFormCheckboxGroup } from 'bootstrap-vue'
@@ -43,20 +43,21 @@ import { BToggle } from 'bootstrap-vue'
 import { RouterLink, RouterView } from 'vue-router'
 import { BInputGroup } from 'bootstrap-vue'
 import { PopoverPlugin } from 'bootstrap-vue'
+import {PInputGroupText} from 'bootstrap-vue';
 
 Vue.use(PopoverPlugin)
 Vue.component('b-input-group', BInputGroup);
-Vue.component('router-link', RouterLink)
-Vue.component('router-view', RouterView)
-Vue.component('b-toggle', BToggle)
-Vue.component('b-dropdown', BDropdown)
+Vue.component('b-input-group-text', BInputGroupText);
+Vue.component('router-link', RouterLink);
+Vue.component('router-view', RouterView);
+Vue.component('b-toggle', BToggle);
+Vue.component('b-dropdown', BDropdown);
 Vue.component('b-dropdown-item', BDropdownItem)
 Vue.component('b-nav', BNav)
 Vue.component('b-nav-item', BNavItem)
 Vue.component('b-nav-text', BNavText)
 Vue.component('b-nav-form', BNavForm)
 Vue.component('b-nav-item-dropdown', BNavItemDropdown)
-
 Vue.component('b-navbar', BNavbar)
 Vue.component('b-navbar-brand', BNavbarBrand)
 Vue.component('b-navbar-toggle', BNavbarToggle)
@@ -109,7 +110,7 @@ export const router = new VueRouter({
     { path: '/ui/qso', component: Qso },
     { path: '/ui/dataview/:table/:view', component: tuxlogDataView, props:true },
     { path: '/ui/dataform/:table/:form/:id', component: tuxlogDataForm, props:true },
-    { path: '/ui/rig/:id', component: Rig, props: true}
+    { path: '/ui/dataform/:table/:form/', component: tuxlogDataForm, props:true },
     ]
   });
 
