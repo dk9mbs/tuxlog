@@ -44,8 +44,10 @@ import { RouterLink, RouterView } from 'vue-router'
 import { BInputGroup } from 'bootstrap-vue'
 import { PopoverPlugin } from 'bootstrap-vue'
 import {PInputGroupText} from 'bootstrap-vue';
+import {BModal} from 'bootstrap-vue';
 
 Vue.use(PopoverPlugin)
+Vue.component('b-modal', BModal);
 Vue.component('b-input-group', BInputGroup);
 Vue.component('b-input-group-text', BInputGroupText);
 Vue.component('router-link', RouterLink);
@@ -99,6 +101,9 @@ Vue.directive('b-popover', VBPopover)
 
 import { ToastPlugin } from 'bootstrap-vue'
 Vue.use(ToastPlugin)
+
+import { ModalPlugin } from 'bootstrap-vue'
+Vue.use(ModalPlugin)
 
 export const router = new VueRouter({
   mode: 'history',

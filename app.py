@@ -69,10 +69,19 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.jinja_env.auto_reload = True
 
 app.debug=False
-#app.host=cfg['httpcfg']['host']
-#app.port=cfg['httpcfg']['port']
 app.threaded=True
 
+
+@app.before_request
+def _db_connect():
+    logger.info("Connecting database")
+    model.database.connect()
+
+@app.teardown_request
+def _db_close(exc):
+    logger.info("Closing database ...")
+    if not model.database.is_closed():
+        model.database.close()
 
 # UI
 @app.route('/')
@@ -174,8 +183,8 @@ def get_dataset(table):
     from usecases.datamodel import get_modellist_by_raw
     tmp = get_modellist_by_raw(table, where=where, order=order, pagesize=pagesize)
 
-    if len(tmp) == 0:
-        Response(json.dumps( {'error': 'No Data found!' }), content_type="text/json" , status=404)
+    #if len(tmp) == 0:
+    #    Response(json.dumps( {'error': 'No Data found!' }), content_type="text/json" , status=404)
 
     tmp=json.dumps(tmp, default=typeformatter)
     return Response(
@@ -209,12 +218,11 @@ def get_record(table, recordid):
 
 @app.route('/api/v1.0/tuxlog/<table>/<recordid>', methods=['DELETE'])
 def del_record(table, recordid):
-
+    #logger.error(recordid)
     mod=ModelClassFactory(table).create()
-    #data = model_to_dict(mod.get(mod.id==recordid))
     query=mod.delete().where(mod.id == recordid)
     query.execute()
-    #logger.error("DELETE")
+    
     return Response(
             {},
             mimetype="text/json",

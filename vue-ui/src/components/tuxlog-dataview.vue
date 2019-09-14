@@ -35,7 +35,8 @@
 </template>
 
 <script>
-import axios from 'axios'
+import axios from 'axios';
+import encodeIdToURI from '../common.js';
 
 export default {
   name: 'tuxlog-dataview',
@@ -63,16 +64,7 @@ export default {
       this.filter_filter_clause=response.data[0].filter_clause;
       this.order_by=response.data[0].order_by;
 
-      var url='/api/v1.0/tuxlog/'+this.table;
-      if(this.order_by!=undefined) {
-        url=url+'?order='+encodeURI(this.order_by)
-      }
-
-      axios.get(url).then( (response) => {
-        this.datalist=response.data;
-      }
-      ).catch( (response) => { alert('Error loading lookbooks') } )
-
+      this.loadData();
 
 }).catch((response) => { debugger;this.dataview_def_not_found=true; })
 
@@ -86,6 +78,18 @@ export default {
       }
   },
   methods: {
+    loadData() {
+      var url='/api/v1.0/tuxlog/'+this.table;
+      if(this.order_by!=undefined) {
+        url=url+'?order='+encodeURI(this.order_by)
+      }
+
+      axios.get(url).then( (response) => {
+        this.datalist=response.data;
+      }
+      ).catch( (response) => { alert('Error loading data') } )
+
+    },
     handleNewClick() {
       this.$router.push('/ui/dataform/LogRigs/default/');
     },
@@ -110,8 +114,22 @@ export default {
       this.$emit('basedata_list_on_dblclick', record, index);
     },
     handleDelClick: function () {
-      axios.delete('/api/v1.0/tuxlog/'+this.table+'/'+this.selected_id);
-      this.$router.go();
+
+          this.$bvModal.msgBoxConfirm('Are you sure?')
+          .then(value => {
+            if(value==true){
+              axios.delete('/api/v1.0/tuxlog/'+this.table+'/'+this.selected_id.replace('/','%2F'))
+                .then((response) => {this.loadData();})
+                .catch((error)=> {alert(error); console.log(error)});
+              
+
+            }
+          })
+          .catch(err => {
+            // An error occurred
+          })
+
+
     }
 
 

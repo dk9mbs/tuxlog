@@ -57,3 +57,7 @@ export function ifnull(value, thenVal, elseVal ) {
         return elseVal;
     }
 }
+
+export function encodeIdToURI(value) {
+    return value.replace('/','%2F')
+}
