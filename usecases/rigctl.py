@@ -12,6 +12,7 @@ class RigCtl:
         if not 'mock' in args :
             try:
                 self._sock=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                self._sock.settimeout(1)
                 self._sock.connect((self._cfg['host'], self._cfg['port']))
                 self._sock.settimeout(5)
             except Exception as e:

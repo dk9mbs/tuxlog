@@ -62,20 +62,18 @@ export default {
   filters:{
   },
   methods: {
-    makeToast(append = false, text) {
+    makeToast(append = false, text, variant='default') {
       this.toastCount++
       this.$bvToast.toast(text, {
         title: 'tuxlog',
+        variant: variant,
         autoHideDelay: 5000,
         appendToast: append
       })
     },
     save: function() {
-      axios.post('/api/v1.0/tuxlog/'+this.table, this.currentrecord).then((response) => {
-        //this.clearForm();
-        //this.makeToast(true, 'record saved!', 'success');
-        //this.endQso();
-        alert('Gespeichert');
+      axios.put('/api/v1.0/tuxlog/'+this.table, this.currentrecord).then((response) => {
+        this.makeToast(true, 'record saved!', 'success');
       }).catch((response)=>{alert('Fehler'); this.appstatus.processdatadetail=false; })
     },
   }

@@ -74,8 +74,10 @@ app.threaded=True
 
 @app.before_request
 def _db_connect():
-    logger.info("Connecting database")
-    model.database.connect()
+    try:
+        model.database.connect()
+    except:
+        pass
 
 @app.teardown_request
 def _db_close(exc):
