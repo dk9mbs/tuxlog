@@ -264,10 +264,17 @@ def adif_import(table):
         @parser.register('duplicate_search_LogLogs')
         def duplicate_search(**kwargs):
             log=kwargs['model']
-            log_exists=LogLogs.get_or_none((LogLogs.logbook==kwargs['logbook_id']) 
-                & (LogLogs.yourcall==log.yourcall)
-                & (LogLogs.logdate_utc==log.logdate_utc)
-                & (LogLogs.start_utc==log.start_utc)
+            #log_exists=LogLogs.get_or_none((LogLogs.logbook==kwargs['logbook_id']) 
+            #    & (LogLogs.yourcall==log.yourcall)
+            #    & (LogLogs.logdate_utc==log.logdate_utc)
+            #    & (LogLogs.start_utc==log.start_utc)
+            #)
+
+            start_utc=datetime.time(int(log.start_utc[0:2]), int(log.start_utc[2:4]))
+
+            log_exists=LogLogs.get_or_none( 
+                (LogLogs.yourcall==log.yourcall) & (LogLogs.logdate_utc==log.logdate_utc)
+                & (LogLogs.start_utc==start_utc ) 
             )
 
             if log_exists != None:

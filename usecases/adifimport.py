@@ -11,6 +11,10 @@ class BaseUseCase(object):
 
     def register(self, name):
         def wrapper(fn):
+            for obj in self._fn:
+                if obj['name']==name:
+                    return fn
+
             self._fn.append({"name": name, "fn": fn})
             return fn
         return wrapper
@@ -46,9 +50,24 @@ class AdifImportLogic(BaseUseCase):
                     #print(internal)
                     if internal.endswith('_id'):
                         internal=internal[:-3]
+
+                    if internal=='start_utc' and (len(adif_rec[adif_fld])==4):
+                        adif_rec[adif_fld]=adif_rec[adif_fld]+"00"
+
+                    if internal=='power':
+                        adif_rec[adif_fld]=re.sub('[^0-9]','', adif_rec[adif_fld])
+                    
+                    if fld_def.internal_datatype=='Boolean':
+                        if str(adif_rec[adif_fld]).strip()=='N':
+                            adif_rec[adif_fld]=0
+                        if str(adif_rec[adif_fld]).strip()=='Y':
+                            adif_rec[adif_fld]=1
+
                     log.__data__[internal]=adif_rec[adif_fld]
 
             log.logbook_id=self._logbook_id
+
+
 
             self._execute('duplicate_search_%s' % self._table_name, model=log, logbook_id=self._logbook_id)
             self._execute('before_save_adif_rec', model=log, logbook_id=self._logbook_id)
@@ -82,8 +101,12 @@ class AdifParserLib:
         adif=adif_str.replace("\n", "")
         adif=adif_str.replace("\t", "")
 
-        records=str(adif).split("<eoh>")
-        records=str(records[1]).split("<eor>")
+        #records=str(adif).split("<eoh>")
+        #records=str(records[1]).split("<eor>")
+
+        records=re.split("<eoh>", adif, flags=re.IGNORECASE)
+        records=re.split("<eor>", records[1], flags=re.IGNORECASE)
+
         adif_recs=list()
 
         for rec in records:
