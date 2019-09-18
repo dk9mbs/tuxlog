@@ -18,6 +18,13 @@ APPDIR=$(dirname $SCRIPT)
 APPDIR=$(dirname $APPDIR)
 CFG_FILE="/etc/tuxlog/tuxlog_cfg.json"
 
+mkdir -p /etc/tuxlog
+mkdir -p $APPDIR/htdocs
+
+if [ ! -f /etc/tuxlog/tuxlog_cfg.json ]; then
+    cp "$BASEDIR/tuxlog_cfg.json" /etc/tuxlog/
+fi
+
 cd $APPDIR/setup/
 KEY=$($PYTHON ./cfgreader.py $CFG_FILE "$ENVIRONMENT" "security" "secret_key")
 DATABASE=$($PYTHON ./cfgreader.py $CFG_FILE "$ENVIRONMENT" mysqlcfg database)
@@ -37,13 +44,13 @@ echo "Username.............:$USERNAME"
 echo "Password.............:*********"
 echo "========================================================"
 
+echo "CREATE DATABASE $DATABASE ..."
+mysql -u$USERNAME -p$PASSWORD -h$HOST -e "CREATE DATABASE IF NOT EXISTS $DATABASE default character set 'UTF8';"
+echo "running sql script ..."
+mysql -u$USERNAME -p$PASSWORD -h$HOST $DATABASE -e "use $DATABASE;source ./logdatabase.db;"
+mysql -u$USERNAME -p$PASSWORD -h$HOST $DATABASE -e "use $DATABASE;source ./logdatabase_update.db;"
 
-mkdir -p /etc/tuxlog
-mkdir -p $APPDIR/htdocs
 
-if [ ! -f /etc/tuxlog/tuxlog_cfg.json ]; then
-    cp "$BASEDIR/tuxlog_cfg.json" /etc/tuxlog/
-fi
 
 
 cat > "$APPDIR/app.wsgi" << EOF
@@ -60,7 +67,6 @@ EOF
 cd $APPDIR/vue-ui/
 npm install
 npm run build
-
 
 cd $APPDIR/setup/
 ./pwizproxy.py $PYTHON $HOST $DATABASE $USERNAME $PASSWORD "../model/model.py"

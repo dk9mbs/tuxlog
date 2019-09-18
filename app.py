@@ -270,7 +270,7 @@ def adif_import(table):
             #    & (LogLogs.start_utc==log.start_utc)
             #)
 
-            start_utc=datetime.time(int(log.start_utc[0:2]), int(log.start_utc[2:4]))
+            start_utc=datetime.time(int(log.start_utc[0:2]), int(log.start_utc[2:4]), int(log.start_utc[4:6]))
 
             log_exists=LogLogs.get_or_none( 
                 (LogLogs.yourcall==log.yourcall) & (LogLogs.logdate_utc==log.logdate_utc)

@@ -140,6 +140,17 @@ CREATE TABLE IF NOT EXISTS log_logs(
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+CREATE TABLE IF NOT EXISTS log_importlogs(
+    id int NOT NULL AUTO_INCREMENT,
+    log_id int NULL COMMENT 'log id',
+    external_record text NULL COMMENT 'adif record as string',
+    internal_record text NULL COMMENT 'json record as string',
+    import_message text NULL COMMENT 'Message from importengine',
+    statuscode int NOT NULL default '0' COMMENT '0=new;1=pending;10=ok;20=error',
+    FOREIGN KEY (log_id) REFERENCES log_logs(id),
+    PRIMARY KEY(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS meta_dataviews(
     id int NOT NULL AUTO_INCREMENT COMMENT 'Unique ID',
     model_name varchar(250) NOT NULL COMMENT 'Name of Table',

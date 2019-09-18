@@ -1,6 +1,6 @@
 from model.model import MetaDataExchangeFields
 from model.model import LogLogs
-from model.model import LogModes
+from model.model import LogModes, LogImportlogs
 from usecases.fieldmapping import FieldMapping
 import peewee
 import sys
@@ -41,7 +41,13 @@ class AdifImportLogic(BaseUseCase):
 
             log=LogLogs()
 
+            import_log=LogImportlogs()
+            import_log.internal_record=adif_rec
+            import_log.external_record=args[1]
+            import_log.save(force_insert=True)
+
             for adif_fld in adif_rec:
+                
                 fld_def=FieldMapping.ext_to_int(adif_fld, 
                     FieldMapping.read_mappings_from_db(self._table_name))
 
@@ -54,7 +60,7 @@ class AdifImportLogic(BaseUseCase):
                     if internal=='start_utc' and (len(adif_rec[adif_fld])==4):
                         adif_rec[adif_fld]=adif_rec[adif_fld]+"00"
 
-                    if internal=='power':
+                    if fld_def.internal_datatype=='Number':
                         adif_rec[adif_fld]=re.sub('[^0-9]','', adif_rec[adif_fld])
                     
                     if fld_def.internal_datatype=='Boolean':
@@ -74,6 +80,9 @@ class AdifImportLogic(BaseUseCase):
 
             try:
                 log.save()
+                import_log.log=log.id
+                import_log.statuscode=10
+                import_log.save(force_insert=False)
                 self._execute("after_save_adif_rec", adif_rec=log)
             except peewee.IntegrityError as err:
                 self._execute("error_save_adif_rec", adif_rec=log, error_desc=str(err))
@@ -97,24 +106,19 @@ class AdifParserLib:
     def __call__(self, *args, **kwargs):
         adif_str=args[0]
         #do not assign adif_str to another value!!!  
-        adif=adif_str.replace("\r", "")
-        adif=adif_str.replace("\n", "")
-        adif=adif_str.replace("\t", "")
 
-        #records=str(adif).split("<eoh>")
-        #records=str(records[1]).split("<eor>")
-
-        records=re.split("<eoh>", adif, flags=re.IGNORECASE)
+        records=re.split("<eoh>", adif_str, flags=re.IGNORECASE)
         records=re.split("<eor>", records[1], flags=re.IGNORECASE)
 
         adif_recs=list()
 
         for rec in records:
-            adif_rec=self._extract_fields(rec+' <DUMMY:2: DUMMY')
-            #print(adif_rec)
+            rec=rec.replace("\r", "").replace("\n", "").replace("\t", "").strip()
+
+            adif_rec=self._extract_fields(rec+' <')
             if len(adif_rec) >0:
 
-                edit_adif_rec=self.fn(adif_rec, **kwargs)
+                edit_adif_rec=self.fn(adif_rec,rec, **kwargs)
                 
                 if edit_adif_rec != None:
                     adif_recs.append(edit_adif_rec)
@@ -124,7 +128,7 @@ class AdifParserLib:
         return adif_recs
 
     def _extract_fields(self, adif_record):
-        attr = re.findall(r"(.*?):(\d)>(.*?)\s(<.*?)", adif_record) 
+        attr = re.findall(r"(.*?):(\d{1,})>(.*?)\s(<.*?)", adif_record) 
         json={}         
         for m in attr:
             name=str(m[0]).replace("<","")
