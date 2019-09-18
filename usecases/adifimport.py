@@ -79,7 +79,8 @@ class AdifImportLogic(BaseUseCase):
             self._execute('before_save_adif_rec', model=log, logbook_id=self._logbook_id)
 
             try:
-                log.save()
+                if log.id==None:
+                    log.save()
                 import_log.log=log.id
                 import_log.statuscode=10
                 import_log.save(force_insert=False)
