@@ -244,8 +244,10 @@ def adif_import(table):
             logbook_id = request.args.get("logbook_id")
         else:
             return Response(json.dumps({'error':'Cannot find logbook_id in querystring!!!'}), 500)
-        content=request.data.decode()
-        logger.info(content)
+
+        #content=request.data.decode()
+        content="".join(map(chr, request.data))        
+
         saved_rec=[]
 
         parser = AdifImportLogic(table,logbook_id)
