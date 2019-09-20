@@ -105,6 +105,7 @@ Vue.use(ToastPlugin)
 import { ModalPlugin } from 'bootstrap-vue'
 Vue.use(ModalPlugin)
 
+
 export const router = new VueRouter({
   mode: 'history',
   base: __dirname,
@@ -125,7 +126,7 @@ new Vue({
   template: `
   <div>
     <b-navbar toggleable="lg" type="dark" variant="dark">
-    <b-navbar-brand :to="{path: '/ui'}">tuXlog</b-navbar-brand>
+    <b-navbar-brand :to="{path: '/ui'}">tuxLog</b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -158,7 +159,13 @@ new Vue({
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
-  <router-view class="view" :key="$route.fullPath"></router-view>
+
+  <table style="min-width: 100%">
+  <tr>
+  <td style="width: 15%;"><tuxlog-menu/></td>
+  <td style="min-width: 85%;"><router-view class="view" :key="$route.fullPath"></router-view></td>
+  </tr>
+  </table>
   
 </div>
 `
