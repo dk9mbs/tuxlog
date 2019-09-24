@@ -106,11 +106,14 @@ import { ModalPlugin } from 'bootstrap-vue'
 Vue.use(ModalPlugin)
 
 
+import LiquorTree from 'liquor-tree';
+Vue.use(LiquorTree);
+
 export const router = new VueRouter({
   mode: 'history',
   base: __dirname,
   routes: [
-    { path: '/ui', component: {template: '<div>home</div>'} },
+    { path: '/ui', component: {template: '<div style="padding: 5px;">tuxLog</div>'} },
     { path: '/ui/about', component: {template: '<div>about</div>'} },
     { path: '/ui/contact', component: {template: '<div>contact</div>'} },
     { path: '/ui/qso', component: Qso },
@@ -123,6 +126,18 @@ export const router = new VueRouter({
 
 new Vue({
   router,
+  data() { return {
+    showSidePanel: true
+    }
+  },
+  methods: {
+    togleSidePanel: function() {
+      this.showSidePanel=!this.showSidePanel;
+    },
+    onClickMenuItem(node) {
+      this.$router.push(node.id);
+    }
+  },
   template: `
   <div>
     <b-navbar toggleable="lg" type="dark" variant="dark">
@@ -137,17 +152,6 @@ new Vue({
 
       <b-navbar-nav class="ml-auto">
 
-        <b-nav-item-dropdown text="QSO" right>
-        <b-dropdown-item :to="{path: '/ui/qso'}">Add / edit / search a qso</b-dropdown-item>
-        </b-nav-item-dropdown>
-
-        <b-nav-item-dropdown text="System" right>
-          <b-dropdown-item :to="{path: '/ui/dataview/LogRigs/default'}">Rigs</b-dropdown-item>
-          <b-dropdown-item :to="{path: '/ui/dataview/LogLogbooks/default'}">Logbooks</b-dropdown-item>
-          <b-dropdown-item :to="{path: '/ui/dataview/LogModes/default'}">Modes</b-dropdown-item>
-          <b-dropdown-item :to="{path: '/ui/dataview/LogQslshipmentmodes/default'}">Shipmentmodes</b-dropdown-item>
-        </b-nav-item-dropdown>
-
         <b-nav-item-dropdown text="Help" right>
         <b-dropdown-item :to="{path: '/ui/about'}">About</b-dropdown-item>
         </b-nav-item-dropdown>
@@ -159,14 +163,14 @@ new Vue({
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
-
-  <table style="min-width: 100%">
-  <tr>
-  <td style="width: 15%;"><tuxlog-menu/></td>
-  <td style="min-width: 85%;"><router-view class="view" :key="$route.fullPath"></router-view></td>
-  </tr>
-  </table>
   
+  <div v-if="showSidePanel===false" style="float: left; margin-right: 1px;width:15px;text-align: right;font-size:2em" @click="togleSidePanel">=</div>
+  
+  <div v-if="showSidePanel" style="float: left;overflow: auto;max-width: 15%; min-width: 15%;">
+    <div style="width: 100%;text-align: right;padding-right: 5px;font-size:2em;" @click="togleSidePanel">x</div>
+    <tuxlog-menu @onClickNode="onClickMenuItem"/>
+  </div>
+  <div><router-view class="view" :key="$route.fullPath"/></div>
 </div>
 `
 }).$mount('#app');

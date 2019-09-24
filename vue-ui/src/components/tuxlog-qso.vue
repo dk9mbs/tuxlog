@@ -155,7 +155,7 @@
             </b-card>
 
 
-          <div class="mb-1" style="height: 100px; overflow: auto;font-size:10px;">
+          <div class="mb-1" style="height: 200px; overflow: auto;font-size:10px;">
           <tuxlog-call-history 
           style="padding-top:5px;"
           v-bind:items="history" 
