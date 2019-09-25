@@ -127,7 +127,7 @@ export const router = new VueRouter({
 new Vue({
   router,
   data() { return {
-    showSidePanel: true
+    showSidePanel: false
     }
   },
   methods: {
@@ -140,7 +140,7 @@ new Vue({
   },
   template: `
   <div>
-    <b-navbar toggleable="lg" type="dark" variant="dark">
+    <b-navbar toggleable="lg" type="dark" variant="dark" style="height: 7vh">
     <b-navbar-brand :to="{path: '/ui'}">tuxLog</b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -151,7 +151,6 @@ new Vue({
       </b-navbar-nav>
 
       <b-navbar-nav class="ml-auto">
-
         <b-nav-item-dropdown text="Help" right>
         <b-dropdown-item :to="{path: '/ui/about'}">About</b-dropdown-item>
         </b-nav-item-dropdown>
@@ -164,12 +163,21 @@ new Vue({
     </b-collapse>
   </b-navbar>
   
-  <div v-if="showSidePanel===false" style="float: left; margin-right: 1px;width:15px;text-align: right;font-size:2em" @click="togleSidePanel">=</div>
+  <div v-if="showSidePanel===false" 
+    style="float:left;
+      background-color: silver;
+      padding-right: 4px;
+      width:35px;
+      text-align:right;height: 93vh;
+      font-size:2em" 
+    @click="togleSidePanel">=
+  </div>
   
-  <div v-if="showSidePanel" style="float: left;overflow: auto;max-width: 15%; min-width: 15%;">
-    <div style="width: 100%;text-align: right;padding-right: 5px;font-size:2em;" @click="togleSidePanel">x</div>
+  <div v-if="showSidePanel" style="float: left;overflow: auto;height:93vh;background-color: silver;">
+    <div style="width: 100%;text-align: right;padding-right: 5px;padding-top:1px;font-size:2em;" @click="togleSidePanel">x</div>
     <tuxlog-menu @onClickNode="onClickMenuItem"/>
   </div>
+
   <div><router-view class="view" :key="$route.fullPath"/></div>
 </div>
 `
