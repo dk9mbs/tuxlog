@@ -140,7 +140,8 @@ new Vue({
   },
   template: `
   <div>
-    <b-navbar toggleable="lg" type="dark" variant="dark" style="height: 7vh">
+    
+    <b-navbar v-if="1===2" toggleable="lg" type="dark" variant="dark" style="height: 7vh">
     <b-navbar-brand :to="{path: '/ui'}">tuxLog</b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -163,12 +164,16 @@ new Vue({
     </b-collapse>
   </b-navbar>
   
+  <div style="width:100%;background-color: black;min-height: 5vh;color: silver; vertical-align: middle;">
+    tuxLog
+  </div>
+
   <div v-if="showSidePanel===false" 
     style="float:left;
       background-color: silver;
       padding-right: 4px;
       width:35px;
-      text-align:right;height: 93vh;
+      text-align:right;height: 95vh;
       font-size:2em" 
     @click="togleSidePanel">=
   </div>
