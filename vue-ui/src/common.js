@@ -2,6 +2,10 @@ import axios from 'axios';
 
 
 export class Tuxlog {
+    static  isMobil() {
+        debugger;
+        return screen.width<=760 ? true : false;
+    }
 
     static webRequestAsync (method, url, data, callBackOk, callBackErr) {
         console.log('HTTP method => '+method);
@@ -32,6 +36,7 @@ export class Tuxlog {
         }
     }
 
+    /*
     static async webRequestSync (method, url, data) {
         console.log('HTTP method => '+method);
         //debugger;
@@ -46,6 +51,7 @@ export class Tuxlog {
             return {'data': res.data,'orgres': res };
         }
     }
+    */
 
 }
 

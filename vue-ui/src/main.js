@@ -1,4 +1,6 @@
 import Vue from 'vue'
+import { Tuxlog } from './common.js'
+
 import Qso from './components/tuxlog-qso.vue'
 import Rig from './components/tuxlog-rig.vue'
 
@@ -105,9 +107,11 @@ Vue.use(ToastPlugin)
 import { ModalPlugin } from 'bootstrap-vue'
 Vue.use(ModalPlugin)
 
-
 import LiquorTree from 'liquor-tree';
 Vue.use(LiquorTree);
+
+import QsoMobile from './components/tuxlog-qsomobile.vue'
+Vue.component('tuxlog-qsomobile', QsoMobile);
 
 export const router = new VueRouter({
   mode: 'history',
@@ -116,7 +120,7 @@ export const router = new VueRouter({
     { path: '/ui', component: {template: '<div style="padding: 5px;">tuxLog</div>'} },
     { path: '/ui/about', component: {template: '<div>about</div>'} },
     { path: '/ui/contact', component: {template: '<div>contact</div>'} },
-    { path: '/ui/qso', component: Qso },
+    { path: '/ui/qso', component: Tuxlog.isMobil() ? QsoMobile : Qso },
     { path: '/ui/dataview/:table/:view', component: tuxlogDataView, props:true },
     { path: '/ui/dataform/:table/:form/:id', component: tuxlogDataForm, props:true },
     { path: '/ui/dataform/:table/:form/', component: tuxlogDataForm, props:true },
@@ -125,6 +129,7 @@ export const router = new VueRouter({
 
 
 new Vue({
+  comments: {QsoMobile},
   router,
   data() { return {
     showSidePanel: false
