@@ -28,7 +28,7 @@
         return {
           items: [
             {text: 'QSO', id: '/ui/qso'},
-            {text: 'Reporting', id: '/ui'},
+            {text: 'Reporting', id: '/ui', children: [ {text: 'QSL', id:'/ui/qsl'} ]},
             {text: 'Basedata', id: '/ui', children: [
               {text: 'Rigs', id: '/ui/dataview/LogRigs/default'},
               {text: 'Modes', id: '/ui/dataview/LogModes/default'},

@@ -11,31 +11,24 @@
             <b-container fluid style="font-size:10px;">
               <b-row>
                 <b-col>
-                  <tuxlog-button label="Start" @click="newRecord()" style="min-width:200px;"/>
-                  <tuxlog-button label="Save" @click="save()" style="min-width:200px;"/>
-                  <tuxlog-button label="Cancel" @click="cancel()" style="min-width:200px;"/>
-                </b-col>
-                <b-col>
-                  <div style="border-radius:10px;" v-show="isNewRecordMode()">
+
+                    
+
+                  <div style="float: left;">
+                  <tuxlog-button label="Start" @click="newRecord()" style="min-width:200px;padding-right:5px;"/>
+                  <tuxlog-button label="Save" @click="save()" style="min-width:200px;padding-right:5px;"/>
+                  <tuxlog-button label="Cancel" @click="cancel()" style="min-width:200px;padding-right:5px;"/>
+                   <div style="border-radius:10px;margin-top:5px;min-height: 10px;background-color: red;padding:2px;" v-show="isNewRecordMode()">
                     QSO&nbsp;running&nbsp;...{{ validateForm() }}
-                  </div>          
-                </b-col>
-                <b-col>
-                    <tuxlog-rigctl
-                    v-if="logentry.rig"
-                    :rig="logentry.rig.id"
-                    :showpanel="false"
-                    :showstatus="true"
-                    @onget_qrg="on_get_qrg">
-                  </tuxlog-rigctl>
-                </b-col>
-                <b-col>
-                  <tuxlog-call-history-filter 
+                  </div>     
+                  </div>
+
+                  <tuxlog-call-history-filter style="float: left;" 
                     v-model="callhistory">
                   </tuxlog-call-history-filter>
 
+
                 </b-col>
-                <b-col></b-col>
               </b-row>
             </b-container>
 
@@ -75,7 +68,7 @@
                 <tuxlog-input id="logdata_utc" type="date" v-model="logentry.logdate_utc" label="Date"></tuxlog-input>
             </b-col>
             <b-col>
-                <tuxlog-input id="start_utc" type="text" v-model="logentry.start_utc" label="UTC"></tuxlog-input>
+                <tuxlog-input id="start_utc" type="time" v-model="logentry.start_utc" label="UTC"></tuxlog-input>
             </b-col>
           </b-row>
 
@@ -155,7 +148,7 @@
             </b-card>
 
 
-          <div class="mb-1" style="height: 200px; overflow: auto;font-size:10px;">
+          <div class="mb-1" style="height: 170px; overflow: auto;font-size:10px;">
           <tuxlog-call-history 
           style="padding-top:5px;"
           v-bind:items="history" 
@@ -166,6 +159,13 @@
           </tuxlog-call-history>
           </div>
 
+          <tuxlog-rigctl
+            v-if="logentry.rig"
+            :rig="logentry.rig.id"
+            :showpanel="false"
+            :showstatus="true"
+            @onget_qrg="on_get_qrg">
+          </tuxlog-rigctl>
 
         </b-col>
 
@@ -312,6 +312,7 @@ export default {
         })
     },
     initEntry: function (id) {
+      //debugger;
       this.appstatus.processdatadetail=true;
       if (id==0) {
         this.clearForm();
@@ -350,7 +351,6 @@ export default {
       "logbook": {"id":logbookId}, "qsl_shipmentmode": {"id":"bureau"}, "logdate_utc": new Date().toISOString().slice(0,10), 
       "start_utc": utcTime, "qslsend":0, "qslrecv":0, "frequency": frequency, "power": pwr};
 
-      
     },
     save: function() {
       if(!this.validateForm()) {

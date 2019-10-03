@@ -2,9 +2,14 @@ import axios from 'axios';
 
 
 export class Tuxlog {
+    static deviceType='desktop';
+
+    static setdeviceType(type) {
+        Tuxlog.deviceType=type;
+    }
+
     static  isMobil() {
-        debugger;
-        return screen.width<=760 ? true : false;
+        return screen.width<=760 || Tuxlog.deviceType == 'mobile' ? true : false;
     }
 
     static webRequestAsync (method, url, data, callBackOk, callBackErr) {

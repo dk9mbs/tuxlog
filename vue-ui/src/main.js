@@ -113,6 +113,14 @@ Vue.use(LiquorTree);
 import QsoMobile from './components/tuxlog-qsomobile.vue'
 Vue.component('tuxlog-qsomobile', QsoMobile);
 
+import Qsl from './pages/tuxlog-qsl.vue';
+Vue.component('tuxlog-qsl', Qsl);
+
+//import { TablePlugin } from 'bootstrap-vue'
+//Vue.use(TablePlugin)
+
+//Tuxlog.setdeviceType('desktop');
+
 export const router = new VueRouter({
   mode: 'history',
   base: __dirname,
@@ -120,13 +128,22 @@ export const router = new VueRouter({
     { path: '/ui', component: {template: '<div style="padding: 5px;">tuxLog</div>'} },
     { path: '/ui/about', component: {template: '<div>about</div>'} },
     { path: '/ui/contact', component: {template: '<div>contact</div>'} },
-    { path: '/ui/qso', component: Tuxlog.isMobil() ? QsoMobile : Qso },
+    { path: '/ui/qso', component: Qso, meta: {mobile: 'mobile'} },
+    { path: '/ui/qso/mobile', component: QsoMobile },
     { path: '/ui/dataview/:table/:view', component: tuxlogDataView, props:true },
     { path: '/ui/dataform/:table/:form/:id', component: tuxlogDataForm, props:true },
     { path: '/ui/dataform/:table/:form/', component: tuxlogDataForm, props:true },
+    { path: '/ui/qsl', component: Qsl, props:false },
     ]
   });
 
+  router.beforeEach((to, from, next) => {
+    if(to.meta.mobile && Tuxlog.isMobil()) {
+      next(to.path+'/mobile');
+    } else {
+      next();
+    }
+  })
 
 new Vue({
   comments: {QsoMobile},

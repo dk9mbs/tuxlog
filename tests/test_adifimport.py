@@ -8,9 +8,9 @@ import os
 
 #from model import model
 import config
-environment=getenv("tuxlog_environment")
-if environment==None or environment=="":
-    environment="test"
+#environment=getenv("tuxlog_environment")
+#if environment==None or environment=="":
+#    environment="test"
 
 #config.DatabaseConfig.open(model.database, config.DatabaseConfig.read_from_file(environment))
 config.DatabaseConfig.open(model.database, config.DatabaseConfig.read_from_file(os.getenv("tuxlog_environment")))

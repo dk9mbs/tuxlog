@@ -20,7 +20,7 @@
         </b-input-group-text>
     </template>  
 
-  <b-form-select v-bind:disabled="readonly" v-bind:id="id" v-model="value" class="mb-0" size="sm" 
+  <b-form-select v-bind:disabled="readonly" v-bind:id="id" v-model="getValue" class="mb-0" size="sm" 
         @input="handleInput" @change="onchange_value" style="border-radius: 10px">
   <option v-bind:key="n" v-for="n in values" v-bind:value="n.id">{{ n.description }}</option>
   </b-form-select>
@@ -34,12 +34,18 @@
 export default {
   name: 'tuxlog-option',
   props: ["values", "value", "label", "id", "readonly", "tooltip", "mandatory"],
+  computed: {
+    getValue: {
+      get: function() {return this.value},
+      set: function(newValue) {}
+    }
+  },
   methods: {
       onchange_value(e) {
         this.$emit('onchange_value', e)
       },
       handleInput (e) {
-        this.$emit('input', this.value)
+        this.$emit('input', e)
       }
     }
 }
