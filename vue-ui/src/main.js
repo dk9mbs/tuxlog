@@ -15,7 +15,6 @@ import tuxlogButton from './components/tuxlog-button.vue'
 import tuxlogCallHistory from './components/tuxlog-call-history.vue'
 import tuxlogCallHistoryFilter from './components/tuxlog-call-history-filter.vue'
 import tuxlogRigctl from './components/tuxlog-rigctl.vue'
-import tuxlogMenu from './components/tuxlog-menu.vue'
 import tuxlogDataView from './components/tuxlog-dataview.vue'
 import tuxlogDataForm from './components/tuxlog-dataform.vue';
 import tuxlogRig from './components/tuxlog-rig.vue';
@@ -86,7 +85,6 @@ Vue.component('tuxlog-checkbox', tuxlogCheckbox);
 Vue.component('tuxlog-call-history', tuxlogCallHistory);
 Vue.component('tuxlog-call-history-filter', tuxlogCallHistoryFilter);
 Vue.component('tuxlog-rigctl', tuxlogRigctl);
-Vue.component('tuxlog-menu', tuxlogMenu);
 Vue.component('tuxlog-button', tuxlogButton);
 Vue.component('tuxlog-dataform', tuxlogDataForm);
 Vue.component('tuxlog-rig', tuxlogRig)
@@ -155,6 +153,14 @@ new Vue({
     },
     onClickMenuItem(node) {
       this.$router.push(node.id);
+    },
+    setDeviceType: function(e) {
+      debugger;
+      if(e==0) {
+        Tuxlog.setdeviceType('desktop');
+      } else {
+        Tuxlog.setdeviceType('mobile');
+      }
     }
   },
   template: `
@@ -172,25 +178,26 @@ new Vue({
 
       <b-navbar-nav class="ml-auto">
 
-
         <b-nav-item-dropdown text="Qso" right>
-        <b-dropdown-item :to="{path: '/ui/qso'}">Qso</b-dropdown-item>
-        <b-dropdown-item :to="{path: '/ui/qsl'}">Qsl management</b-dropdown-item>
+          <b-dropdown-item :to="{path: '/ui/qso'}">Qso</b-dropdown-item>
+          <b-dropdown-item :to="{path: '/ui/qsl'}">Qsl management</b-dropdown-item>
         </b-nav-item-dropdown>
 
         <b-nav-item-dropdown text="System" right>
-	<b-dropdown-item :to="{path: '/ui/dataview/LogRigs/default'}">Rigs</b-dropdown-item>
-	<b-dropdown-item :to="{path: '/ui/dataview/LogModes/default'}">Modes</b-dropdown-item>
-	<b-dropdown-item :to="{path: '/ui/dataview/LogLogbooks/default'}">Logbooks</b-dropdown-item>
-        <b-dropdown-item :to="{path: '/ui/dataview/LogQslshipmentmodes/default'}">Qsl shipment</b-dropdown-item>
-
+          <b-dropdown-item :to="{path: '/ui/dataview/LogRigs/default'}">Rigs</b-dropdown-item>
+          <b-dropdown-item :to="{path: '/ui/dataview/LogModes/default'}">Modes</b-dropdown-item>
+          <b-dropdown-item :to="{path: '/ui/dataview/LogLogbooks/default'}">Logbooks</b-dropdown-item>
+          <b-dropdown-item :to="{path: '/ui/dataview/LogQslshipmentmodes/default'}">Qsl shipment</b-dropdown-item>
+          <b-nav-form>
+            <tuxlog-checkbox style="padding-left:20px;" label="Mobile" @onchange_value="setDeviceType" />
+          </b-nav-form>
         </b-nav-item-dropdown>
-
-
 
         <b-nav-item-dropdown text="Help" right>
-        <b-dropdown-item :to="{path: '/ui/about'}">About</b-dropdown-item>
+          <b-dropdown-item :to="{path: '/ui/about'}">About</b-dropdown-item>
         </b-nav-item-dropdown>
+
+        <!--Tuxlog.setdeviceType('mobile'); -->
 
 
         <b-nav-item-dropdown right>
@@ -201,10 +208,6 @@ new Vue({
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
-
-  <div v-if="1===2" style="width:100%;background-color: black;min-height: 5vh;color: silver; vertical-align: middle;">
-    tuxLog
-  </div>
 
   <div><router-view class="view" :key="$route.fullPath"/></div>
 </div>

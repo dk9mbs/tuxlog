@@ -4,7 +4,7 @@
 
       <tuxlog-input label="Call" @input="handleSearch" />
 
-      <b-table :fields="fields" :items="items" :busy="isBusy"
+      <b-table :fields="fields" :items="items" :busy="isBusy" :stacked="isStacked"
           striped hover small
           v-bind:bordered="true">
         <template slot="qslrecv" slot-scope="row">
@@ -50,6 +50,7 @@ export default {
     }
   },
   mounted () {
+    
     Tuxlog.webRequestAsync('GET','/api/v1.0/tuxlog/LogLogs?where='+encodeURI('id < 0'), undefined,(response) => {
       this.items=response.data;
     },(response) => { alert('Error loading lookbooks') })
@@ -58,6 +59,11 @@ export default {
   watch: {
   },
   filters:{
+  },
+  computed: {
+    isStacked: {
+      get: function(){return Tuxlog.isMobil()}
+    }
   },
   methods: {
     handleSearch(e) {
