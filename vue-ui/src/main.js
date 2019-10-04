@@ -116,9 +116,6 @@ Vue.component('tuxlog-qsomobile', QsoMobile);
 import Qsl from './pages/tuxlog-qsl.vue';
 Vue.component('tuxlog-qsl', Qsl);
 
-//import { TablePlugin } from 'bootstrap-vue'
-//Vue.use(TablePlugin)
-
 //Tuxlog.setdeviceType('desktop');
 
 export const router = new VueRouter({
@@ -163,7 +160,7 @@ new Vue({
   template: `
   <div>
     
-    <b-navbar v-if="1===2" toggleable="lg" type="dark" variant="dark" style="height: 7vh">
+    <b-navbar v-if="1===1" toggleable="lg" type="dark" variant="dark">
     <b-navbar-brand :to="{path: '/ui'}">tuxLog</b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -174,35 +171,39 @@ new Vue({
       </b-navbar-nav>
 
       <b-navbar-nav class="ml-auto">
+
+
+        <b-nav-item-dropdown text="Qso" right>
+        <b-dropdown-item :to="{path: '/ui/qso'}">Qso</b-dropdown-item>
+        <b-dropdown-item :to="{path: '/ui/qsl'}">Qsl management</b-dropdown-item>
+        </b-nav-item-dropdown>
+
+        <b-nav-item-dropdown text="System" right>
+	<b-dropdown-item :to="{path: '/ui/dataview/LogRigs/default'}">Rigs</b-dropdown-item>
+	<b-dropdown-item :to="{path: '/ui/dataview/LogModes/default'}">Modes</b-dropdown-item>
+	<b-dropdown-item :to="{path: '/ui/dataview/LogLogbooks/default'}">Logbooks</b-dropdown-item>
+        <b-dropdown-item :to="{path: '/ui/dataview/LogQslshipmentmodes/default'}">Qsl shipment</b-dropdown-item>
+
+        </b-nav-item-dropdown>
+
+
+
         <b-nav-item-dropdown text="Help" right>
         <b-dropdown-item :to="{path: '/ui/about'}">About</b-dropdown-item>
         </b-nav-item-dropdown>
+
 
         <b-nav-item-dropdown right>
           <template slot="button-content"><em>User</em></template>
           <b-dropdown-item href="#">Sign Out</b-dropdown-item>
         </b-nav-item-dropdown>
+
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
-  
-  <div style="width:100%;background-color: black;min-height: 5vh;color: silver; vertical-align: middle;">
-    tuxLog
-  </div>
 
-  <div v-if="showSidePanel===false" 
-    style="float:left;
-      background-color: silver;
-      padding-right: 4px;
-      width:35px;
-      text-align:right;height: 95vh;
-      font-size:2em" 
-    @click="togleSidePanel">=
-  </div>
-  
-  <div v-if="showSidePanel" style="float: left;overflow: auto;height:93vh;background-color: silver;">
-    <div style="width: 100%;text-align: right;padding-right: 5px;padding-top:1px;font-size:2em;" @click="togleSidePanel">x</div>
-    <tuxlog-menu @onClickNode="onClickMenuItem"/>
+  <div v-if="1===2" style="width:100%;background-color: black;min-height: 5vh;color: silver; vertical-align: middle;">
+    tuxLog
   </div>
 
   <div><router-view class="view" :key="$route.fullPath"/></div>
