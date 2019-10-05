@@ -89,6 +89,10 @@ BEGIN
             'LogQslshipmentmodes', 'default', '["id","description"]', 
                 '','description like \'$1\'','id','/ui/dataform/LogQslshipmentmodes/default/$1','description');
 
+        INSERT INTO meta_dataviews (model_name, view_name, fields, where_clause,filter_clause, id_field_name, open_path, order_by) VALUES (
+            'LogDxcc', 'default', '["id","entity_name"]', 
+                '','description like \'$1\'','id','/ui/dataform/LogDxcc/default/$1','entity_name');
+
     END IF;
 
 
@@ -106,10 +110,23 @@ BEGIN
             'LogQslshipmentmodes','default','tuxlog-qslshipmentmode'
         );
 
+        INSERT INTO meta_dataforms(model_name,form_name, datacomponent) VALUES (
+            'LogDxcc','default','tuxlog-dxcc'
+        );
+
     END IF;
 
 
+   IF NOT EXISTS (select COLUMN_NAME from INFORMATION_SCHEMA.columns WHERE TABLE_SCHEMA=DATABASE() 
+        AND TABLE_NAME='log_logs' AND column_name='rxexchange1') THEN
 
+        ALTER TABLE log_logs ADD rxexchange1 varchar(50) NULL COMMENT 'Contest exchange';
+        ALTER TABLE log_logs ADD txexchange1 varchar(50) NULL COMMENT 'Contest exchange';
+
+        ALTER TABLE log_logs ADD rxexchange2 varchar(50) NULL COMMENT 'Contest exchange 2';
+        ALTER TABLE log_logs ADD txexchange2 varchar(50) NULL COMMENT 'Contest exchange 2';
+
+    END IF;
 
 
     IF NOT EXISTS (SELECT version FROM meta_sys_dbversion WHERE version='upd20190903') THEN 

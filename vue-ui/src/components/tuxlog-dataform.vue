@@ -26,11 +26,13 @@
 
 <script>
 import axios from 'axios'
+import { Tuxlog, ifnull } from '../common.js';
 
 export default {
   name: 'tuxlog-dataform',
   props: ["id", "table", "form"],
   data() { return {
+    mode: '',
     dataform_def_not_found: false,
     datasource: [],
     currentrecord: {},
@@ -38,16 +40,21 @@ export default {
 }
   },
   mounted () {
-    var where=encodeURI("id='"+this.id+"'");
-    axios.get('/api/v1.0/tuxlog/'+this.table+'?where='+where).then ( (response) => {
-        if(response.data.length==0) {
-          this.currentrecord={};
-          this.datasource=[];
-        } else {
-          this.datasource=response.data;
-          this.currentrecord=this.datasource[0];
-        }
-    }).catch((response) => { debugger;alert('Error in dataform'+where); })
+    if (ifnull(this.id, this.id,'') != '') {
+      this.mode='EDIT';
+      var where=encodeURI("id='"+this.id+"'");
+      axios.get('/api/v1.0/tuxlog/'+this.table+'?where='+where).then ( (response) => {
+          if(response.data.length==0) {
+            this.currentrecord={};
+            this.datasource=[];
+          } else {
+            this.datasource=response.data;
+            this.currentrecord=this.datasource[0];
+          }
+      }).catch((response) => { debugger;alert('Error in dataform'+where); })
+    } else {
+      this.mode='NEW';
+    }
 
     var where=encodeURI("model_name='"+this.table+"' AND form_name='"+this.form+"'");
     axios.get('/api/v1.0/tuxlog/MetaDataforms?where='+where).then((response) => {
@@ -67,14 +74,17 @@ export default {
       this.$bvToast.toast(text, {
         title: 'tuxlog',
         variant: variant,
-        autoHideDelay: 5000,
+        autoHideDelay: 1000,
         appendToast: append
       })
     },
     save: function() {
-      axios.put('/api/v1.0/tuxlog/'+this.table, this.currentrecord).then((response) => {
+      var method='PUT';
+      if(this.mode=='NEW') method='POST';
+
+      Tuxlog.webRequestAsync(method,'/api/v1.0/tuxlog/'+this.table, this.currentrecord,(response) => {
         this.makeToast(true, 'record saved!', 'success');
-      }).catch((response)=>{alert('Fehler'); this.appstatus.processdatadetail=false; })
+      },(response)=>{alert('Fehler'); this.appstatus.processdatadetail=false; } )
     },
   }
 }

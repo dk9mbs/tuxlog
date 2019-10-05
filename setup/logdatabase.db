@@ -151,6 +151,19 @@ CREATE TABLE IF NOT EXISTS log_importlogs(
     PRIMARY KEY(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS log_dxcc(
+    id int NOT NULL AUTO_INCREMENT,
+    prefix varchar(50) NOT NULL COMMENT 'The callprefix',
+    deleted smallint NOT NULL default '0' COMMENT '1=deleted by ARRL',
+    entity_name varchar(100) NOT NULL COMMENT 'Name of the country',
+    continent varchar(2) NOT NULL COMMENT '2 Character continent shortsign',
+    itu_zone smallint NOT NULL COMMENT 'ITU zone',
+    cq_zone smallint NOT NULL COMMENT 'CQ zone',
+    time_zone smallint NOT NULL COMMENT 'Time Zome in h',
+    entity_code smallint NOT NULL COMMENT 'Entity code',
+    PRIMARY KEY(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS meta_dataviews(
     id int NOT NULL AUTO_INCREMENT COMMENT 'Unique ID',
     model_name varchar(250) NOT NULL COMMENT 'Name of Table',

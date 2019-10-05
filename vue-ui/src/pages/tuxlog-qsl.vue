@@ -62,7 +62,7 @@ export default {
   },
   computed: {
     isStacked: {
-      get: function(){return Tuxlog.isMobil()}
+      get: function(){return Tuxlog.isPhone()}
     }
   },
   methods: {

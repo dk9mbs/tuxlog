@@ -19,16 +19,13 @@
                   </div>     
                   </div>
 
-                  <tuxlog-call-history-filter style="float: left;" 
-                    v-model="callhistory">
-                  </tuxlog-call-history-filter>
               </b-row>
             </b-container>
 
           </b-card>  
 
 
-          <b-card class="mb-1">
+          <!--<b-card class="mb-1">-->
             <div v-if="appstatus.processdatadetail===true" class="d-flex justify-content-center mb-3">
                 <b-spinner label="Loading..."></b-spinner>
             </div>
@@ -43,29 +40,18 @@
                 <tuxlog-input id="power" type="number" v-model="logentry.power" label="Pwr"></tuxlog-input>
                 <tuxlog-input id="frequency" type="number" v-model="logentry.frequency" label="QRG"></tuxlog-input>
                 <tuxlog-input id="logdata_utc" readonly=true type="date" v-model="logentry.logdate_utc" label="Date"></tuxlog-input>
-                <tuxlog-input id="start_utc" readonly=true type="text" v-model="logentry.start_utc" label="UTC"></tuxlog-input>
+                <tuxlog-input id="start_utc" readonly=true type="time" v-model="logentry.start_utc" label="UTC"></tuxlog-input>
                 <tuxlog-input id="yourcall" mandatory type="text" @onchange_value="yourcall_onchange" v-model="logentry.yourcall" label="Call"></tuxlog-input>
                 <tuxlog-input id="rxrst" tooltip="Your incoming RST, as given by the other station" type="number" v-model="logentry.rxrst" label="RX RST"></tuxlog-input>
                 <tuxlog-input id="txrst" tooltip="Your outgoing RST" type="number" v-model="logentry.txrst" label="TX RST"></tuxlog-input>
-                <tuxlog-input id="locator" type="text" v-model="logentry.locator" label="LOC"></tuxlog-input>
+                <tuxlog-input id="name" type="text" v-model="logentry.name" label="Name"></tuxlog-input>
                 <tuxlog-input id="comment" type="text" v-model="logentry.comment" label="Comment"></tuxlog-input>
               </b-col>
             </b-row>
       
             </b-container>
-            </b-card>
+            <!--</b-card>-->
 
-
-          <div class="mb-1" style="height: 100px; overflow: auto;font-size:10px;">
-          <tuxlog-call-history 
-          style="padding-top:5px;"
-          v-bind:items="history" 
-          v-bind:fields="historyfields" 
-          v-bind:id="history" 
-          v-bind:pending="appstatus.loadhistory"
-          @onclick_row="onclick_history">
-          </tuxlog-call-history>
-          </div>
 
             <tuxlog-rigctl
             v-if="logentry.rig"
@@ -102,9 +88,6 @@ export default {
       qslshipmentmodes: [],
       alert: {message: null, type: 'warning',dismissSecs: 10,dismissCountDown: 0,showDismissibleAlert: false}, 
       auth: {username: 'guest', password:null},
-      history: [],
-      historyfields: ["yourcall","logdate_utc","frequency","mode"],
-      callhistory: {"listuri": null, "defaultlisturl": "order=logdate_utc desc,start_utc desc&pagesize=10"}
     }
   },
   mounted () {
@@ -130,22 +113,9 @@ export default {
       this.qslshipmentmodes=response.data;
     },(response) => { alert('Error loading qslshipmentmodes') })
     
-    this.loadHistory();
     
   },
   watch: {
-    'callhistory.listuri': function (newValue) {
-      this.appstatus.loadHistory=true;
-
-      if(newValue==null) {
-        newValue=this.callhistory.defaultlisturl;
-      }
-
-      Tuxlog.webRequestAsync('GET','/api/v1.0/tuxlog/LogLogs?'+newValue, undefined,(response) => {
-      this.history=response.data;
-      this.appstatus.loadhistory=false;
-      },(response)=> {alert('Fehler')} );
-    }
   },
    filters:{
       getconfigkey: function(value,key){
@@ -159,27 +129,6 @@ export default {
         this.logentry.frequency=f/1000000;
       }
     },
-    onclick_history: function(record, index) {
-      this.initEntry(record.id);
-    },
-    loadHistory: function(callsign="") {
-        var paras = "";
-        if (this.callhistory.listuri==null) {
-          paras=this.callhistory.defaultlisturl;
-        } else {
-          paras=this.callhistory.listuri;
-        }
-        
-        Tuxlog.webRequestAsync('GET','/api/v1.0/tuxlog/LogLogs?'+paras,undefined,
-        (response) => {
-          this.history=response.data;
-          this.appstatus.loadhistory=false;
-        },
-        (response)=> {
-          alert('Fehler')
-          } 
-        )
-    },
     makeToast(append = false, text, variant='default') {
         this.toastCount++
         this.$bvToast.toast(text, {
@@ -191,7 +140,6 @@ export default {
       },
     yourcall_onchange: function(event) {
       this.makeToast(true, 'Reading from callbook...')
-      this.loadHistory(event);
       Tuxlog.webRequestAsync('GET','/api/v1.0/callbook/hamdb/'+event,undefined,
       (response)=>{
         this.logentry.name=response.data.haminfo.name
@@ -230,7 +178,6 @@ export default {
     clearForm: function() {
       var now = new Date();
       var utcTime = now.getUTCHours()+":"+now.getUTCMinutes();
-      this.loadHistory();
       this.appstatus.processdatadetail=false;
 
       var rigId="";

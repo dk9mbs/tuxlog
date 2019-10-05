@@ -8,8 +8,8 @@ export class Tuxlog {
         Tuxlog.deviceType=type;
     }
 
-    static  isMobil() {
-        return screen.width<=760 || Tuxlog.deviceType == 'mobile' ? true : false;
+    static  isPhone() {
+        return screen.width<=760 || Tuxlog.deviceType == 'phone' ? true : false;
     }
 
     static webRequestAsync (method, url, data, callBackOk, callBackErr) {
@@ -62,7 +62,7 @@ export class Tuxlog {
 
 
 export function ifnull(value, thenVal, elseVal ) {
-    if(value==undefined) {
+    if(value!=undefined) {
         return thenVal;
     } else {
         return elseVal;

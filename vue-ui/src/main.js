@@ -124,7 +124,7 @@ export const router = new VueRouter({
     { path: '/ui/about', component: {template: '<div>about</div>'} },
     { path: '/ui/contact', component: {template: '<div>contact</div>'} },
     { path: '/ui/qso', component: Qso, meta: {mobile: 'mobile'} },
-    { path: '/ui/qso/mobile', component: QsoMobile },
+    { path: '/ui/qso/phone', component: QsoMobile },
     { path: '/ui/dataview/:table/:view', component: tuxlogDataView, props:true },
     { path: '/ui/dataform/:table/:form/:id', component: tuxlogDataForm, props:true },
     { path: '/ui/dataform/:table/:form/', component: tuxlogDataForm, props:true },
@@ -133,8 +133,8 @@ export const router = new VueRouter({
   });
 
   router.beforeEach((to, from, next) => {
-    if(to.meta.mobile && Tuxlog.isMobil()) {
-      next(to.path+'/mobile');
+    if(to.meta.mobile && Tuxlog.isPhone()) {
+      next(to.path+'/phone');
     } else {
       next();
     }
@@ -159,7 +159,7 @@ new Vue({
       if(e==0) {
         Tuxlog.setdeviceType('desktop');
       } else {
-        Tuxlog.setdeviceType('mobile');
+        Tuxlog.setdeviceType('phone');
       }
     }
   },
@@ -179,7 +179,8 @@ new Vue({
       <b-navbar-nav class="ml-auto">
 
         <b-nav-item-dropdown text="Qso" right>
-          <b-dropdown-item :to="{path: '/ui/qso'}">Qso</b-dropdown-item>
+          <b-dropdown-item :to="{path: '/ui/qso'}">QSO (desktop)</b-dropdown-item>
+          <b-dropdown-item :to="{path: '/ui/qso/phone'}">QSO (phone)</b-dropdown-item>
           <b-dropdown-item :to="{path: '/ui/qsl'}">Qsl management</b-dropdown-item>
         </b-nav-item-dropdown>
 
@@ -188,8 +189,9 @@ new Vue({
           <b-dropdown-item :to="{path: '/ui/dataview/LogModes/default'}">Modes</b-dropdown-item>
           <b-dropdown-item :to="{path: '/ui/dataview/LogLogbooks/default'}">Logbooks</b-dropdown-item>
           <b-dropdown-item :to="{path: '/ui/dataview/LogQslshipmentmodes/default'}">Qsl shipment</b-dropdown-item>
+          <b-dropdown-item :to="{path: '/ui/dataview/LogDxcc/default'}">DXCC entities</b-dropdown-item>
           <b-nav-form>
-            <tuxlog-checkbox style="padding-left:20px;" label="Mobile" @onchange_value="setDeviceType" />
+            <tuxlog-checkbox style="padding-left:20px;" label="Phone" @onchange_value="setDeviceType" />
           </b-nav-form>
         </b-nav-item-dropdown>
 
