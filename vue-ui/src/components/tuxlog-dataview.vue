@@ -91,7 +91,20 @@ export default {
 
     },
     handleNewClick() {
-      this.$router.push('/ui/dataform/LogRigs/default/');
+      //this.$router.push('/ui/dataform/LogRigs/default/');
+      const vm=require('vm');
+      const sandbox = { x: 2, vue: this };
+      var context=vm.createContext(sandbox); // Contextify the sandbox.
+
+      const code = 'x += 40; var y = 17; vue.$router.push("/ui/dataform/LogRigs/default/");';
+      // `x` and `y` are global variables in the sandboxed environment.
+      // Initially, x has the value 2 because that is the value of sandbox.x.
+      vm.runInContext(code, context);
+
+      console.log(context.x); // 42
+      console.log(context.y); // 17
+
+      //console.log(x); // 1; y is not defined.
     },
     resetErrors() {
       this.dataview_def_not_found=false;
