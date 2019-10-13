@@ -157,10 +157,28 @@ CREATE TABLE IF NOT EXISTS log_dxcc(
     continent varchar(2) NOT NULL COMMENT '2 Character continent shortsign',
     itu_zone smallint NOT NULL COMMENT 'ITU zone',
     cq_zone smallint NOT NULL COMMENT 'CQ zone',
-    time_zone smallint NOT NULL COMMENT 'Time Zome in h',
+    time_offset smallint NOT NULL COMMENT 'utc time offset in h',
+    latitude decimal(15,4) NOT NULL DEFAULT '0',
+    longitude decimal(15,4) NOT NULL DEFAULT '0',
     entity smallint NOT NULL COMMENT 'Entity code',
     PRIMARY KEY(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+CREATE TABLE IF NOT EXISTS log_dxcc_prefixes(
+    id varchar(50) NOT NULL COMMENT 'the callprefix',
+    dxcc_id varchar(10) NOT NULL,
+    itu_zone smallint NOT NULL COMMENT 'ITU zone',
+    cq_zone smallint NOT NULL COMMENT 'CQ zone',
+    entity smallint NOT NULL COMMENT 'Entity code',
+    time_offset smallint NOT NULL COMMENT 'utc time offset in h',
+    exact_match smallint NOT NULL DEFAULT '0' COMMENT 'call must have an exact match',
+    PRIMARY KEY(id),
+    FOREIGN KEY (dxcc_id) REFERENCES log_dxcc(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 
 CREATE TABLE IF NOT EXISTS meta_dataviews(
     id int NOT NULL AUTO_INCREMENT COMMENT 'Unique ID',
