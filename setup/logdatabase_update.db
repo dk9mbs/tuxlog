@@ -90,8 +90,8 @@ BEGIN
                 '','description like \'$1\'','id','/ui/dataform/LogQslshipmentmodes/default/$1','description');
 
         INSERT INTO meta_dataviews (model_name, view_name, fields, where_clause,filter_clause, id_field_name, open_path, order_by) VALUES (
-            'LogDxcc', 'default', '["id","entity_name"]', 
-                '','description like \'$1\'','id','/ui/dataform/LogDxcc/default/$1','entity_name');
+            'LogDxcc', 'default', '["id","country"]', 
+                '','coutry like \'$1\'','id','/ui/dataform/LogDxcc/default/$1','country');
 
     END IF;
 

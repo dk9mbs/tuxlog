@@ -72,3 +72,8 @@ wget --debug --header "content-type:text/adif" --post-file /tmp/wsjtx_log.adi -O
 ## what is RST(TX) and RST(RX) 
 
 TX(RST) is "sent". RX(RST) is "received". So your outgoing RST goes in TX(RST). Your incoming RST, as given by the other station, goes in RX(RST).
+
+
+## How to get cty.dat file?
+
+http://www.country-files.com/dx-cluster/dx-spider/

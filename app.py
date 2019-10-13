@@ -202,12 +202,13 @@ def get_dataset(table):
 def get_record(table, recordid):
 
     mod=ModelClassFactory(table).create()
-    data = model_to_dict(mod.get(mod.id==recordid))
+    data = mod.get_or_none(mod.id==recordid)
     
-    if len(data) == 0:
-        logger.error("No record found!")
-        return
-        
+    if data == None:
+        logger.error('get_record: Record with id %s not found in table %s' % (recordid, table))
+        return Response(status=404)
+
+    data = model_to_dict(data)
     data=json.dumps( data, default=typeformatter )
  
     return Response(
