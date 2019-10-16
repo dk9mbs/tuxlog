@@ -64,11 +64,18 @@ cd setup
 ```
 
 
-## How to import adif data
+## How to import adif data?
 
 ```bash
 wget --debug --header "content-type:text/adif" --post-file /tmp/wsjtx_log.adi -O - http://username:password@localhost:80/api/v1.0/import/LogLogs?logbook_id=dk9mbs 
 ```
+## How to import cty.dat?
+
+```bash
+wget --debug --header "content-type:text/cty" --post-file /tmp/cty.dat -O -http://username:password@localhost:5000/api/v1.0/import/LogDxcc
+```
+
+
 ## what is RST(TX) and RST(RX) 
 
 TX(RST) is "sent". RX(RST) is "received". So your outgoing RST goes in TX(RST). Your incoming RST, as given by the other station, goes in RX(RST).
