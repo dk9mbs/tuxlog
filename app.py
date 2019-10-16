@@ -289,6 +289,18 @@ def adif_import(table):
         parser.adif_import(content)
         return Response(json.dumps(saved_rec))
 
+    elif request.headers.get("content-type")=="text/cty":
+
+        from usecases.ctyimport import CtyImport
+        from threading import Thread
+
+        content="".join(map(chr, request.data))  
+        uc=CtyImport()
+
+        t = Thread(target=uc.execute, args=(content,))
+        t.start()
+        return Response(json.dumps({"response": "pending"}) ,mimetype="text/json")
+
 
 # callbook api
 @app.route('/api/v1.0/callbook/<provider>/<call>', methods=['GET'])
