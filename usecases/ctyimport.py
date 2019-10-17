@@ -6,7 +6,7 @@ from model.model import MySQLDatabase
 from os import getenv
 import os
 import config
-from usecases.adifimport import BaseUseCase
+from common.common import BaseUseCase
 
 
 class CtyImport(BaseUseCase):

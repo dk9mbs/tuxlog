@@ -2,29 +2,15 @@ from model.model import MetaDataExchangeFields
 from model.model import LogLogs
 from model.model import LogModes, LogImportlogs
 from usecases.fieldmapping import FieldMapping
+from services.adifimport import AdifParserLib
+from common.common import BaseUseCase
+
 import peewee
 import sys
 import re
 
-class BaseUseCase(object):
-    _fn=list()
 
-    def register(self, name):
-        def wrapper(fn):
-            for obj in self._fn:
-                if obj['name']==name:
-                    return fn
-
-            self._fn.append({"name": name, "fn": fn})
-            return fn
-        return wrapper
-    
-    def _execute(self, name, **kwargs):
-        for fn in self._fn:
-            if fn['name']==name:
-                fn['fn'](**kwargs)
-
-class AdifImportLogic(BaseUseCase):
+class AdifImport(BaseUseCase):
     _logbook_id=""
     _table_name=""
 
@@ -96,47 +82,6 @@ class AdifImportLogic(BaseUseCase):
 
         inner_import(content)
         pass
-
-
-
-class AdifParserLib:
-    def __init__(self,fn):
-        self.fn=fn
-        pass
-
-    def __call__(self, *args, **kwargs):
-        adif_str=args[0]
-        #do not assign adif_str to another value!!!  
-
-        records=re.split("<eoh>", adif_str, flags=re.IGNORECASE)
-        records=re.split("<eor>", records[1], flags=re.IGNORECASE)
-
-        adif_recs=list()
-
-        for rec in records:
-            rec=rec.replace("\r", "").replace("\n", "").replace("\t", "").strip()
-
-            adif_rec=self._extract_fields(rec+' <')
-            if len(adif_rec) >0:
-
-                edit_adif_rec=self.fn(adif_rec,rec, **kwargs)
-                
-                if edit_adif_rec != None:
-                    adif_recs.append(edit_adif_rec)
-                else:
-                    adif_recs.append(adif_rec)
-
-        return adif_recs
-
-    def _extract_fields(self, adif_record):
-        attr = re.findall(r"(.*?):(\d{1,})>(.*?)\s(<.*?)", adif_record) 
-        json={}         
-        for m in attr:
-            name=str(m[0]).replace("<","")
-            value=m[2]
-            json[name]=value  
-
-        return json
 
 
 
