@@ -12,22 +12,23 @@ class TestDxCallInfo(unittest.TestCase):
         from model.model import LogDxccPrefixes
 
         prefix=DxCallInfo.get_dxinfo_by_call("dk9mbs")
-        print(prefix.dxcc.country)
-
+        self.assertEqual(prefix['main_prefix'] , 'DL')
+        
         prefix=DxCallInfo.get_dxinfo_by_call("dl4ac")
-        print(prefix.dxcc.country)
+        self.assertEqual(prefix['main_prefix'], 'DL')
 
         prefix=DxCallInfo.get_dxinfo_by_call("EB1RJ")
-        print(prefix.dxcc.country)
+        self.assertEqual(prefix['main_prefix'], 'EA')
 
         prefix=DxCallInfo.get_dxinfo_by_call("OZ/EB1RJ/p")
-        print(prefix.dxcc.country)
+        self.assertEqual(prefix['main_prefix'], 'OZ')
 
         prefix=DxCallInfo.get_dxinfo_by_call("ZS5ZLB/L ")
-        print(prefix.dxcc.country)
+        self.assertEqual(prefix['main_prefix'], 'ZS')
 
-        #result_fld_def=map.ext_to_int("notexists", field_mapping_list)
-        #self.assertEqual(result_fld_def, None)
+        prefix=DxCallInfo.get_dxinfo_by_call(" oz-dl4ay-p")
+        self.assertEqual(prefix['main_prefix'], 'OZ')
+
 
 if __name__ == '__main__':
     unittest.main()
