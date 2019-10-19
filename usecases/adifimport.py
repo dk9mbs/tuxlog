@@ -19,10 +19,17 @@ class AdifImport(BaseUseCase):
         self._logbook_id=loogbook_id
         pass
 
-    def adif_import(self, content):
+    def execute(self, content, **kwargs):
+        user_data=None
+        if 'user_data' in kwargs:
+            user_data=kwargs['user_data']
 
         @AdifParserLib
         def inner_import(*args, **kwargs):
+            user_data=None
+            if 'user_data' in kwargs:
+                user_data=kwargs['user_data']
+    
             adif_rec=args[0]
 
             log=LogLogs()
@@ -61,8 +68,8 @@ class AdifImport(BaseUseCase):
 
 
 
-            self._execute('duplicate_search_%s' % self._table_name, model=log, logbook_id=self._logbook_id)
-            self._execute('before_save_adif_rec', model=log, logbook_id=self._logbook_id)
+            self._execute('duplicate_search_%s' % self._table_name, model=log, logbook_id=self._logbook_id, user_data=user_data)
+            self._execute('before_save_adif_rec', model=log, logbook_id=self._logbook_id, user_data=user_data)
 
             try:
                 if log.id==None:
@@ -70,17 +77,17 @@ class AdifImport(BaseUseCase):
                 import_log.log=log.id
                 import_log.statuscode=10
                 import_log.save(force_insert=False)
-                self._execute("after_save_adif_rec", adif_rec=log)
+                self._execute("after_save_adif_rec", adif_rec=log, user_data=user_data)
             except peewee.IntegrityError as err:
-                self._execute("error_save_adif_rec", adif_rec=log, error_desc=str(err))
+                self._execute("error_save_adif_rec", adif_rec=log, error_desc=str(err), user_data=user_data)
                 print('peewee.IntegrityError:%s' % str(err))
-            except:
-                self._execute("error_save_adif_rec", adif_rec=log)
-                print("Unexpected error:", sys.exc_info()[0])
+            #except:
+            #    self._execute("error_save_adif_rec", adif_rec=log)
+            #    print("Unexpected error:", sys.exc_info()[0])
 
             
 
-        inner_import(content)
+        inner_import(content, user_data=user_data)
         pass
 
 

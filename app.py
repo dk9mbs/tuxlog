@@ -185,9 +185,6 @@ def get_dataset(table):
     from usecases.datamodel import get_modellist_by_raw
     tmp = get_modellist_by_raw(table, where=where, order=order, pagesize=pagesize)
 
-    #if len(tmp) == 0:
-    #    Response(json.dumps( {'error': 'No Data found!' }), content_type="text/json" , status=404)
-
     tmp=json.dumps(tmp, default=typeformatter)
     return Response(
             tmp,
@@ -239,65 +236,31 @@ def del_record(table, recordid):
 @app.route('/api/v1.0/import/<table>', methods=['POST'])
 def adif_import(table):
     if request.headers.get("content-type")=="text/adif":
-        from usecases.adifimport import AdifImportLogic
-        
+        from jobs.adifimportjob import AdifImportJob
+        from threading import Thread
+
         if request.args.get("logbook_id") != None:
             logbook_id = request.args.get("logbook_id")
         else:
             return Response(json.dumps({'error':'Cannot find logbook_id in querystring!!!'}), 500)
 
-        #content=request.data.decode()
         content="".join(map(chr, request.data))        
 
-        saved_rec=[]
+        job=AdifImportJob()
+        t = Thread(target=job.execute, args=(content,), kwargs={'table': table, 'logbook_id': logbook_id})
+        t.start()
 
-        parser = AdifImportLogic(table,logbook_id)
-        @parser.register("error_save_adif_rec")
-        def error_save_adif_record(**kwargs):
-            nonlocal saved_rec
-            saved_rec.append({"status":"Error", "message": {"error":kwargs['error_desc']}})
-
-        @parser.register("after_save_adif_rec")
-        def after_save_adif_rec(**kwargs):
-            nonlocal saved_rec
-            saved_rec.append({"status":"OK", "message": {"id": kwargs['adif_rec'].__data__['id']}})
-            for wsock in connections:
-                wsock.send(json.dumps({'publisher':'save','target': table, 'message': {"id":kwargs['adif_rec'].__data__['id']} } ))
-
-        @parser.register('duplicate_search_LogLogs')
-        def duplicate_search(**kwargs):
-            log=kwargs['model']
-            #log_exists=LogLogs.get_or_none((LogLogs.logbook==kwargs['logbook_id']) 
-            #    & (LogLogs.yourcall==log.yourcall)
-            #    & (LogLogs.logdate_utc==log.logdate_utc)
-            #    & (LogLogs.start_utc==log.start_utc)
-            #)
-
-            start_utc=datetime.time(int(log.start_utc[0:2]), int(log.start_utc[2:4]), int(log.start_utc[4:6]))
-
-            log_exists=LogLogs.get_or_none( 
-                (LogLogs.yourcall==log.yourcall) & (LogLogs.logdate_utc==log.logdate_utc)
-                & (LogLogs.start_utc==start_utc ) 
-            )
-
-            if log_exists != None:
-                logger.info('Found duplicate logentry => %s' % log_exists.id)
-                log.id=log_exists.id
-
-            pass
-
-        parser.adif_import(content)
-        return Response(json.dumps(saved_rec))
+        return Response(json.dumps({"response": "pending"}) ,mimetype="text/json")
 
     elif request.headers.get("content-type")=="text/cty":
 
-        from usecases.ctyimport import CtyImport
+        from jobs.ctyimportjob import CtyImportJob
         from threading import Thread
 
         content="".join(map(chr, request.data))  
-        uc=CtyImport()
+        job=CtyImportJob()
 
-        t = Thread(target=uc.execute, args=(content,))
+        t = Thread(target=job.execute, args=(content,))
         t.start()
         return Response(json.dumps({"response": "pending"}) ,mimetype="text/json")
 

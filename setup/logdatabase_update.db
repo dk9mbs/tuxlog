@@ -93,6 +93,11 @@ BEGIN
             'LogDxcc', 'default', '["id","country"]', 
                 '','coutry like \'$1\'','id','/ui/dataform/LogDxcc/default/$1','country');
 
+        INSERT INTO meta_dataviews (model_name, view_name, fields, where_clause,filter_clause, id_field_name, open_path, order_by) VALUES (
+            'LogImportjobs', 'default', '["id","job_name", "start_date", "end_date","message", "import_success","import_fail", "status"]', 
+                '','job_name like \'$1\'','id','/ui/dataform/LogImportjobs/default/$1','id desc');
+
+
     END IF;
 
 
@@ -114,6 +119,10 @@ BEGIN
             'LogDxcc','default','tuxlog-dxcc'
         );
 
+        INSERT INTO meta_dataforms(model_name,form_name, datacomponent) VALUES (
+            'LogImportJobs','default','tuxlog-importjob'
+        );
+
     END IF;
 
 
@@ -131,6 +140,14 @@ BEGIN
 
     IF NOT EXISTS (SELECT version FROM meta_sys_dbversion WHERE version='upd20190903') THEN 
         INSERT INTO meta_sys_dbversion(version,description) VALUES ('upd20190903','upd20190903');
+    END IF;
+
+
+    IF NOT EXISTS (SELECT id FROM log_importjob_status WHERE id=0) THEN
+        INSERT INTO log_importjob_status (id, description) VALUES (0, 'New');
+        INSERT INTO log_importjob_status (id, description) VALUES (10, 'Pending');
+        INSERT INTO log_importjob_status (id, description) VALUES (20, 'Success');
+        INSERT INTO log_importjob_status (id, description) VALUES (30, 'Fail');
     END IF;
 
 

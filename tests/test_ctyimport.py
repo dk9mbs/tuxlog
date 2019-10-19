@@ -7,6 +7,7 @@ from os import getenv
 import os
 import config
 from usecases.ctyimport import CtyImport
+from jobs.ctyimportjob import CtyImportJob 
 
 
 class TestCtyImport(unittest.TestCase):
@@ -31,8 +32,10 @@ class TestCtyImport(unittest.TestCase):
         #with open('/tmp/cty.dat', 'r') as file:
         #    content=file.readlines()
 
-        uc=CtyImport()
-        uc.execute(content)
+        job=CtyImportJob()
+        job.execute(content)
+        #uc=CtyImport()
+        #uc.execute(content)
 
 
 if __name__ == '__main__':

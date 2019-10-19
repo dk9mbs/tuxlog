@@ -42,7 +42,7 @@ class TestAdifImport(unittest.TestCase):
             #print("=========================END========================")
             pass
     
-        parser.adif_import(content)
+        parser.execute(content)
 
 
 class TestAdifParser(unittest.TestCase):

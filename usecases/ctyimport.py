@@ -11,11 +11,18 @@ from common.common import BaseUseCase
 
 class CtyImport(BaseUseCase):
 
-    def execute(self, content):
+    def execute(self, content, **kwargs):
+        user_data=None
+        if 'user_data' in kwargs:
+            user_data=kwargs['user_data']
+
         content=content.split('\n')
 
         @CtyImportLib
         def test(country, **kwargs):
+            user_data=None
+            if 'user_data' in kwargs:
+                user_data=kwargs['user_data']
             dxcc=model.LogDxcc.get_or_none(model.LogDxcc.id==country['prefix'])
             if dxcc==None:
                 dxcc=model.LogDxcc()
@@ -55,9 +62,8 @@ class CtyImport(BaseUseCase):
                 dxcc_pref.exact_match=exact_match
                 dxcc_pref.save(force_insert=not exists)
 
-
-            print('%s => %s (%s) offset:%s' % (country['prefix'], country['country'], country['continent'], country['time_offset'])  )
+            self._execute('after_save_cty_rec', record=country, user_data=user_data)
             pass
 
-        test(content)
+        test(content, user_data=user_data)
 

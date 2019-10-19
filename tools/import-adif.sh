@@ -15,7 +15,7 @@ for i in $1/*.adi; do
     if [ $ERRCODE == "0" ] 
     then
         echo "Import OK renaming importfile!"
-    	rm $i "$1.imported"
+    	mv $i "$1.imported"
     fi
 
 
