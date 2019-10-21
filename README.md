@@ -19,6 +19,7 @@ npm install -g @vue/cli
 
 cd /tmp
 python3 -m venv virtenv
+chmod 0755 ./virtenv
 cd virtenv
 git clone https://github.com/dk9mbs/tuxlog.git
 cd tuxlog
