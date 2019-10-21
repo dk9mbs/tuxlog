@@ -9,7 +9,7 @@
 curl -sL https://deb.nodesource.com/setup_11.x | sudo -E bash -
 apt-get update
 #apt-get install nodejs npm
-#apt-get install nodejs
+apt-get install nodejs
 
 npm install -g @vue/cli
 
