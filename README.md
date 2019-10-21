@@ -11,6 +11,10 @@ apt-get update
 #apt-get install nodejs npm
 apt-get install nodejs
 
+#git clone https://github.com/coleifer/peewee.git
+#cd peewee
+#python setup.py install
+
 npm install -g @vue/cli
 
 cd /tmp
