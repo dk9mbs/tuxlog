@@ -9,7 +9,7 @@
 curl -sL https://deb.nodesource.com/setup_11.x | sudo -E bash -
 apt-get update
 #apt-get install nodejs npm
-apt-get install -y nodejs
+apt-get install -y nodejs gcc g++ make
 
 #git clone https://github.com/coleifer/peewee.git
 #cd peewee
