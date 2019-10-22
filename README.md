@@ -46,7 +46,7 @@ npm run build
 * apt-get install mod-wsgi
 * 
 * vue create vue-proj
-* npm run build && npm run serve 
+* 
 
 ## How to run as apache2 www-server
 
