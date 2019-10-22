@@ -34,7 +34,7 @@ cd setup
 
 cd ../vue-ui
 npm install
-
+npm run build
 ```
 
 
