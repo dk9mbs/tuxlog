@@ -8,7 +8,6 @@
 # https://debianforum.de/forum/viewtopic.php?t=172240
 curl -sL https://deb.nodesource.com/setup_11.x | sudo -E bash -
 apt-get update
-#apt-get install nodejs npm
 apt-get install -y nodejs gcc g++ make
 
 #git clone https://github.com/coleifer/peewee.git
@@ -24,7 +23,7 @@ cd virtenv
 git clone https://github.com/dk9mbs/tuxlog.git
 cd tuxlog
 ../bin/pip3 install -r requirements.txt
-../bin/pip3 install pexpect
+
 ./setup
 #
 # configure manually /etc/tuxlog/tuxlog_cfg.json
@@ -32,6 +31,10 @@ cd tuxlog
 cd setup
 ./integrationtest.sh
 ./install.sh
+
+cd ../vue-ui
+npm install
+
 ```
 
 
