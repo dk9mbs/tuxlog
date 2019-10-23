@@ -42,6 +42,14 @@ with open(modelfile,'w') as f:
             print ("Database definition found ... replace with DatabaseProxy() ")
             f.write('database = DatabaseProxy()\n')
             found=True
+        elif str(line).startswith("from peewee import *"):
+            print ("Imports found and replce with playhous")
+            f.write(line+'\n')
+            f.write('from playhouse.signals import Model as PModel\n')
+            f.write('from playhouse.signals import post_save\n')
+        elif str(line).startswith("class BaseModel(Model)"):
+            print("BaseModel found and replace")
+            f.write('class BaseModel(PModel)\n')
         else:
             f.write(line+'\n')       
 
