@@ -49,7 +49,7 @@ with open(modelfile,'w') as f:
             f.write('from playhouse.signals import post_save\n')
         elif str(line).startswith("class BaseModel(Model)"):
             print("BaseModel found and replace")
-            f.write('class BaseModel(PModel)\n')
+            f.write('class BaseModel(PModel):\n')
         else:
             f.write(line+'\n')       
 
