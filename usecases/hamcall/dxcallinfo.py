@@ -1,4 +1,7 @@
 from model.model import LogDxccPrefixes
+import logging
+
+logger = logging.getLogger(__name__)
 
 class DxCallInfo:
 
@@ -6,32 +9,31 @@ class DxCallInfo:
         pass
 
     @classmethod
-    def get_dxinfo_by_call(cls, call):
-        call=call.replace('-', '/').strip()
-        call=call.upper()
+    def get_dxinfo_by_call(cls, callsign):
+        callsign=callsign.replace('-', '/').strip().upper()
         
         prefix=""
         postfix=""
         call_info=dict()
 
-        call_info['complete']=call
+        call_info['complete']=callsign
 
-        parts=call.split('/')
+        parts=callsign.split('/')
         if len(parts)==3:
             prefix=parts[0]
-            call=parts[1]
+            callsign=parts[1]
             postfix=parts[2]
 
         if len(parts)==2:
             if len(parts[0]) < len(parts[1]):
                 prefix=parts[0]
-                call=parts[1]
+                callsign=parts[1]
             else:
-                call=parts[0]
+                callsign=parts[0]
                 postfix=parts[1] 
 
         call_info['prefix']=prefix
-        call_info['call']=call
+        call_info['call']=callsign
         call_info['postfix']=postfix
 
         # look for the complete call 
@@ -41,7 +43,7 @@ class DxCallInfo:
 
         for x in range(len(call_info['complete'])):
             part=call_info['complete'][:x*-1]
-            print(part)
+            logger.info(part)
             dxinfo=DxCallInfo.get_prefix_by_call(part)
             if dxinfo!=None:
                 return DxCallInfo.model_to_dict(dxinfo, call_info)

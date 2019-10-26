@@ -3,10 +3,16 @@ import json
 import os
 from model import model
 from peewee import MySQLDatabase
+import os
 
 logger = logging.getLogger(__name__)
 
 current_cfg={}
+
+class AppConfig:
+    @classmethod
+    def get_app_root(cls):
+        return os.path.dirname(__file__)+'/'
 
 
 class DatabaseConfig:

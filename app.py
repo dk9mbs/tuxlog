@@ -9,10 +9,11 @@ import argparse
 import os
 import signal
 import logging
-
+import usecases.callbook as callbook
+import config
+import importlib
 from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread, Lock
-
 from flask import Flask
 from flask import render_template
 from flask import request
@@ -20,25 +21,37 @@ from flask import Response
 from flask import abort
 from flask import jsonify
 from flask import Blueprint
-
 from gevent.pywsgi import WSGIServer
 from geventwebsocket import WebSocketError
 from geventwebsocket.handler import WebSocketHandler
-
 from flaskext.mysql import MySQL
-
 from playhouse.shortcuts import model_to_dict, dict_to_model
-
 from usecases.datamodel import ModelClassFactory
-import usecases.callbook as callbook
 from model.model import LogLogs
-
 from model import model
-import config
 
 logging.basicConfig(level=logging.INFO)
 #logging.basicConfig(filename='/tmp/tuxlog.log')
 logger = logging.getLogger(__name__)
+
+# ============================================
+from playhouse.signals import post_save, pre_save
+from usecases.hook_main import hook
+
+def pre_save_exec_hook(sender, instance, created):
+    params={'sender': sender, 'instance': instance, 'created': created}
+    hook.execute('pre_save', params)
+
+pre_save.connect(pre_save_exec_hook ,sender=LogLogs)
+
+# Register hooks
+
+for file in os.listdir( os.path.join(config.AppConfig.get_app_root(), 'plugins')):
+    if file.endswith(".py") and not file.startswith('__'):
+        logger.info(file)
+        i = importlib.import_module('plugins.'+file.replace('.py', ''))
+        i.register()
+# ============================================
 
 config.DatabaseConfig.open(model.database, config.DatabaseConfig.read_from_file(os.getenv("tuxlog_environment")))
 

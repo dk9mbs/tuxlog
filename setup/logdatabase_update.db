@@ -47,6 +47,10 @@ BEGIN
             ALTER TABLE log_rigs add column remote_port int NOT NULL default '4532';
     END IF;
 
+    IF NOT EXISTS (select COLUMN_NAME from INFORMATION_SCHEMA.columns WHERE TABLE_SCHEMA=DATABASE() 
+        AND TABLE_NAME='log_logs' AND column_name='entity') THEN
+            ALTER TABLE log_logs add column entity int NULL;
+    END IF;
 
 
     IF NOT EXISTS (SELECT version FROM meta_sys_dbversion WHERE version='upd20190825') THEN 
