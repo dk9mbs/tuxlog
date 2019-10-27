@@ -107,9 +107,9 @@
           </b-row>                
       
           <b-row class="mb-1">
-              <b-col>
+              <!--<b-col>
                   <tuxlog-input id="itu_prefix" type="text" v-model="logentry.itu_prefix" label="Prefix"></tuxlog-input>
-                </b-col>
+                </b-col>-->
               <b-col>
                   <tuxlog-input id="dxcc" type="text" v-model="logentry.dxcc" label="DXCC"></tuxlog-input>
                 </b-col>

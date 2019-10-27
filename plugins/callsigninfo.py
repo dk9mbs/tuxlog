@@ -17,7 +17,7 @@ def execute(name, params, **kwargs):
     if prefix==None:
         return
 
-    instance.dxcc=prefix['prefix']
+    instance.dxcc=prefix['main_prefix']
     instance.itu=prefix['itu_zone']
     instance.cq=prefix['cq_zone']
     instance.country=prefix['country']
