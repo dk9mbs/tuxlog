@@ -101,6 +101,9 @@ BEGIN
             'LogImportjobs', 'default', '["id","job_name", "start_date", "end_date","message", "import_success","import_fail", "status"]', 
                 '','job_name like \'$1\'','id','/ui/dataform/LogImportjobs/default/$1','id desc');
 
+        INSERT INTO meta_dataviews (model_name, view_name, fields, where_clause,filter_clause, id_field_name, open_path, order_by) VALUES (
+            'LogBands', 'default', '["name", "frequecy_min", "frequecy_max", "frequecy_unit"]', 
+                '','name like \'$1\'','id','/ui/dataform/LogBands/default/$1','id');
 
     END IF;
 
@@ -127,6 +130,10 @@ BEGIN
             'LogImportJobs','default','tuxlog-importjob'
         );
 
+        INSERT INTO meta_dataforms(model_name,form_name, datacomponent) VALUES (
+            'LogBands','default','tuxlog-band'
+        );
+
     END IF;
 
 
@@ -141,12 +148,6 @@ BEGIN
 
     END IF;
 
-
-    IF NOT EXISTS (SELECT version FROM meta_sys_dbversion WHERE version='upd20190903') THEN 
-        INSERT INTO meta_sys_dbversion(version,description) VALUES ('upd20190903','upd20190903');
-    END IF;
-
-
     IF NOT EXISTS (SELECT id FROM log_importjob_status WHERE id=0) THEN
         INSERT INTO log_importjob_status (id, description) VALUES (0, 'New');
         INSERT INTO log_importjob_status (id, description) VALUES (10, 'Pending');
@@ -154,6 +155,9 @@ BEGIN
         INSERT INTO log_importjob_status (id, description) VALUES (30, 'Fail');
     END IF;
 
+    IF NOT EXISTS (SELECT version FROM meta_sys_dbversion WHERE version='upd20190903') THEN 
+        INSERT INTO meta_sys_dbversion(version,description) VALUES ('upd20190903','upd20190903');
+    END IF;
 
     call proc_printf('upd20190903 installed!');
 
@@ -162,7 +166,100 @@ DELIMITER ;
 
 
 
+DROP PROCEDURE IF EXISTS proc_install_upd20191027;
+DELIMITER //
+CREATE PROCEDURE proc_install_upd20191027
+()
+BEGIN
+    call proc_printf('installing upd20191027 ...');
+
+
+    IF NOT EXISTS (SELECT * FROM log_bands WHERE id=1) THEN
+        INSERT INTO log_bands (id,name,adif_name,frequecy_min,frequecy_max) VALUES
+            (10,'2190m','2190m',0.1357,0.1378);
+        INSERT INTO log_bands (id,name,adif_name,frequecy_min,frequecy_max) VALUES
+            (20,'630m','630m',0.472,0.479);
+        INSERT INTO log_bands (id,name,adif_name,frequecy_min,frequecy_max) VALUES
+            (30,'560m','560m',0.501,0.504);
+        INSERT INTO log_bands (id,name,adif_name,frequecy_min,frequecy_max) VALUES
+            (40,'160m','160m',1.8,2.0);
+        INSERT INTO log_bands (id,name,adif_name,frequecy_min,frequecy_max) VALUES
+            (50,'80m','80m',3.5,4.0);
+        INSERT INTO log_bands (id,name,adif_name,frequecy_min,frequecy_max) VALUES
+            (60,'60m','60m',5.06,5.045);
+        INSERT INTO log_bands (id,name,adif_name,frequecy_min,frequecy_max) VALUES
+            (70,'40m','40m',7.0,7.3);
+        INSERT INTO log_bands (id,name,adif_name,frequecy_min,frequecy_max) VALUES
+            (80,'30m','30m',10.1,10.15);
+        INSERT INTO log_bands (id,name,adif_name,frequecy_min,frequecy_max) VALUES
+            (90,'20m','20m',14.0,14.35);
+        INSERT INTO log_bands (id,name,adif_name,frequecy_min,frequecy_max) VALUES
+            (100,'17m','17m',18.068,18.168);
+        INSERT INTO log_bands (id,name,adif_name,frequecy_min,frequecy_max) VALUES
+            (110,'15m','15m',21.0,21.45);
+        INSERT INTO log_bands (id,name,adif_name,frequecy_min,frequecy_max) VALUES
+            (120,'12m','12m',24.890,24.99);
+        INSERT INTO log_bands (id,name,adif_name,frequecy_min,frequecy_max) VALUES
+            (130,'10m','10m',28.0,29.7);
+        INSERT INTO log_bands (id,name,adif_name,frequecy_min,frequecy_max) VALUES
+            (140,'6m','6m',50,54);
+        INSERT INTO log_bands (id,name,adif_name,frequecy_min,frequecy_max) VALUES
+            (150,'4m','4m',70,71);
+        INSERT INTO log_bands (id,name,adif_name,frequecy_min,frequecy_max) VALUES
+            (160,'2m','2m',144,148);
+        INSERT INTO log_bands (id,name,adif_name,frequecy_min,frequecy_max) VALUES
+            (170,'1.25cm','70cm',222,225);
+        INSERT INTO log_bands (id,name,adif_name,frequecy_min,frequecy_max) VALUES
+            (180,'70cm','70cm',420,450);
+        INSERT INTO log_bands (id,name,adif_name,frequecy_min,frequecy_max) VALUES
+            (190,'33cm','33cm',902,928);
+        INSERT INTO log_bands (id,name,adif_name,frequecy_min,frequecy_max) VALUES
+            (200,'23cm','23cm',1240,1300);
+        INSERT INTO log_bands (id,name,adif_name,frequecy_min,frequecy_max) VALUES
+            (210,'13cm','13cm',2300,2450);
+        INSERT INTO log_bands (id,name,adif_name,frequecy_min,frequecy_max) VALUES
+            (220,'9cm','9cm',3300,3500);
+        INSERT INTO log_bands (id,name,adif_name,frequecy_min,frequecy_max) VALUES
+            (230,'6cm','6cm',5650,5925);
+        INSERT INTO log_bands (id,name,adif_name,frequecy_min,frequecy_max) VALUES
+            (240,'3cm','3cm',10000,10500);
+        INSERT INTO log_bands (id,name,adif_name,frequecy_min,frequecy_max) VALUES
+            (250,'1.25cm','1.25cm',24000,24250);
+        INSERT INTO log_bands (id,name,adif_name,frequecy_min,frequecy_max) VALUES
+            (260,'6mm','6mm',47000,47200);
+        INSERT INTO log_bands (id,name,adif_name,frequecy_min,frequecy_max) VALUES
+            (270,'4mm','4mm',75500,81000);
+        INSERT INTO log_bands (id,name,adif_name,frequecy_min,frequecy_max) VALUES
+            (280,'2.5mm','2.5mm',119980,120020);
+        INSERT INTO log_bands (id,name,adif_name,frequecy_min,frequecy_max) VALUES
+            (290,'2mm','2mm',142000,149000);
+        INSERT INTO log_bands (id,name,adif_name,frequecy_min,frequecy_max) VALUES
+            (300,'1mm','1mm',241000,250000);
+
+    END IF;
+
+    IF NOT EXISTS (select COLUMN_NAME from INFORMATION_SCHEMA.columns WHERE TABLE_SCHEMA=DATABASE() 
+        AND TABLE_NAME='log_logs' AND column_name='band_id') THEN
+            ALTER TABLE log_logs add column band_id int NULL;
+
+            ALTER TABLE log_logs add foreign key(band_id) REFERENCES log_bands(id);
+    END IF;
+
+
+    IF NOT EXISTS (SELECT version FROM meta_sys_dbversion WHERE version='upd20191027') THEN 
+        INSERT INTO meta_sys_dbversion(version,description) VALUES ('upd20191027','upd20191027');
+    END IF;
+    call proc_printf('upd20191027 installed!');
+
+END //
+DELIMITER ;
+
+
+
+
+
 call proc_install_upd20190804();
 call proc_install_upd20190825();
 call proc_install_upd20190903();
+call proc_install_upd20191027();
 

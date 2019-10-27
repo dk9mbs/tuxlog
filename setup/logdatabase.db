@@ -209,7 +209,15 @@ CREATE TABLE IF NOT EXISTS log_dxcc_prefixes(
     FOREIGN KEY (dxcc_id) REFERENCES log_dxcc(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
+CREATE TABLE IF NOT EXISTS log_bands(
+    id int NOT NULL COMMENT 'Unique Band id',
+    name varchar(50) NOT NULL COMMENT 'Name of the band for eaxample: 20m',
+    adif_name varchar(10) NOT NULL COMMENT 'Adif confirm name',
+    frequecy_min numeric(15,4) NOT NULL COMMENT '',
+    frequecy_max numeric(15,4) NOT NULL COMMENT '',
+    frequecy_unit varchar(10) NOT NULL default 'MHz' COMMENT '',
+    PRIMARY KEY(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS meta_dataviews(
     id int NOT NULL AUTO_INCREMENT COMMENT 'Unique ID',

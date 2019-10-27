@@ -191,6 +191,7 @@ new Vue({
           <b-dropdown-item :to="{path: '/ui/dataview/LogQslshipmentmodes/default'}">Qsl shipment</b-dropdown-item>
           <b-dropdown-item :to="{path: '/ui/dataview/LogDxcc/default'}">DXCC entities</b-dropdown-item>
           <b-dropdown-item :to="{path: '/ui/dataview/LogImportjobs/default'}">Importjobs</b-dropdown-item>
+          <b-dropdown-item :to="{path: '/ui/dataview/LogBands/default'}">Bänder</b-dropdown-item>
           <b-nav-form>
             <tuxlog-checkbox style="padding-left:20px;" label="Phone" @onchange_value="setDeviceType" />
           </b-nav-form>

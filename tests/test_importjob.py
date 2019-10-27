@@ -6,7 +6,7 @@ from os import getenv
 import os
 import config
 
-from services.importjob import ImportJob
+from jobs.importjob import ImportJob
 from usecases.ctyimport import CtyImport
 
 class TestImportJob(unittest.TestCase):

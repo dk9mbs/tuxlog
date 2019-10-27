@@ -1,7 +1,7 @@
 from model import model
 from usecases.ctyimport import CtyImport
 from model.model import LogImportjobs
-from services.importjob import ImportJob
+from jobs.importjob import ImportJob
 
 class BaseImportJob:
 

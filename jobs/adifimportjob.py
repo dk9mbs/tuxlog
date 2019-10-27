@@ -4,7 +4,7 @@ from usecases.adifimport import AdifImport
 from model import model
 from usecases.ctyimport import CtyImport
 from model.model import LogImportjobs
-from services.importjob import ImportJob
+from jobs.importjob import ImportJob
 from jobs.ctyimportjob import BaseImportJob
 from model.model import LogLogs
 

@@ -26,5 +26,5 @@ def execute(name, params, **kwargs):
 
 
 def register():
-    from usecases.hook_main import hook
-    hook.register('pre_save', execute)
+    from usecases import app_hooks 
+    app_hooks.register('pre_save', execute)

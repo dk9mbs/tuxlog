@@ -16,7 +16,7 @@ class TestDxCallInfo(unittest.TestCase):
     def test_dxcallinfo(self):
         config.DatabaseConfig.open(model.database, config.DatabaseConfig.read_from_file(os.getenv("tuxlog_environment")))
 
-        from usecases.hook_main import hook
+        from usecases import app_hooks as hook
 
         hook.register('test', self.hook1 )
         hook.register('test', self.hook2 )

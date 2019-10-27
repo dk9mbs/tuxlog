@@ -1,5 +1,6 @@
 import unittest
-from services.ctyimport import CtyImportLib
+#from services.ctyimport import CtyImportLib
+from usecases.ctyimport import CtyImportLib
 
 from model import model
 from model.model import MySQLDatabase
