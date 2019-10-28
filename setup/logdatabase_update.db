@@ -174,7 +174,7 @@ BEGIN
     call proc_printf('installing upd20191027 ...');
 
 
-    IF NOT EXISTS (SELECT * FROM log_bands WHERE id=1) THEN
+    IF NOT EXISTS (SELECT * FROM log_bands WHERE id=10) THEN
         INSERT INTO log_bands (id,name,adif_name,frequecy_min,frequecy_max) VALUES
             (10,'2190m','2190m',0.1357,0.1378);
         INSERT INTO log_bands (id,name,adif_name,frequecy_min,frequecy_max) VALUES
