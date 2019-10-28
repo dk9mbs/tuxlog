@@ -62,7 +62,7 @@ export class Tuxlog {
 
 
 export function ifnull(value, thenVal, elseVal ) {
-    if(value!=undefined) {
+    if(value==undefined) {
         return thenVal;
     } else {
         return elseVal;

@@ -35,13 +35,13 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # ============================================
-from playhouse.signals import post_save, pre_save
-from usecases import app_hooks as hook
-def pre_save_exec_hook(sender, instance, created):
-    params={'sender': sender, 'instance': instance, 'created': created}
-    hook.execute('pre_save', params)
+#from playhouse.signals import post_save, pre_save
+#from usecases import app_hooks as hook
+#def pre_save_exec_hook(sender, instance, created):
+#    params={'sender': sender, 'instance': instance, 'created': created}
+#    hook.execute('pre_save', params)
 
-pre_save.connect(pre_save_exec_hook ,sender=LogLogs)
+#pre_save.connect(pre_save_exec_hook ,sender=LogLogs)
 
 # Register hooks
 

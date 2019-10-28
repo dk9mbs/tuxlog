@@ -5,9 +5,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 def execute(sender, instance, created):
-    #sender=params['sender']
-    #instance=params['instance']
-    #created=params['created']
     print("pre_save hook")
 
     from usecases.hamcall.dxcallinfo import DxCallInfo
@@ -24,10 +21,12 @@ def execute(sender, instance, created):
     instance.entity=prefix['entity']
 
 
+def execute_to_upper(sender, instance, created):
+    instance.yourcall=str(instance.yourcall).upper()
+
 
 def register():
     from playhouse.signals import pre_save
     from model.model import LogLogs
-    #from usecases import app_hooks 
-    #app_hooks.register('pre_save', execute)
     pre_save.connect(execute, name='dxcallsigninfo', sender=LogLogs)
+    pre_save.connect(execute_to_upper, name='plugin_callsign_to_upper', sender=LogLogs)

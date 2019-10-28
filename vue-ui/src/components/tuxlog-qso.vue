@@ -369,7 +369,7 @@ export default {
         alert('Fehler'); 
         this.appstatus.processdatadetail=false;    
       }
-
+      debugger;
       Tuxlog.webRequestAsync(ifnull(this.logentry.id,'POST', 'PUT') ,
         '/api/v1.0/tuxlog/LogLogs'+ifnull(this.logentry.id,'', '/'+this.logentry.id), 
         this.logentry, callBackOk, callBackErr);
