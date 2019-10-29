@@ -20,6 +20,7 @@ END//
 delimiter ;
 
 
+DROP TABLE IF EXISTS log_bands;
 
 DROP TABLE IF EXISTS log_tmp_adif_export;
 CREATE TABLE log_tmp_adif_export (
@@ -213,9 +214,9 @@ CREATE TABLE IF NOT EXISTS log_bands(
     id int NOT NULL COMMENT 'Unique Band id',
     name varchar(50) NOT NULL COMMENT 'Name of the band for eaxample: 20m',
     adif_name varchar(10) NOT NULL COMMENT 'Adif confirm name',
-    frequecy_min numeric(15,4) NOT NULL COMMENT '',
-    frequecy_max numeric(15,4) NOT NULL COMMENT '',
-    frequecy_unit varchar(10) NOT NULL default 'MHz' COMMENT '',
+    frequency_min numeric(15,4) NOT NULL COMMENT '',
+    frequency_max numeric(15,4) NOT NULL COMMENT '',
+    frequency_unit varchar(10) NOT NULL default 'MHz' COMMENT '',
     PRIMARY KEY(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
