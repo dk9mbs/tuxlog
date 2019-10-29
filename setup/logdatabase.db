@@ -20,7 +20,6 @@ END//
 delimiter ;
 
 
-DROP TABLE IF EXISTS log_bands;
 
 DROP TABLE IF EXISTS log_tmp_adif_export;
 CREATE TABLE log_tmp_adif_export (
