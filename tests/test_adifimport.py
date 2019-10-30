@@ -22,8 +22,8 @@ class TestAdifImport(unittest.TestCase):
         """
         from usecases.adifimport import AdifImport
 
-        from plugins import callsigninfo
-        callsigninfo.register()
+        #from plugins import callsigninfo
+        #callsigninfo.register()
 
 
         content = "WSJT-X ADIF Export<eoh>\n" \

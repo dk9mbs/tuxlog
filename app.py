@@ -341,6 +341,16 @@ def set_rig(rig_id, command, value, value2=None):
     return Response(json.dumps({"response": result}) ,mimetype="text/json")
 
 
+# webfunction api
+@app.route('/api/v1.0/webfunction/<name>', methods=['POST'])
+def call_action(name):
+    from usecases import webfunction
+    params= json.loads("".join(map(chr, request.data)))  
+      
+    result=webfunction.execute(name, params)
+    return Response(json.dumps(result) ,mimetype="text/json")
+
+
 #server = WSGIServer((cfg['httpcfg']['host'], int(cfg['httpcfg']['port'])), app, handler_class=WebSocketHandler)
 #server.serve_forever()
 

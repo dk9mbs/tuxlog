@@ -3,7 +3,7 @@ import config
 import os
 from model import model
 
-class TestDxCallInfo(unittest.TestCase):
+class TestHook(unittest.TestCase):
 
     def hook1(self, name, params, **kwargs):
         print('\nHallo aus 1 %s' % name)
@@ -13,10 +13,10 @@ class TestDxCallInfo(unittest.TestCase):
         print('\nHallo aus 2 %s' % name)
         return True
 
-    def test_dxcallinfo(self):
+    def test_hook(self):
         config.DatabaseConfig.open(model.database, config.DatabaseConfig.read_from_file(os.getenv("tuxlog_environment")))
 
-        from usecases import app_hooks as hook
+        from usecases import webfunction as hook
 
         hook.register('test', self.hook1 )
         hook.register('test', self.hook2 )
