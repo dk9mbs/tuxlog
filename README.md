@@ -77,12 +77,12 @@ npm run build
 ## How to import adif data?
 
 ```bash
-wget --debug --header "content-type:text/adif" --post-file /tmp/wsjtx_log.adi -O - http://username:password@localhost:80/api/v1.0/import/LogLogs?logbook_id=dk9mbs 
+./webfn-proxy.sh build import_adif '{"logbook_id":"dk9mbs"}' /tmp/wsjtx_log.adi
 ```
 ## How to import cty.dat?
 
 ```bash
-wget --debug --header "content-type:text/cty" --post-file /tmp/cty.dat -O -http://username:password@localhost:5000/api/v1.0/import/LogDxcc
+./webfn-proxy.sh build import_ctydat '{}' /tmp/cty.dat
 ```
 
 

@@ -2,18 +2,22 @@
     "default": "prod",
     "build":{
         "mysqlcfg": {"host":"localhost", "port":"3306","database":"database", "username":"username", "password":"password"},
-	"security": {"secret_key": "mykey"}
+        "security": {"secret_key": "mykey"},
+        "client": {"host": "localhost", "port":"5000", "username":"username", "password": "password"}
     },
     "dev":{
         "mysqlcfg": {"host":"localhost", "port":"3306","database":"database", "username":"username", "password":"password"},
-	"security": {"secret_key": "mykey"}
+	    "security": {"secret_key": "mykey"},
+        "client": {"host": "localhost", "port":"5000", "username":"username", "password": "password"}
     },
     "test":{
         "mysqlcfg": {"host":"localhost", "port":"3306","database":"database", "username":"username", "password":"password"},
-	"security": {"secret_key": "mykey"}
+	    "security": {"secret_key": "mykey"},
+        "client": {"host": "localhost", "port":"5000", "username":"username", "password": "password"}
     },
     "prod":{
         "mysqlcfg": {"host":"localhost", "port":"3306","database":"database", "username":"username", "password":"password"},
-	"security": {"secret_key": "mykey"}
+	    "security": {"secret_key": "mykey"},
+        "client": {"host": "localhost", "port":"5000", "username":"username", "password": "password"}
     }
 }

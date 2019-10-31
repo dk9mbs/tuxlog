@@ -34,25 +34,16 @@ logging.basicConfig(level=logging.INFO)
 #logging.basicConfig(filename='/tmp/tuxlog.log')
 logger = logging.getLogger(__name__)
 
+config.DatabaseConfig.open(model.database, config.DatabaseConfig.read_from_file(os.getenv("tuxlog_environment")))
+
 # ============================================
-#from playhouse.signals import post_save, pre_save
-#from usecases import app_hooks as hook
-#def pre_save_exec_hook(sender, instance, created):
-#    params={'sender': sender, 'instance': instance, 'created': created}
-#    hook.execute('pre_save', params)
-
-#pre_save.connect(pre_save_exec_hook ,sender=LogLogs)
-
-# Register hooks
-
+# Register all plugins
 for file in os.listdir( os.path.join(config.AppConfig.get_app_root(), 'plugins')):
     if file.endswith(".py") and not file.startswith('__'):
         logger.info(file)
         i = importlib.import_module('plugins.'+file.replace('.py', ''))
         i.register()
 # ============================================
-
-config.DatabaseConfig.open(model.database, config.DatabaseConfig.read_from_file(os.getenv("tuxlog_environment")))
 
 def handler(signum, frame):
     pass
@@ -243,50 +234,6 @@ def del_record(table, recordid):
             }
         )     
 
-
-# dataimport api
-@app.route('/api/v1.0/import/<table>', methods=['POST'])
-def adif_import(table):
-    if request.headers.get("content-type")=="text/adif":
-        from jobs.adifimportjob import AdifImportJob
-        from threading import Thread
-
-        if request.args.get("logbook_id") != None:
-            logbook_id = request.args.get("logbook_id")
-        else:
-            return Response(json.dumps({'error':'Cannot find logbook_id in querystring!!!'}), 500)
-
-        content="".join(map(chr, request.data))        
-
-        job=AdifImportJob()
-        t = Thread(target=job.execute, args=(content,), kwargs={'table': table, 'logbook_id': logbook_id})
-        t.start()
-
-        return Response(json.dumps({"response": "pending"}) ,mimetype="text/json")
-
-    elif request.headers.get("content-type")=="text/cty":
-
-        from jobs.ctyimportjob import CtyImportJob
-        from threading import Thread
-
-        content="".join(map(chr, request.data))  
-        job=CtyImportJob()
-
-        t = Thread(target=job.execute, args=(content,))
-        t.start()
-        return Response(json.dumps({"response": "pending"}) ,mimetype="text/json")
-
-
-# callbook api
-@app.route('/api/v1.0/callbook/<provider>/<call>', methods=['GET'])
-def get_ham_info(provider, call):
-    result=callbook.init_haminfo_dict()
-    callbook.HamInfoProviderFactory.create(provider).read(call, result)
-    logger.info('HamInfo => %s' % str(result))
-    return Response(json.dumps(result), mimetype="text/json")
-
-
-
 @app.errorhandler(ConnectionRefusedError)
 def handle_error(error):
     message = [str(x) for x in error.args]
@@ -304,51 +251,26 @@ def handle_error(error):
     logger.exception(error)
     return jsonify(response), status_code
 
-
-# rig api
-@app.route('/api/v1.0/rigctl/<rig_id>/<command>', methods=['GET'])
-def get_rig(rig_id, command):
-    from usecases.rigctl import RigCtl
-    from model.model import LogRigs
-    
-    rig=LogRigs.get_or_none(LogRigs.id==rig_id)
-
-    if rig==None:
-        return Response( json.dumps( {'error': 'Rig not found in LogRigs table!' }), content_type="text/json" , status=500)
-
-    try:
-        rig_ctl=RigCtl( {"host": rig.remote_host, "port": rig.remote_port } )
-        result=rig_ctl.get_rig(command)
-        return Response(json.dumps(result) ,mimetype="text/json")
-    except Exception as e:
-        return Response(json.dumps( {'error': 'Error while reading data from rig!' }), content_type="text/json" , status=500)
-
-@app.route('/api/v1.0/rigctl/<rig_id>/<command>/<value>', methods=['GET'])
-@app.route('/api/v1.0/rigctl/<rig_id>/<command>/<value>/<value2>', methods=['GET'])
-def set_rig(rig_id, command, value, value2=None):
-    from usecases.rigctl import RigCtl
-    from model.model import LogRigs
-    
-    value_list=[value, value2]
-
-    rig=LogRigs.get_or_none(LogRigs.id==rig_id)
-
-    if rig==None:
-        return Response( json.dumps( {'error': 'Rig not found in LogRigs table!' }) , 500)
-
-    rig_ctl=RigCtl( {"host": rig.remote_host, "port": rig.remote_port } )
-    result=rig_ctl.set_rig(command, value_list)
-    return Response(json.dumps({"response": result}) ,mimetype="text/json")
-
-
 # webfunction api
-@app.route('/api/v1.0/webfunction/<name>', methods=['POST'])
+@app.route('/api/v1.0/webfunction/<name>', methods=['POST', 'GET'])
 def call_action(name):
     from usecases import webfunction
-    params= json.loads("".join(map(chr, request.data)))  
-      
+
+    content=None
+
+    if request.args.get('params', default=None) != None:
+        #in case of query args read the content from body
+        params=json.loads(request.args.get('params'))
+        content="".join(map(chr, request.data))        
+    else:
+        params= json.loads("".join(map(chr, request.data)))  
+
+    params['content']=content
+    params['status_code']=200
+    
     result=webfunction.execute(name, params)
-    return Response(json.dumps(result) ,mimetype="text/json")
+
+    return Response(json.dumps(result) ,mimetype="text/json",content_type="text/json" , status=params['status_code'])
 
 
 #server = WSGIServer((cfg['httpcfg']['host'], int(cfg['httpcfg']['port'])), app, handler_class=WebSocketHandler)

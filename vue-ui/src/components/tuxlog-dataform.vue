@@ -40,7 +40,7 @@ export default {
 }
   },
   mounted () {
-    if (ifnull(this.id, this.id,'') != '') {
+    if (ifnull(this.id, '',this.id) != '') {
       this.mode='EDIT';
       var where=encodeURI("id='"+this.id+"'");
       axios.get('/api/v1.0/tuxlog/'+this.table+'?where='+where).then ( (response) => {

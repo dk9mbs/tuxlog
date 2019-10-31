@@ -294,7 +294,7 @@ export default {
     yourcall_onchange: function(event) {
       this.makeToast(true, 'Reading from callbook...')
       this.loadHistory(event);
-      Tuxlog.webRequestAsync('GET','/api/v1.0/callbook/hamdb/'+event,undefined,
+      Tuxlog.webRequestAsync('POST','/api/v1.0/webfunction/callbook',{"callsign":event , "provider": "hamdb"},
       (response)=>{
         this.logentry.name=response.data.haminfo.name
         this.logentry.country=response.data.haminfo.country

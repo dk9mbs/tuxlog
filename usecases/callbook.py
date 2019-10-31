@@ -44,7 +44,10 @@ class HamDbProvider(HamBaseInfoProvider):
         r = requests.get('http://api.hamdb.org/%s/json/APPNAME' % call, headers=headers)
 
         if r.json()['hamdb']['messages']['status'] != "OK":
-            pass
+            return 
+
+        if str(r.json()['hamdb']['callsign']['name']).startswith('NOT_FOUND'):
+            return 
 
         info_json['haminfo']['call']=r.json()['hamdb']['callsign']['call']
         info_json['haminfo']['name']=r.json()['hamdb']['callsign']['name']

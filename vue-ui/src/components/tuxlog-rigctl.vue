@@ -27,6 +27,7 @@
 <script>
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import  {Tuxlog, ifnull}  from '../common.js'
 
 export default {
   name: 'tuxlog-rigctl',
@@ -64,17 +65,22 @@ export default {
         // use arrow function
         var intervalId=setInterval(() => {
           this.clearError();
-          axios.get('/api/v1.0/rigctl/'+this.rig+'/f').then(response => {
+
+          Tuxlog.webRequestAsync('POST','/api/v1.0/webfunction/get_rig_data', {"rig_id": this.rig, "command":"f"} ,
+          (response) => {
+            debugger;
             this.freq=response.data['response']['Frequency']
             this.error=null
             this.$emit('onget_qrg', this.freq);
-          }).catch( response => {
-            console.log(response.response.data['error']);
-            this.error= response.response.data;
-            this.error_text= response.response.data['error'];
+          }, (response) => {
+            console.log(response['orgres'].response.data['error']);
+            this.error= response['orgres'].response.data;
+            this.error_text= response['orgres'].response.data['error'];
             this.freq=0;
             this.stopInterval();
+
           })
+
       },this.timer_interval )
       this.timer_id=intervalId;
       return intervalId;
