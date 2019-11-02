@@ -38,76 +38,7 @@ from usecases.tuxlog import webfunction
 
 logger = logging.getLogger(__name__)
 
-class CustomFlask(Flask):
-    jinja_options = Flask.jinja_options.copy()
-    jinja_options.update(dict(
-        block_start_string='<%',
-        block_end_string='%>',
-        variable_start_string='<{',
-        variable_end_string='}>',
-        comment_start_string='<#',
-        comment_end_string='#>',
-    ))
-
-app = CustomFlask(__name__, template_folder='htdocs', static_url_path='/static')
-app.config['SECRET_KEY'] = 'secret!'
-app.config['TEMPLATES_AUTO_RELOAD'] = True
-app.jinja_env.auto_reload = True
-
-app.debug=False
-app.threaded=True
-
-
-@app.before_request
-def _db_connect():
-    try:
-        model.database.connect()
-    except:
-        pass
-
-@app.teardown_request
-def _db_close(exc):
-    logger.info("Closing database ...")
-    if not model.database.is_closed():
-        model.database.close()
-
-# UI
-@app.route('/')
-@app.route('/<file>')
-@app.route('/ui/<path:path>')
-def index(file="index.html", path=""):
-    if file=='favicon.ico':
-        return Response(status=404)
-    
-    return render_template(file, config=config.DatabaseConfig.get_current_cfg() )
-
-@app.route('/js/<file>', methods=['GET'])
-def get_js_file(file):
-    logger.info('get file: %s' % file)
-    try:
-        return Response(render_template('js/'+file, config=config.current_cfg), status=200, content_type="text/javascript", mimetype="test/javascript")
-    except Exception as e:
-        logger.exception(e)
-        return Response( json.dumps( { 'error': 'not found'} ), 404)
-
-# Websocket
-connections = set()
-
-@app.route('/websocket')
-def handle_websocket():
-    wsock = request.environ.get('wsgi.websocket')
-    if not wsock:
-        return Response( json.dumps( { 'error': 'Expected WebSocket request.'} ), 400)
-
-    connections.add(wsock)
-    
-    while True:
-        try:
-            wsock.receive()
-        except WebSocketError:
-            break
-    connections.remove(wsock)
-    abort(500)
+database=Blueprint('database', __name__, template_folder='templates', static_folder='static')
 
 # Web Api v1.0
 
@@ -126,8 +57,8 @@ def typeformatter(obj):
         #return json.JSONEncoder.default(obj)
         pass
 
-@app.route('/api/v1.0/tuxlog/<table>', methods=['POST', 'PUT'])
-@app.route('/api/v1.0/tuxlog/<table>/<id>', methods=['POST', 'PUT'])
+@database.route('/api/v1.0/tuxlog/<table>', methods=['POST', 'PUT'])
+@database.route('/api/v1.0/tuxlog/<table>/<id>', methods=['POST', 'PUT'])
 def save_or_update(table, id=None):
     mod_cls=ModelClassFactory(table).create()
     data_model=dict_to_model(mod_cls, request.json)
@@ -139,13 +70,13 @@ def save_or_update(table, id=None):
 
     logger.info('id created after save => %s' % str(data_model.id))
 
-    for wsock in connections:
-        wsock.send(json.dumps({'publisher':'save','target': table, 'message': {"id":data_model.id} } ))
+    #for wsock in connections:
+    #    wsock.send(json.dumps({'publisher':'save','target': table, 'message': {"id":data_model.id} } ))
 
     return Response({"id":data_model.id})
 
 
-@app.route('/api/v1.0/tuxlog/<table>', methods=['GET'])
+@database.route('/api/v1.0/tuxlog/<table>', methods=['GET'])
 def get_dataset(table):
     order=""
     where=""
@@ -176,7 +107,7 @@ def get_dataset(table):
             }
         )     
 
-@app.route('/api/v1.0/tuxlog/<table>/<recordid>', methods=['GET'])
+@database.route('/api/v1.0/tuxlog/<table>/<recordid>', methods=['GET'])
 def get_record(table, recordid):
 
     mod=ModelClassFactory(table).create()
@@ -197,7 +128,7 @@ def get_record(table, recordid):
             }
         )     
 
-@app.route('/api/v1.0/tuxlog/<table>/<recordid>', methods=['DELETE'])
+@database.route('/api/v1.0/tuxlog/<table>/<recordid>', methods=['DELETE'])
 def del_record(table, recordid):
     #logger.error(recordid)
     mod=ModelClassFactory(table).create()
@@ -211,44 +142,5 @@ def del_record(table, recordid):
                 "dk9mbs": "yes"
             }
         )     
-
-@app.errorhandler(ConnectionRefusedError)
-def handle_error(error):
-    message = [str(x) for x in error.args]
-    #status_code = error.status_code
-    status_code=500
-    success = False
-    response = {
-        'success': success,
-        'error': {
-            'type': error.__class__.__name__,
-            'message': message,
-            'traceback': None
-        }
-    }
-    logger.exception(error)
-    return jsonify(response), status_code
-
-# webfunction api
-@app.route('/api/v1.0/webfunction/<name>', methods=['POST', 'GET'])
-def call_action(name):
-    content=None
-
-    if request.args.get('params', default=None) != None:
-        #in case of query args read the content from body
-        params=json.loads(request.args.get('params'))
-        content="".join(map(chr, request.data))        
-    else:
-        params= json.loads("".join(map(chr, request.data)))  
-
-    params['content']=content
-    params['status_code']=200
-    
-    result=webfunction.execute(name, params)
-
-    return Response(json.dumps(result) ,mimetype="text/json",content_type="text/json" , status=params['status_code'])
-
-
-
 
 
