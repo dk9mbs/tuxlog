@@ -5,16 +5,16 @@ from __future__ import print_function
 import sys
 import json
 import time
-import argparse
-import os
-import signal
+#import argparse
+#import os
+#import signal
 import logging
-import usecases.tuxlog.callbook as callbook
+#import usecases.tuxlog.callbook as callbook
 from usecases.tuxlog.datamodel import ModelClassFactory
 import config
 import importlib
-from socket import AF_INET, socket, SOCK_STREAM
-from threading import Thread, Lock
+#from socket import AF_INET, socket, SOCK_STREAM
+#from threading import Thread, Lock
 from flask import Flask
 from flask import render_template
 from flask import request
@@ -22,9 +22,9 @@ from flask import Response
 from flask import abort
 from flask import jsonify
 from flask import Blueprint
-from gevent.pywsgi import WSGIServer
-from geventwebsocket import WebSocketError
-from geventwebsocket.handler import WebSocketHandler
+#from gevent.pywsgi import WSGIServer
+#from geventwebsocket import WebSocketError
+#from geventwebsocket.handler import WebSocketHandler
 from flaskext.mysql import MySQL
 from playhouse.shortcuts import model_to_dict, dict_to_model
 from model.model import LogLogs
@@ -33,7 +33,7 @@ import urllib.parse
 from usecases.tuxlog.datamodel import get_modellist_by_raw
 import datetime
 from decimal import Decimal
-from usecases.tuxlog import webfunction
+#from usecases.tuxlog import webfunction
 
 
 logger = logging.getLogger(__name__)
@@ -57,8 +57,8 @@ def typeformatter(obj):
         #return json.JSONEncoder.default(obj)
         pass
 
-@database.route('/api/v1.0/tuxlog/<table>', methods=['POST', 'PUT'])
-@database.route('/api/v1.0/tuxlog/<table>/<id>', methods=['POST', 'PUT'])
+@database.route('/<table>', methods=['POST', 'PUT'])
+@database.route('/<table>/<id>', methods=['POST', 'PUT'])
 def save_or_update(table, id=None):
     mod_cls=ModelClassFactory(table).create()
     data_model=dict_to_model(mod_cls, request.json)
@@ -76,7 +76,7 @@ def save_or_update(table, id=None):
     return Response({"id":data_model.id})
 
 
-@database.route('/api/v1.0/tuxlog/<table>', methods=['GET'])
+@database.route('/<table>', methods=['GET'])
 def get_dataset(table):
     order=""
     where=""
@@ -107,7 +107,7 @@ def get_dataset(table):
             }
         )     
 
-@database.route('/api/v1.0/tuxlog/<table>/<recordid>', methods=['GET'])
+@database.route('/<table>/<recordid>', methods=['GET'])
 def get_record(table, recordid):
 
     mod=ModelClassFactory(table).create()
@@ -128,7 +128,7 @@ def get_record(table, recordid):
             }
         )     
 
-@database.route('/api/v1.0/tuxlog/<table>/<recordid>', methods=['DELETE'])
+@database.route('/<table>/<recordid>', methods=['DELETE'])
 def del_record(table, recordid):
     #logger.error(recordid)
     mod=ModelClassFactory(table).create()

@@ -52,9 +52,9 @@ from endpoint.common.data import database
 from endpoint.common.webfunction import webfunction
 from ui_view import ui
 
-app.register_blueprint(database,url_prefix='/')
+app.register_blueprint(database,url_prefix='/api/v1.0/tuxlog')
 app.register_blueprint(ui, url_prefix='/')
-app.register_blueprint(webfunction, url_prefix='/')
+app.register_blueprint(webfunction, url_prefix='/api/v1.0/webfunction')
 
 
 

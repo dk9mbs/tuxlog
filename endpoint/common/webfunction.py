@@ -41,7 +41,7 @@ logger = logging.getLogger(__name__)
 webfunction=Blueprint('webfunction', __name__, template_folder='templates', static_folder='static')
 
 # webfunction api
-@webfunction.route('/api/v1.0/webfunction/<name>', methods=['POST', 'GET'])
+@webfunction.route('/<name>', methods=['POST', 'GET'])
 def call_action(name):
     from usecases.tuxlog import webfunction
 
