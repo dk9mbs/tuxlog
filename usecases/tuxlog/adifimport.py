@@ -1,10 +1,17 @@
 from model.model import MetaDataExchangeFields
 from model.model import LogLogs
 from model.model import LogModes, LogImportlogs
-from usecases.fieldmapping import FieldMapping
+from .fieldmapping import FieldMapping
 #from services.adifimport import AdifParserLib
 from common.common import BaseUseCase
 
+import peewee
+import sys
+import re
+
+from model.model import MetaDataExchangeFields
+from model.model import LogLogs
+from model.model import LogModes, LogImportlogs
 import peewee
 import sys
 import re
@@ -89,15 +96,6 @@ class AdifImport(BaseUseCase):
 
         inner_import(content, user_data=user_data)
         pass
-
-
-from model.model import MetaDataExchangeFields
-from model.model import LogLogs
-from model.model import LogModes, LogImportlogs
-from usecases.fieldmapping import FieldMapping
-import peewee
-import sys
-import re
 
 class AdifParserLib:
     def __init__(self,fn):

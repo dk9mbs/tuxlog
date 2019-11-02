@@ -1,6 +1,7 @@
-from usecases import callbook
+from usecases.tuxlog import callbook
 import logging
 import json
+from usecases.tuxlog import webfunction
 
 logger = logging.getLogger(__name__)
 
@@ -15,5 +16,4 @@ def execute(name, params, **kwargs):
 
 
 def register():
-    from usecases import webfunction
     webfunction.register('callbook', execute)

@@ -1,7 +1,8 @@
+from jobs.adifimportjob import AdifImportJob
+from threading import Thread
+from usecases.tuxlog import webfunction
 
 def execute(name, params, **kwargs):
-    from jobs.adifimportjob import AdifImportJob
-    from threading import Thread
 
     logbook_id=params['logbook_id']
     content=params['content']        
@@ -15,5 +16,4 @@ def execute(name, params, **kwargs):
 
 
 def register():
-    from usecases import webfunction
     webfunction.register('import_adif', execute)

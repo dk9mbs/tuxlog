@@ -1,13 +1,13 @@
 import unittest
+from usecases.tuxlog.adifimport import AdifParserLib
+from model.model import MetaDataExchangeFields
+from usecases.tuxlog.fieldmapping import FieldMapping
+from model.model import MetaDataExchangeFields
+
 
 class TestAdifParser(unittest.TestCase):
 
     def test_fieldmapping(self):
-        from usecases.adifimport import AdifParserLib
-        from model.model import MetaDataExchangeFields
-        from usecases.fieldmapping import FieldMapping
-        from model.model import MetaDataExchangeFields
-
         fld_def1=MetaDataExchangeFields()
         fld_def1.external_fieldname="call"
         fld_def1.internal_fieldname="yourcall"

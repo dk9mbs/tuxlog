@@ -1,8 +1,8 @@
 import datetime
 import logging
-from usecases.adifimport import AdifImport
+from usecases.tuxlog.adifimport import AdifImport
 from model import model
-from usecases.ctyimport import CtyImport
+from usecases.tuxlog.ctyimport import CtyImport
 from model.model import LogImportjobs
 from jobs.importjob import ImportJob
 from jobs.ctyimportjob import BaseImportJob

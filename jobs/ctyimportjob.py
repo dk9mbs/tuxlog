@@ -1,5 +1,5 @@
 from model import model
-from usecases.ctyimport import CtyImport
+from usecases.tuxlog.ctyimport import CtyImport
 from model.model import LogImportjobs
 from jobs.importjob import ImportJob
 

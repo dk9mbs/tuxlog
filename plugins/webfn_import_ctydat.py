@@ -1,7 +1,8 @@
+from jobs.ctyimportjob import CtyImportJob
+from threading import Thread
+from usecases.tuxlog import webfunction
 
 def execute(name, params, **kwargs):
-    from jobs.ctyimportjob import CtyImportJob
-    from threading import Thread
 
     content=params['content'] 
     
@@ -12,5 +13,4 @@ def execute(name, params, **kwargs):
     return {"response": "pending"}
 
 def register():
-    from usecases import webfunction
     webfunction.register('import_ctydat', execute)

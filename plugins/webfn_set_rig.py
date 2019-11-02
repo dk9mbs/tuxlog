@@ -1,8 +1,8 @@
+from usecases.tuxlog import webfunction
+from usecases.tuxlog.rigctl import RigCtl
+from model.model import LogRigs
 
 def execute(name, params, **kwargs):
-    from usecases.rigctl import RigCtl
-    from model.model import LogRigs
-
     command=params['command']
     value=params['value']
     rig_id=params['rig_id']
@@ -25,5 +25,4 @@ def execute(name, params, **kwargs):
 
 
 def register():
-    from usecases import webfunction
     webfunction.register('set_rig_data', execute)

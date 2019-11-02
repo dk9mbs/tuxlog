@@ -1,5 +1,5 @@
 from model.model import LogLogs
-from usecases.band import get_band_by_frequency
+from usecases.tuxlog.band import get_band_by_frequency
 from playhouse.signals import pre_save
 
 

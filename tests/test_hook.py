@@ -2,6 +2,7 @@ import unittest
 import config
 import os
 from model import model
+from usecases.tuxlog import webfunction as hook
 
 class TestHook(unittest.TestCase):
 
@@ -15,8 +16,6 @@ class TestHook(unittest.TestCase):
 
     def test_hook(self):
         config.DatabaseConfig.open(model.database, config.DatabaseConfig.read_from_file(os.getenv("tuxlog_environment")))
-
-        from usecases import webfunction as hook
 
         hook.register('test', self.hook1 )
         hook.register('test', self.hook2 )

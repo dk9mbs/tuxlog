@@ -1,13 +1,14 @@
 from playhouse.signals import post_save, pre_save
 from model.model import LogLogs
 import logging
+from playhouse.signals import pre_save
+from model.model import LogLogs
+from usecases.tuxlog.dxcallinfo import DxCallInfo
 
 logger = logging.getLogger(__name__)
 
 def execute(sender, instance, created):
     print("pre_save hook")
-
-    from usecases.hamcall.dxcallinfo import DxCallInfo
 
     prefix=DxCallInfo.get_dxinfo_by_call(instance.yourcall)
 
@@ -21,6 +22,4 @@ def execute(sender, instance, created):
     instance.entity=prefix['entity']
 
 def register():
-    from playhouse.signals import pre_save
-    from model.model import LogLogs
     pre_save.connect(execute, name='dxcallsigninfo', sender=LogLogs)

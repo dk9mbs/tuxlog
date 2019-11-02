@@ -36,30 +36,7 @@ from decimal import Decimal
 from usecases.tuxlog import webfunction
 
 
-logging.basicConfig(level=logging.INFO)
-#logging.basicConfig(filename='/tmp/tuxlog.log')
 logger = logging.getLogger(__name__)
-
-config.DatabaseConfig.open(model.database, config.DatabaseConfig.read_from_file(os.getenv("tuxlog_environment")))
-
-# ============================================
-# Register all plugins
-for file in os.listdir( os.path.join(config.AppConfig.get_app_root(), 'plugins')):
-    if file.endswith(".py") and not file.startswith('__'):
-        logger.info(file)
-        i = importlib.import_module('plugins.'+file.replace('.py', ''))
-        i.register()
-# ============================================
-
-def handler(signum, frame):
-    pass
-
-def handler_int(signum, frame):
-    logger.info('Strg+c')
-    sys.exit()
-
-signal.signal(signal.SIGINT, handler_int)
-signal.signal(signal.SIGTERM, handler)
 
 class CustomFlask(Flask):
     jinja_options = Flask.jinja_options.copy()
@@ -270,10 +247,6 @@ def call_action(name):
     result=webfunction.execute(name, params)
 
     return Response(json.dumps(result) ,mimetype="text/json",content_type="text/json" , status=params['status_code'])
-
-
-#server = WSGIServer((cfg['httpcfg']['host'], int(cfg['httpcfg']['port'])), app, handler_class=WebSocketHandler)
-#server.serve_forever()
 
 
 

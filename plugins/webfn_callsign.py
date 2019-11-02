@@ -1,9 +1,9 @@
-from usecases import webfunction
+from usecases.tuxlog import webfunction
 import json
+from usecases.tuxlog.dxcallinfo import DxCallInfo
+from model.model import LogDxccPrefixes
 
 def execute(name, params, **kwargs):
-    from usecases.hamcall.dxcallinfo import DxCallInfo
-    from model.model import LogDxccPrefixes
 
     callsign=params['callsign']
     prefix=DxCallInfo.get_dxinfo_by_call(callsign)

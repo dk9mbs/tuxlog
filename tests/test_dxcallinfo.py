@@ -2,14 +2,13 @@ import unittest
 import config
 import os
 from model import model
+from usecases.tuxlog.dxcallinfo import DxCallInfo
+from model.model import LogDxccPrefixes
 
 class TestDxCallInfo(unittest.TestCase):
 
     def test_dxcallinfo(self):
         config.DatabaseConfig.open(model.database, config.DatabaseConfig.read_from_file(os.getenv("tuxlog_environment")))
-
-        from usecases.hamcall.dxcallinfo import DxCallInfo
-        from model.model import LogDxccPrefixes
 
         prefix=DxCallInfo.get_dxinfo_by_call("dk9mbs")
         self.assertEqual(prefix['main_prefix'] , 'DL')
