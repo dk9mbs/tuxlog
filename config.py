@@ -14,6 +14,10 @@ class AppConfig:
     def get_app_root(cls):
         return os.path.dirname(__file__)+'/'
 
+    @classmethod
+    def convert_path_to_namespace(cls, path):
+        path=path.replace(cls.get_app_root(), '').replace('/','.')
+        return path
 
 class DatabaseConfig:
     _current_cfg={}

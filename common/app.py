@@ -18,21 +18,13 @@ from gevent.pywsgi import WSGIServer
 from flaskext.mysql import MySQL
 from model import model
 import urllib.parse
+from common.solution import find_all_solutions
 
 logging.basicConfig(level=logging.INFO)
 #logging.basicConfig(filename='/tmp/tuxlog.log')
 logger = logging.getLogger(__name__)
 
 config.DatabaseConfig.open(model.database, config.DatabaseConfig.read_from_file(os.getenv("tuxlog_environment")))
-
-# ============================================
-# Register all plugins
-for file in os.listdir( os.path.join(config.AppConfig.get_app_root(), 'tuxlog/plugins')):
-    if file.endswith(".py") and not file.startswith('__'):
-        logger.info(file)
-        i = importlib.import_module('tuxlog.plugins.'+file.replace('.py', ''))
-        i.register()
-# ============================================
 
 def handler(signum, frame):
     pass
@@ -55,5 +47,8 @@ app.register_blueprint(ui, url_prefix='/')
 app.register_blueprint(webfunction, url_prefix='/api/v1.0/webfunction')
 
 
-
+def test(value):
+    print('test')
+    
+find_all_solutions( test )
 
