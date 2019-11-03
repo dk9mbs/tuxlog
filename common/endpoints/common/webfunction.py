@@ -30,10 +30,9 @@ from model import model
 import urllib.parse
 import datetime
 from decimal import Decimal
-from tuxlog.system import webfunction
-from tuxlog.system.datamodel import get_modellist_by_raw, ModelClassFactory
+from common.datamodel import get_modellist_by_raw, ModelClassFactory
 import tuxlog.callsign.callbook as callbook
-from tuxlog.system.webfunction import execute
+from common.webfunction import execute
 
 logger = logging.getLogger(__name__)
 

@@ -1,6 +1,6 @@
 from model import model
 from model.model import LogImportjobs
-from jobs.importjob import ImportJob
+from tuxlog.jobs.importjob import ImportJob
 from tuxlog.file_import.ctyimport import CtyImport
 class BaseImportJob:
 

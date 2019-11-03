@@ -1,7 +1,6 @@
-from jobs.adifimportjob import AdifImportJob
+from tuxlog.jobs.adifimportjob import AdifImportJob
 from threading import Thread
-from tuxlog.system import webfunction
-
+from common import webfunction
 def execute(name, params, **kwargs):
 
     logbook_id=params['logbook_id']

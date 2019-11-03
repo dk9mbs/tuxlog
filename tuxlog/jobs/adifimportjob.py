@@ -2,11 +2,11 @@ import datetime
 import logging
 from model import model
 from model.model import LogImportjobs
-from jobs.importjob import ImportJob
-from jobs.ctyimportjob import BaseImportJob
 from model.model import LogLogs
 from tuxlog.file_import.ctyimport import CtyImport
 from tuxlog.file_import.adifimport import AdifImport
+from tuxlog.jobs.importjob import ImportJob
+from tuxlog.jobs.ctyimportjob import BaseImportJob
 
 logger = logging.getLogger(__name__)
 

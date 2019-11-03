@@ -1,7 +1,7 @@
 import json
 from model.model import LogDxccPrefixes
 from tuxlog.callsign.dxcallinfo import DxCallInfo
-from tuxlog.system import webfunction
+from common import webfunction
 
 def execute(name, params, **kwargs):
 

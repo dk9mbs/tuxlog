@@ -30,9 +30,7 @@ from model import model
 import urllib.parse
 import datetime
 from decimal import Decimal
-from tuxlog.system.datamodel import get_modellist_by_raw
-#import usecases.tuxlog.callbook as callbook
-#from usecases.tuxlog.datamodel import ModelClassFactory
+from common.datamodel import get_modellist_by_raw
 
 logger = logging.getLogger(__name__)
 

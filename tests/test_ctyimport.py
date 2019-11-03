@@ -4,7 +4,7 @@ from model.model import MySQLDatabase
 from os import getenv
 import os
 import config
-from jobs.ctyimportjob import CtyImportJob 
+from tuxlog.jobs.ctyimportjob import CtyImportJob 
 from tuxlog.file_import.ctyimport import CtyImport
 from tuxlog.file_import.ctyimport import CtyImportLib
 

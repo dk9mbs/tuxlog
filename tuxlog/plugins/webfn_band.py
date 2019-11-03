@@ -1,6 +1,6 @@
 from model.model import LogBands
 from decimal import Decimal
-from tuxlog.system import webfunction
+from common import webfunction
 from tuxlog.band import get_band_by_frequency
 
 def execute(name, params, **kwargs):

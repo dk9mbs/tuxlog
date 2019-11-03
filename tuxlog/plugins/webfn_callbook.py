@@ -1,6 +1,6 @@
 import logging
 import json
-from tuxlog.system import webfunction
+from common import webfunction
 from tuxlog.callsign import callbook
 
 logger = logging.getLogger(__name__)

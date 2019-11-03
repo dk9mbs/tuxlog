@@ -22,8 +22,7 @@ from model import model
 import urllib.parse
 import datetime
 from decimal import Decimal
-from tuxlog.system.datamodel import get_modellist_by_raw, ModelClassFactory
-
+from common.datamodel import get_modellist_by_raw, ModelClassFactory
 logger = logging.getLogger(__name__)
 
 database=Blueprint('database', __name__, template_folder='templates', static_folder='static')

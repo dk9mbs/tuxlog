@@ -1,5 +1,5 @@
 from model.model import LogRigs
-from tuxlog.system import webfunction
+from common import webfunction
 from tuxlog.rig.rigctl import RigCtl
 
 def execute(name, params, **kwargs):

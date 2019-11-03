@@ -45,9 +45,9 @@ signal.signal(signal.SIGINT, handler_int)
 signal.signal(signal.SIGTERM, handler)
 
 
-from endpoint.common import app
-from endpoint.common.data import database
-from endpoint.common.webfunction import webfunction
+from common.endpoints.common import app
+from common.endpoints.common.data import database
+from common.endpoints.common.webfunction import webfunction
 from ui_view import ui
 
 app.register_blueprint(database,url_prefix='/api/v1.0/tuxlog')

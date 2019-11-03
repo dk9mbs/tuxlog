@@ -1,6 +1,6 @@
-from tuxlog.system import webfunction
 from tuxlog.rig.rigctl import RigCtl
 from model.model import LogRigs
+from common import webfunction
 
 def execute(name, params, **kwargs):
     rig_id=params['rig_id']

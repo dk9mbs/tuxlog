@@ -1,7 +1,6 @@
-from jobs.ctyimportjob import CtyImportJob
+from tuxlog.jobs.ctyimportjob import CtyImportJob
 from threading import Thread
-from tuxlog.system import webfunction
-
+from common import webfunction
 def execute(name, params, **kwargs):
 
     content=params['content'] 
