@@ -60,7 +60,8 @@ import logging
 import sys
 logging.basicConfig(stream=sys.stderr)
 sys.path.insert(0, "$APPDIR/")
-from app import app as application
+#from app import app as application
+from common.app import app as application
 application.secret_key = "$KEY"
 EOF
 
