@@ -5,9 +5,10 @@ from model.model import MySQLDatabase
 import json
 from os import getenv
 import os
-from usecases.tuxlog.adifimport import AdifImport
-from usecases.tuxlog.adifimport import AdifParserLib
 from model.model import MetaDataExchangeFields
+
+from tuxlog.file_import.adifimport import AdifImport
+from tuxlog.file_import.adifimport import AdifParserLib
 
 #from model import model
 import config

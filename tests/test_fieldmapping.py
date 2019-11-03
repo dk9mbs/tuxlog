@@ -1,9 +1,8 @@
 import unittest
-from usecases.tuxlog.adifimport import AdifParserLib
 from model.model import MetaDataExchangeFields
-from usecases.tuxlog.fieldmapping import FieldMapping
 from model.model import MetaDataExchangeFields
-
+from tuxlog.system.fieldmapping import FieldMapping
+from tuxlog.file_import.adifimport import AdifParserLib
 
 class TestAdifParser(unittest.TestCase):
 

@@ -1,8 +1,7 @@
 from model import model
-from usecases.tuxlog.ctyimport import CtyImport
 from model.model import LogImportjobs
 from jobs.importjob import ImportJob
-
+from tuxlog.file_import.ctyimport import CtyImport
 class BaseImportJob:
 
     def __init__(self):

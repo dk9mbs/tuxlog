@@ -2,12 +2,11 @@ import unittest
 import os
 import config
 from os import getenv
-from usecases.ctyimport import CtyImport
-from usecases.band import get_band_by_frequency
 from model import model
 from model.model import MySQLDatabase
 from model.model import LogBands
-
+from tuxlog.file_import.ctyimport import CtyImport
+from tuxlog.band import get_band_by_frequency
 
 class TestBand(unittest.TestCase):
     def test_band(self):

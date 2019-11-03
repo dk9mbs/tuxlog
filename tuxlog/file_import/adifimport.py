@@ -1,8 +1,7 @@
 from model.model import MetaDataExchangeFields
 from model.model import LogLogs
 from model.model import LogModes, LogImportlogs
-from .fieldmapping import FieldMapping
-#from services.adifimport import AdifParserLib
+from tuxlog.system.fieldmapping import FieldMapping
 from common.common import BaseUseCase
 
 import peewee

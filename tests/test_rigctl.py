@@ -1,6 +1,5 @@
 import unittest
-from usecases.rigctl import RigCtl
-
+from tuxlog.rig.rigctl import RigCtl
 
 
 class TestRigCtl(unittest.TestCase):

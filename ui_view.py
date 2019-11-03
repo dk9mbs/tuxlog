@@ -9,8 +9,6 @@ import argparse
 import os
 import signal
 import logging
-import usecases.tuxlog.callbook as callbook
-from usecases.tuxlog.datamodel import ModelClassFactory
 import config
 import importlib
 from socket import AF_INET, socket, SOCK_STREAM
@@ -30,11 +28,11 @@ from playhouse.shortcuts import model_to_dict, dict_to_model
 from model.model import LogLogs
 from model import model
 import urllib.parse
-from usecases.tuxlog.datamodel import get_modellist_by_raw
 import datetime
 from decimal import Decimal
-from usecases.tuxlog import webfunction
-
+from tuxlog.system.datamodel import get_modellist_by_raw
+#import usecases.tuxlog.callbook as callbook
+#from usecases.tuxlog.datamodel import ModelClassFactory
 
 logger = logging.getLogger(__name__)
 

@@ -2,7 +2,7 @@ import unittest
 import config
 import os
 from model import model
-from usecases.tuxlog import webfunction as hook
+from tuxlog.system import webfunction as hook
 
 class TestHook(unittest.TestCase):
 

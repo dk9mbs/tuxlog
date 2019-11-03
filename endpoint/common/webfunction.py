@@ -9,8 +9,6 @@ import argparse
 import os
 import signal
 import logging
-import usecases.tuxlog.callbook as callbook
-from usecases.tuxlog.datamodel import ModelClassFactory
 import config
 import importlib
 from socket import AF_INET, socket, SOCK_STREAM
@@ -30,11 +28,12 @@ from playhouse.shortcuts import model_to_dict, dict_to_model
 from model.model import LogLogs
 from model import model
 import urllib.parse
-from usecases.tuxlog.datamodel import get_modellist_by_raw
 import datetime
 from decimal import Decimal
-from usecases.tuxlog import webfunction
-
+from tuxlog.system import webfunction
+from tuxlog.system.datamodel import get_modellist_by_raw, ModelClassFactory
+import tuxlog.callsign.callbook as callbook
+from tuxlog.system.webfunction import execute
 
 logger = logging.getLogger(__name__)
 
@@ -43,8 +42,6 @@ webfunction=Blueprint('webfunction', __name__, template_folder='templates', stat
 # webfunction api
 @webfunction.route('/<name>', methods=['POST', 'GET'])
 def call_action(name):
-    from usecases.tuxlog import webfunction
-
     content=None
 
     if request.args.get('params', default=None) != None:
@@ -57,6 +54,6 @@ def call_action(name):
     params['content']=content
     params['status_code']=200
     
-    result=webfunction.execute(name, params)
-
+    result=execute(name, params)
+    
     return Response(json.dumps(result) ,mimetype="text/json",content_type="text/json" , status=params['status_code'])

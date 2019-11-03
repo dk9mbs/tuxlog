@@ -5,9 +5,8 @@ from model.model import MySQLDatabase
 from os import getenv
 import os
 import config
-
 from jobs.importjob import ImportJob
-from usecases.ctyimport import CtyImport
+from tuxlog.file_import.ctyimport import CtyImport
 
 class TestImportJob(unittest.TestCase):
     def test_import(self):

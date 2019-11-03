@@ -1,12 +1,12 @@
 import datetime
 import logging
-from usecases.tuxlog.adifimport import AdifImport
 from model import model
-from usecases.tuxlog.ctyimport import CtyImport
 from model.model import LogImportjobs
 from jobs.importjob import ImportJob
 from jobs.ctyimportjob import BaseImportJob
 from model.model import LogLogs
+from tuxlog.file_import.ctyimport import CtyImport
+from tuxlog.file_import.adifimport import AdifImport
 
 logger = logging.getLogger(__name__)
 

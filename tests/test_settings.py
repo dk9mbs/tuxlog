@@ -1,12 +1,10 @@
 import unittest
-from usecases.setting import Setting
-
 from model import model
 from model.model import MySQLDatabase
 from os import getenv
 import os
 import config
-
+from tuxlog.system.setting import Setting
 
 
 class TestSetting(unittest.TestCase):

@@ -2,9 +2,8 @@ import unittest
 import config
 import os
 from model import model
-from usecases.tuxlog.dxcallinfo import DxCallInfo
 from model.model import LogDxccPrefixes
-
+from tuxlog.callsign.dxcallinfo import DxCallInfo
 class TestDxCallInfo(unittest.TestCase):
 
     def test_dxcallinfo(self):

@@ -18,8 +18,6 @@ from gevent.pywsgi import WSGIServer
 from flaskext.mysql import MySQL
 from model import model
 import urllib.parse
-from usecases.tuxlog.datamodel import get_modellist_by_raw
-
 
 logging.basicConfig(level=logging.INFO)
 #logging.basicConfig(filename='/tmp/tuxlog.log')
@@ -29,10 +27,10 @@ config.DatabaseConfig.open(model.database, config.DatabaseConfig.read_from_file(
 
 # ============================================
 # Register all plugins
-for file in os.listdir( os.path.join(config.AppConfig.get_app_root(), 'plugin/tuxlog')):
+for file in os.listdir( os.path.join(config.AppConfig.get_app_root(), 'tuxlog/plugins')):
     if file.endswith(".py") and not file.startswith('__'):
         logger.info(file)
-        i = importlib.import_module('plugin.tuxlog.'+file.replace('.py', ''))
+        i = importlib.import_module('tuxlog.plugins.'+file.replace('.py', ''))
         i.register()
 # ============================================
 

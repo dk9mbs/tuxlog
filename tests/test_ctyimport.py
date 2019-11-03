@@ -1,14 +1,12 @@
 import unittest
-#from services.ctyimport import CtyImportLib
-from usecases.ctyimport import CtyImportLib
-
 from model import model
 from model.model import MySQLDatabase
 from os import getenv
 import os
 import config
-from usecases.ctyimport import CtyImport
 from jobs.ctyimportjob import CtyImportJob 
+from tuxlog.file_import.ctyimport import CtyImport
+from tuxlog.file_import.ctyimport import CtyImportLib
 
 
 class TestCtyImport(unittest.TestCase):
