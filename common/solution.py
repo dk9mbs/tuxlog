@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 Found all Solution folder in the application.
 A solution folder must have an plugin subfolder with __init__.py file.
 '''
-def find_all_solutions(fn):
+def find_all_solutions():
     logger.info("Scanning for plugins ...")
     for root, dirs, files in os.walk(os.path.join(config.AppConfig.get_app_root(), '')):
         if root.endswith('__solution__') :
@@ -31,7 +31,6 @@ def find_all_solutions(fn):
                         logger.info(file)
                         namespace=config.AppConfig.convert_path_to_namespace(full_path_name)
                         i = importlib.import_module(namespace+'.'+file.replace('.py', ''))
-                        fn(i.register())
 
 
 
