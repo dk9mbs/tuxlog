@@ -20,9 +20,6 @@ from flask import Response
 from flask import abort
 from flask import jsonify
 from flask import Blueprint
-from gevent.pywsgi import WSGIServer
-from geventwebsocket import WebSocketError
-from geventwebsocket.handler import WebSocketHandler
 from flaskext.mysql import MySQL
 from playhouse.shortcuts import model_to_dict, dict_to_model
 from model.model import LogLogs
