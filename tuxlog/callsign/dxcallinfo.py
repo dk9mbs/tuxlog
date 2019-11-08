@@ -43,7 +43,7 @@ class DxCallInfo:
 
         for x in range(len(call_info['complete'])):
             part=call_info['complete'][:x*-1]
-            logger.info(part)
+            #logger.info(part)
             dxinfo=DxCallInfo.get_prefix_by_call(part)
             if dxinfo!=None:
                 return DxCallInfo.model_to_dict(dxinfo, call_info)

@@ -1,10 +1,10 @@
 from model.model import LogLogs
-from tuxlog.band import get_band_by_frequency
+from tuxlog.band import frequency_to_band
 from playhouse.signals import pre_save
 
 
 def execute(sender, instance, created):
-    instance.band=get_band_by_frequency(instance.frequency)
+    instance.band=frequency_to_band(instance.frequency)
 
 
 def register():

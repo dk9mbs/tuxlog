@@ -1,7 +1,7 @@
 from model.model import LogBands
 from decimal import Decimal
 
-def get_band_by_frequency(frequency):
+def frequency_to_band(frequency):
     if frequency==None:
         return None
 

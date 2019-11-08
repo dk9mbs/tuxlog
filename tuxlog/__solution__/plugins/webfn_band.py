@@ -1,11 +1,11 @@
 from model.model import LogBands
 from decimal import Decimal
 from common import webfunction
-from tuxlog.band import get_band_by_frequency
+from tuxlog.band import frequency_to_band
 
 def execute(name, params, **kwargs):
     frequency=params['frequency']
-    band=get_band_by_frequency(Decimal(frequency))
+    band=frequency_to_band(Decimal(frequency))
 
     return {
         "band": band.name
