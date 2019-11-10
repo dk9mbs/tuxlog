@@ -12,6 +12,7 @@ if [ -z $ENVIRONMENT ]; then
 fi
 
 PYTHON="python3.5"
+PIP="pip3"
 BASEDIR=$(dirname "$0")
 SCRIPT=$(readlink -f $0)
 APPDIR=$(dirname $SCRIPT)
@@ -24,6 +25,9 @@ mkdir -p $APPDIR/htdocs
 if [ ! -f /etc/tuxlog/tuxlog_cfg.json ]; then
     cp "$BASEDIR/tuxlog_cfg.json" /etc/tuxlog/
 fi
+
+cd $APPDIR
+$PIP install -r requirements.txt
 
 cd $APPDIR/setup/
 KEY=$($PYTHON ./cfgreader.py $CFG_FILE "$ENVIRONMENT" "security" "secret_key")
