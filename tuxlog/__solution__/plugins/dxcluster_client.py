@@ -26,7 +26,8 @@ def task():
             spot=args[1]
 
             if spot_type=='dx':
-                socketio.emit('dxcluster_message', spot)
+                #socketio.emit('dxcluster_message', spot)
+                socketio.emit('dxcluter_message', {})
                 print(spot)        
             elif spot_type=='raw':
                 print(spot)

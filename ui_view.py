@@ -41,7 +41,14 @@ def index(file="index.html", path=""):
     if file=='favicon.ico':
         return Response(status=404)
     
-    return render_template(file, config=config.DatabaseConfig.get_current_cfg() )
+
+    #resp=render_template(file,config=config.DatabaseConfig.get_current_cfg())
+    headers=dict()
+    headers['Access-Control-Allow-Origin']='*'
+    return Response(render_template(file,config=config.DatabaseConfig.get_current_cfg()), headers=headers)
+    #return resp
+
+    #return render_template(file, config=config.DatabaseConfig.get_current_cfg() )
 
 @ui.route('/js/<file>', methods=['GET'])
 def get_js_file(file):
