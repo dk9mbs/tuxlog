@@ -2,6 +2,9 @@ from __future__ import print_function
 
 import sys
 import model.model
+import logging
+
+logger = logging.getLogger(__name__)
 
 class ModelClassFactory:
     _name=""
@@ -55,6 +58,7 @@ def get_modellist_by_raw(*args, **kwargs):
     else:
         sql=kwargs['sql']
 
-    print(sql)
+    logger.info(sql)
+    
     query=mod_cls.raw(sql)
     return list(query.dicts())

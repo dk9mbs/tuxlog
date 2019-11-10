@@ -3,6 +3,7 @@ import config
 import os
 from model import model
 from tuxlog.cluster import ClusterSpot
+from model.model import LogDxclusterSpots
 
 class ClusterSpotTest(unittest.TestCase):
     def test_spotparse(self):

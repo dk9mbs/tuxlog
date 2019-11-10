@@ -1,12 +1,6 @@
 /*CREATE DATABASE IF NOT EXISTS tuxlog default character set 'UTF8';*/
 /*USE tuxlog;*/
 
-/*
-* Clear the meta tables! nach insta auf allen Datenbanken weg
-*/
-DROP PROCEDURE IF EXISTS proc_update_20160618;
-
-
 
 /*
 * Now we will create the tuxlog user is not exists ...
@@ -968,9 +962,20 @@ BEGIN
 */
 CREATE TABLE IF NOT EXISTS log_dxcluster_spots(
     id int NOT NULL AUTO_INCREMENT,
-    spot varchar(250) NOT NULL,
+    spot varchar(250) NULL,
+    spotter varchar(50) NOT NULL,
+    spotter_dxcc_prefix_id varchar(50) NULL,
+    callsign varchar(50) NOT NULL,
+    callsign_dxcc_prefix_id varchar(50) NULL,
+    frequency numeric(15,4) NOT NULL,
+    band_id int NULL,
+    comment text NULL,
+    time_utc varchar(5) NULL,
     date timestamp default CURRENT_TIMESTAMP NOT NULL,
-    PRIMARY KEY(id)
+    PRIMARY KEY(id),
+    FOREIGN KEY(spotter_dxcc_prefix_id) REFERENCES log_dxcc_prefixes(id),
+    FOREIGN KEY(callsign_dxcc_prefix_id) REFERENCES log_dxcc_prefixes(id),
+    FOREIGN KEY(band_id) REFERENCES log_bands(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS log_dxcluster(

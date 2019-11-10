@@ -21,6 +21,7 @@ mysql -u$USERNAME -p$PASSWORD -h$HOST -e "DROP DATABASE IF EXISTS $DATABASE;"
 echo "CREATE DATABASE $DATABASE ..."
 mysql -u$USERNAME -p$PASSWORD -h$HOST -e "CREATE DATABASE IF NOT EXISTS tuxlog_build default character set 'UTF8';"
 echo "running sql script ..."
+mysql -u$USERNAME -p$PASSWORD -h$HOST $DATABASE -e "use $DATABASE;source ./logdatabase_init.db;"
 mysql -u$USERNAME -p$PASSWORD -h$HOST $DATABASE -e "use $DATABASE;source ./logdatabase.db;"
 mysql -u$USERNAME -p$PASSWORD -h$HOST $DATABASE -e "use $DATABASE;source ./logdatabase_update.db;"
 

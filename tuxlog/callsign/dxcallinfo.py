@@ -66,4 +66,6 @@ class DxCallInfo:
         info_dict['time_offset']=dxcc_model.time_offset
         info_dict['latitude']=dxcc_model.dxcc.latitude
         info_dict['longitude']=dxcc_model.dxcc.longitude
-        return info_dict
+        return dxcc_model
+        #return info_dict
+        

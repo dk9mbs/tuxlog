@@ -3,6 +3,7 @@ from tuxlog.band import frequency_to_band
 from common import BaseObject
 from functools import wraps
 from tuxlog.callsign.dxcallinfo import DxCallInfo
+from model.model import LogDxclusterSpots
 
 class ClusterSpot(BaseObject):
     def __init__(self, spot, frequency_unit="KHz", target_frequency_unit="MHz"):
@@ -29,27 +30,22 @@ class ClusterSpot(BaseObject):
                 band = frequency_to_band(frequency)
 
                 spotter_call_info=DxCallInfo().get_dxinfo_by_call(spotter)
-                call_info=DxCallInfo().get_dxinfo_by_call(callsign)
+                callsign_info=DxCallInfo().get_dxinfo_by_call(callsign)
 
-                spotter_prefix=None
-                callsign_prefix=None
+                #dict_spot=dict()
 
-                if spotter_call_info!=None:
-                    spotter_prefix=spotter_call_info['main_prefix']
+                spot=LogDxclusterSpots()
+                spot.spot=self.__spot
+                spot.callsign=callsign
+                spot.callsign_dxcc_prefix=callsign_info
+                spot.spotter=spotter
+                spot.spotter_dxcc_prefix=spotter_call_info
+                spot.frequency=frequency
+                spot.comment=comment
+                spot.band=band
+                spot.time_utc=spot_time
+                fn('dx', spot)
 
-                if call_info!=None:
-                    callsign_prefix=call_info['main_prefix']
-
-                json_spot={'spotter': spotter, 
-                        'frequency': frequency, 
-                        'callsign': callsign, 
-                        'comment': comment,
-                        'spot_time': spot_time,
-                        'band': band.name,
-                        'spotter_prefix': spotter_prefix,
-                        'callsign_prefix': callsign_prefix}
-
-                fn('dx', json_spot)
-
-                return json_spot        
+                spot.save()
+                return spot        
         return wrapper

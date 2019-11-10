@@ -6,7 +6,7 @@ from model import model
 from model.model import MySQLDatabase
 from model.model import LogBands
 from tuxlog.file_import.ctyimport import CtyImport
-from tuxlog.band import get_band_by_frequency
+from tuxlog.band import frequency_to_band
 
 class TestBand(unittest.TestCase):
     def test_band(self):
@@ -14,27 +14,27 @@ class TestBand(unittest.TestCase):
 
         print("\nBand:\n==============")
 
-        band=get_band_by_frequency(14.074)
+        band=frequency_to_band(14.074)
         print('Frequency => %s Band => %s' % (14.074, band.name))
         self.assertEqual(band.name, '20m')
 
-        band=get_band_by_frequency(14.0)
+        band=frequency_to_band(14.0)
         print('Frequency => %s Band => %s' % (14.0, band.name))
         self.assertEqual(band.name, '20m')
 
-        band=get_band_by_frequency(14.35)
+        band=frequency_to_band(14.35)
         print('Frequency => %s Band => %s' % (14.35, band.name))
         self.assertEqual(band.name, '20m')
 
-        band=get_band_by_frequency(0.473)
+        band=frequency_to_band(0.473)
         print('Frequency => %s Band => %s' % (0.473, band.name))
         self.assertEqual(band.name, '630m')
 
-        band=get_band_by_frequency(241000.0)
+        band=frequency_to_band(241000.0)
         print('Frequency => %s Band => %s' % (241000.0, band.name))
         self.assertEqual(band.name, '1mm')
         
-        band=get_band_by_frequency(13.0)
+        band=frequency_to_band(13.0)
         print('Frequency => %s Band => %s' % (13.0, band))
         self.assertEqual(band, None)
 
