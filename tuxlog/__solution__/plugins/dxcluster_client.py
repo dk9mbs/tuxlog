@@ -38,7 +38,7 @@ def task():
 def register():
     global thread
 
-    #thread=socketio.start_background_task(task)
-    thread=threading.Thread(target=task)
-    thread.start()
-    logger.info("started")
+    if thread==None:
+        thread=threading.Thread(target=task)
+        thread.start()
+        logger.info("started")
