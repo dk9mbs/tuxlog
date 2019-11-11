@@ -1,7 +1,7 @@
 DROP PROCEDURE IF EXISTS proc_update_20160618;
 
 
-drop table if exists log_dxcluster_spots;
+/*drop table if exists log_dxcluster_spots;*/
 
 DROP TABLES IF EXISTS log_dxcluster;
 DROP TABLES IF EXISTS log_dxcluster_loginscript;

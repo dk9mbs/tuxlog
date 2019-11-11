@@ -990,7 +990,7 @@ CREATE TABLE IF NOT EXISTS log_dxcluster_loginscripts(
     id int NOT NULL,
     dxcluster_id int NOT NULL,
     position smallint NOT NULL default '10',
-    prompt varchar(250) NOT NULL,
+    prompt varchar(250) NULL,
     send varchar(50) NOT NULL,
     FOREIGN KEY (dxcluster_id) REFERENCES log_dxclusters(id),
     PRIMARY KEY(id)
