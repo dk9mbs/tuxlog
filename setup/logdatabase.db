@@ -981,10 +981,15 @@ CREATE TABLE IF NOT EXISTS log_dxclusters(
     id int NOT NULL,
     host varchar(250) NOT NULL,
     port int NOT NULL,
+    prompt_username varchar(100) NOT NULL,
+    prompt_password varchar(100) NULL,
+    username varchar(50) NOT NULL,
+    password varchar(50) NULL,
     position smallint NOT NULL default '100',
     PRIMARY KEY(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+/*
 CREATE TABLE IF NOT EXISTS log_dxcluster_loginscripts(
     id int NOT NULL,
     dxcluster_id int NOT NULL,
@@ -994,6 +999,7 @@ CREATE TABLE IF NOT EXISTS log_dxcluster_loginscripts(
     FOREIGN KEY (dxcluster_id) REFERENCES log_dxclusters(id),
     PRIMARY KEY(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+*/
 
 /*
 DX Cluster eintragen
@@ -1009,14 +1015,14 @@ BEGIN
     IF NOT EXISTS (SELECT * FROM meta_sys_dbversion WHERE version='INSTALL-DXCLUSTER_V3.0.0') THEN
 		call proc_printf ('DXCluster installieren ...!');
 
-INSERT INTO log_dxclusters(id,host,port,position) VALUES (1,'oz5bbs.dk',8000,0);
-INSERT INTO log_dxclusters(id,host,port,position) VALUES (2,'zl2arn.ddns.net',7300,10);
-INSERT INTO log_dxclusters(id,host,port,position) VALUES (3,'la3waa.ddns.net',8000,20);
-
+INSERT INTO log_dxclusters(id,host,port,position,prompt_username) VALUES (1,'oz5bbs.dk',8000,0,'login: ');
+INSERT INTO log_dxclusters(id,host,port,position,prompt_username) VALUES (2,'zl2arn.ddns.net',7300,10,'login: ');
+INSERT INTO log_dxclusters(id,host,port,position,prompt_username) VALUES (3,'la3waa.ddns.net',8000,20,'login: ');
+/*
 INSERT INTO log_dxcluster_loginscripts(id,dxcluster_id,position,prompt,send) VALUES (1,1,10,'login: ','callsign');
 INSERT INTO log_dxcluster_loginscripts(id,dxcluster_id,position,prompt,send) VALUES (2,2,10,'login: ','callsign');
 INSERT INTO log_dxcluster_loginscripts(id,dxcluster_id,position,prompt,send) VALUES (3,3,10,'login: ','callsign');
-
+*/
 INSERT INTO meta_sys_dbversion(version,description) VALUES ('INSTALL-DXCLUSTER_V3.0.0','INSTALL-DXCLUSTER_V3.0.0');
 
 	END IF;

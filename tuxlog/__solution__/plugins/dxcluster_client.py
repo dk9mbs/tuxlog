@@ -3,7 +3,7 @@ import logging
 import time
 import threading
 from tuxlog.cluster import ClusterSpot
-from model.model import LogDxclusters, LogDxclusterLoginscripts
+from model.model import LogDxclusters
 from tuxlog.system.settungs import Setting
 
 logger = logging.getLogger(__name__)
@@ -25,6 +25,7 @@ def task():
 
     tn = telnetlib.Telnet(cluster.host,cluster.port)
 
+    '''
     query=LogDxclusterLoginscripts.select().where(LogDxclusterLoginscripts.dxcluster_id==cluster.id)
     for row in query:
         logger.info ('loginscript position %s' % row.position)
@@ -34,6 +35,14 @@ def task():
 
         logger.info('sending to dxcluster => %s' % row.send)
         tn.write(str.encode(row.send+'\n'))
+    '''
+
+    tn.read_until(str.encode(cluster.prompt_username))
+    tn.write(str.encode(cluster.username+'\n'))
+
+    if cluster.prompt_password!=None:
+        tn.read_until(str.encode(cluster.prompt_password))
+        tn.write(str.encode(cluster.password+'\n'))
 
     tn.write(str.encode('SET/NAME %s\n' % Setting.get_setting_value('*','dxcluster_set_name','')  ))
     tn.write(str.encode('SET/QRA %s\n' % Setting.get_setting_value('*','dxcluster_set_qra','')  ))
