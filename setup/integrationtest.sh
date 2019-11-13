@@ -7,6 +7,7 @@ USERNAME=$($PYTHON ./cfgreader.py $CFG_FILE build mysqlcfg username)
 PASSWORD=$($PYTHON ./cfgreader.py $CFG_FILE build mysqlcfg password)
 HOST=$($PYTHON ./cfgreader.py $CFG_FILE build mysqlcfg host)
 BASEDIR=$(dirname "$0")
+TESTDATA="/etc/tuxlog/test/logdatabase_testdata.db"
 
 cd $BASEDIR
 
@@ -15,6 +16,7 @@ echo "Hot.............:$HOST"
 echo "Username........:$USERNAME"
 echo "Password........:*********"
 echo "Basedir.........:$BASEDIR"
+echo "Testdata........:$TESTDATA"
 
 echo "DROP DATABASE IF EXISTS $DATABASE ..."
 mysql -u$USERNAME -p$PASSWORD -h$HOST -e "DROP DATABASE IF EXISTS $DATABASE;"
@@ -24,6 +26,14 @@ echo "running sql script ..."
 mysql -u$USERNAME -p$PASSWORD -h$HOST $DATABASE -e "use $DATABASE;source ./logdatabase_init.db;"
 mysql -u$USERNAME -p$PASSWORD -h$HOST $DATABASE -e "use $DATABASE;source ./logdatabase.db;"
 mysql -u$USERNAME -p$PASSWORD -h$HOST $DATABASE -e "use $DATABASE;source ./logdatabase_update.db;"
+mysql -u$USERNAME -p$PASSWORD -h$HOST $DATABASE -e "use $DATABASE;source ./logdatabase_post.db;"
+
+if [ -f $TESTDATA ] 
+then
+    echo "Executing Testdata script => $TESTDATA"
+    mysql -u$USERNAME -p$PASSWORD -h$HOST $DATABASE -e "use $DATABASE;source $TESTDATA;"
+    echo "Executed Testdata script => $TESTDATA"
+fi
 
 ./pwizproxy.py $PYTHON $HOST $DATABASE $USERNAME $PASSWORD "../model/model.py"
 

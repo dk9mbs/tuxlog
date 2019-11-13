@@ -4,6 +4,7 @@ import time
 import threading
 from tuxlog.cluster import ClusterSpot
 from model.model import LogDxclusters, LogDxclusterLoginscripts
+from tuxlog.system.settungs import Setting
 
 logger = logging.getLogger(__name__)
 
@@ -14,12 +15,15 @@ def task():
     import re
     from common.app import socketio
 
-    cluster=LogDxclusters.get(LogDxclusters.position==0)
+    
+    default_cluster_id=Setting.get_setting_value('*','default_dxcluster','1')
+
+    cluster=LogDxclusters.get(LogDxclusters.id==default_cluster_id)
     if cluster==None:
-        logger.info("No defalut DXCluster (position 0) found!")
+        logger.info("No defalut DXCluster found!")
         return 
 
-    tn = telnetlib.Telnet(cluster.cluster_url,cluster.port)
+    tn = telnetlib.Telnet(cluster.host,cluster.port)
 
     query=LogDxclusterLoginscripts.select().where(LogDxclusterLoginscripts.dxcluster_id==cluster.id)
     for row in query:
@@ -31,6 +35,10 @@ def task():
         logger.info('sending to dxcluster => %s' % row.send)
         tn.write(str.encode(row.send+'\n'))
 
+    tn.write(str.encode('SET/NAME %s\n' % Setting.get_setting_value('*','dxcluster_set_name','')  ))
+    tn.write(str.encode('SET/QRA %s\n' % Setting.get_setting_value('*','dxcluster_set_qra','')  ))
+    tn.write(str.encode('SET/QTH %s\n' % Setting.get_setting_value('*','dxcluster_set_qth','')  ))
+
     while (1):
         spot="".join(map(chr, tn.read_until(b'\n'))).replace('\n','').replace('\r','')
         
@@ -40,9 +48,7 @@ def task():
             spot=args[1]
 
             if spot_type=='dx':
-                #socketio.emit('dxcluster_message', spot)
                 socketio.emit('dxcluter_message', {})
-                print(spot)        
             elif spot_type=='raw':
                 print(spot)
             else:

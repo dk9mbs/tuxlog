@@ -1,0 +1,4 @@
+
+DELETE FROM log_settings WHERE name='callbook_hamqth_password';
+DELETE FROM log_settings WHERE name='callbook_hamqth_username';
+DELETE FROM log_settings WHERE name='rest_server_port';

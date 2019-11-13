@@ -245,6 +245,20 @@ BEGIN
             ALTER TABLE log_logs add foreign key(band_id) REFERENCES log_bands(id);
     END IF;
 
+    IF NOT EXISTS (select name FROM log_settings WHERE logbook_id='*' AND name='default_logbook') THEN
+        INSERT INTO log_settings(logbook_id,name,value) VALUES ('*','default_logbook','dk9mbs');
+    END IF;
+
+    IF NOT EXISTS (select name FROM log_settings WHERE logbook_id='*' AND name='default_dxcluster') THEN
+        INSERT INTO log_settings(logbook_id,name,value) VALUES ('*','default_dxcluster',1);
+    END IF;
+
+    IF NOT EXISTS (select name FROM log_settings WHERE logbook_id='*' AND name='dxcluster_set_name') THEN
+        INSERT INTO log_settings(logbook_id,name,value) VALUES ('*','dxcluster_set_name','<Your name>');
+        INSERT INTO log_settings(logbook_id,name,value) VALUES ('*','dxcluster_set_qra','JO50aa');
+        INSERT INTO log_settings(logbook_id,name,value) VALUES ('*','dxcluster_set_qth','<your qth>');
+    END IF;
+
 
     IF NOT EXISTS (SELECT version FROM meta_sys_dbversion WHERE version='upd20191027') THEN 
         INSERT INTO meta_sys_dbversion(version,description) VALUES ('upd20191027','upd20191027');
@@ -262,4 +276,10 @@ call proc_install_upd20190804();
 call proc_install_upd20190825();
 call proc_install_upd20190903();
 call proc_install_upd20191027();
+
+
+
+
+
+
 

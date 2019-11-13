@@ -465,26 +465,25 @@ BEGIN
 I will create the default logbooks ...
 */
 call proc_mklogbook('*');
-call proc_mklogbook('do9mbs');
 call proc_mklogbook('dk9mbs');
+/*
+call proc_mklogbook('do9mbs');
 call proc_mklogbook('oz/dk9mbs');
 call proc_mklogbook('oz/do9mbs');
 call proc_mklogbook('dk0ay');
-
+*/
 /* Fill the setting table for template logbok */
 INSERT INTO log_settings(logbook_id,name,value) VALUES ('*','default_rig_id','ic735');
 INSERT INTO log_settings(logbook_id,name,value) VALUES ('*','default_power',100);
 INSERT INTO log_settings(logbook_id,name,value) VALUES ('*','default_mode_id', 'ssb');
 INSERT INTO log_settings(logbook_id,name,value) VALUES ('*','default_qsl_shipment_mode_id', 'bureau');
-INSERT INTO log_settings(logbook_id,name,value) VALUES ('*','callbook_hamqth_username', 'username');
-INSERT INTO log_settings(logbook_id,name,value) VALUES ('*','callbook_hamqth_password', 'password');
-INSERT INTO log_settings(logbook_id,name,value) VALUES ('*','rest_server_port','8081');
 
-call proc_initlogbook('do9mbs');
-call proc_initlogbook('dk9mbs');
+/*call proc_initlogbook('do9mbs');
 call proc_initlogbook('oz/dk9mbs');
 call proc_initlogbook('oz/do9mbs');
 call proc_initlogbook('dk0ay');
+*/
+call proc_initlogbook('dk9mbs');
 
 /*
 * Database Fields
@@ -980,7 +979,7 @@ CREATE TABLE IF NOT EXISTS log_dxcluster_spots(
 
 CREATE TABLE IF NOT EXISTS log_dxclusters(
     id int NOT NULL,
-    cluster_url varchar(250) NOT NULL,
+    host varchar(250) NOT NULL,
     port int NOT NULL,
     position smallint NOT NULL default '100',
     PRIMARY KEY(id)
@@ -1010,16 +1009,13 @@ BEGIN
     IF NOT EXISTS (SELECT * FROM meta_sys_dbversion WHERE version='INSTALL-DXCLUSTER_V3.0.0') THEN
 		call proc_printf ('DXCluster installieren ...!');
 
-INSERT INTO log_dxclusters(id,cluster_url,port,position) VALUES (1,'oz5bbs.dk',8000,0);
-INSERT INTO log_dxclusters(id,cluster_url,port,position) VALUES (2,'zl2arn.ddns.net',7300,10);
-INSERT INTO log_dxclusters(id,cluster_url,port,position) VALUES (3,'la3waa.ddns.net',8000,20);
+INSERT INTO log_dxclusters(id,host,port,position) VALUES (1,'oz5bbs.dk',8000,0);
+INSERT INTO log_dxclusters(id,host,port,position) VALUES (2,'zl2arn.ddns.net',7300,10);
+INSERT INTO log_dxclusters(id,host,port,position) VALUES (3,'la3waa.ddns.net',8000,20);
 
 INSERT INTO log_dxcluster_loginscripts(id,dxcluster_id,position,prompt,send) VALUES (1,1,10,'login: ','callsign');
-INSERT INTO log_dxcluster_loginscripts(id,dxcluster_id,position,prompt,send) VALUES (2,1,20,null,'set/name Markus');
-INSERT INTO log_dxcluster_loginscripts(id,dxcluster_id,position,prompt,send) VALUES (3,1,30,null,'set/qth Salzgitter');
-
-INSERT INTO log_dxcluster_loginscripts(id,dxcluster_id,position,prompt,send) VALUES (4,2,10,'login: ','callsign');
-INSERT INTO log_dxcluster_loginscripts(id,dxcluster_id,position,prompt,send) VALUES (5,3,10,'login: ','callsign');
+INSERT INTO log_dxcluster_loginscripts(id,dxcluster_id,position,prompt,send) VALUES (2,2,10,'login: ','callsign');
+INSERT INTO log_dxcluster_loginscripts(id,dxcluster_id,position,prompt,send) VALUES (3,3,10,'login: ','callsign');
 
 INSERT INTO meta_sys_dbversion(version,description) VALUES ('INSTALL-DXCLUSTER_V3.0.0','INSTALL-DXCLUSTER_V3.0.0');
 
