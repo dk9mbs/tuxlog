@@ -123,7 +123,7 @@ export default {
     },
     handleDblClick: function(record, index) {
 
-      this.$router.push( {path: this.open_path.replace("$1",  record.id.replace('/','%2F')   ) } );
+      this.$router.push( {path: this.open_path.replace("$1",  record.id.toString().replace('/','%2F')   ) } );
       this.$emit('basedata_list_on_dblclick', record, index);
     },
     handleDelClick: function () {
@@ -131,7 +131,7 @@ export default {
           this.$bvModal.msgBoxConfirm('Are you sure?')
           .then(value => {
             if(value==true){
-              axios.delete('/api/v1.0/tuxlog/'+this.table+'/'+this.selected_id.replace('/','%2F'))
+              axios.delete('/api/v1.0/tuxlog/'+this.table+'/'+this.selected_id.toString().replace('/','%2F'))
                 .then((response) => {this.loadData();})
                 .catch((error)=> {alert(error); console.log(error)});
               

@@ -990,18 +990,6 @@ CREATE TABLE IF NOT EXISTS log_dxclusters(
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*
-CREATE TABLE IF NOT EXISTS log_dxcluster_loginscripts(
-    id int NOT NULL,
-    dxcluster_id int NOT NULL,
-    position smallint NOT NULL default '10',
-    prompt varchar(250) NULL,
-    send varchar(50) NOT NULL,
-    FOREIGN KEY (dxcluster_id) REFERENCES log_dxclusters(id),
-    PRIMARY KEY(id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-*/
-
-/*
 DX Cluster eintragen
 */
 DROP PROCEDURE IF EXISTS proc_install_dxcluster;
@@ -1032,6 +1020,21 @@ call proc_install_dxcluster();
 
 
 
+/* Views */
+DROP VIEW IF EXISTS log_vw_dxcluster_spots;
+CREATE VIEW IF NOT EXISTS log_vw_dxcluster_spots 
+AS 
+SELECT DISTINCT s.spotter,ds.id AS spotter_dxcc,ds.country AS spotter_country,
+    s.frequency,b.name AS band,
+    s.callsign,dc.id AS callsign_dxcc,dc.country AS callsign_country,
+    s.comment, s.time_utc 
+    from log_dxcluster_spots s 
+        INNER JOIN log_dxcc_prefixes ps ON s.spotter_dxcc_prefix_id=ps.id 
+        INNER JOIN log_dxcc_prefixes pc ON s.callsign_dxcc_prefix_id=pc.id 
+        INNER JOIN log_dxcc ds ON ps.dxcc_id=ds.id 
+        INNER JOIN log_dxcc dc ON pc.dxcc_id=dc.id 
+        INNER JOIN log_bands b ON s.band_id=b.id 
+    ORDER BY s.id desc;
 
 
 

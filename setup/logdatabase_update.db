@@ -105,6 +105,10 @@ BEGIN
             'LogBands', 'default', '["name", "frequency_min", "frequency_max", "frequency_unit"]', 
                 '','name like \'$1\'','id','/ui/dataform/LogBands/default/$1','id');
 
+        INSERT INTO meta_dataviews (model_name, view_name, fields, where_clause,filter_clause, id_field_name, open_path, order_by) VALUES (
+            'LogDxclusters', 'default', '["id", "host", "port"]', 
+                '','host like \'$1\'','id','/ui/dataform/LogDxclusters/default/$1','id');
+
     END IF;
 
 
@@ -132,6 +136,10 @@ BEGIN
 
         INSERT INTO meta_dataforms(model_name,form_name, datacomponent) VALUES (
             'LogBands','default','tuxlog-band'
+        );
+
+        INSERT INTO meta_dataforms(model_name,form_name, datacomponent) VALUES (
+            'LogDxclusters','default','tuxlog-dxcluster'
         );
 
     END IF;

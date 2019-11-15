@@ -21,7 +21,7 @@ import tuxlogRig from './components/tuxlog-rig.vue';
 import tuxlogQslshipmentmode from './components/tuxlog-qslshipmentmode';
 import tuxlogMode from './components/tuxlog-mode';
 import tuxlogLogbook from './components/tuxlog-logbook';
-
+import tuxlogDxcluster from './components/tuxlog-dxcluster';
 
 import { BFormInput, BInputGroupText } from 'bootstrap-vue'
 import { BFormGroup } from 'bootstrap-vue'
@@ -91,7 +91,7 @@ Vue.component('tuxlog-rig', tuxlogRig)
 Vue.component('tuxlog-mode', tuxlogMode)
 Vue.component('tuxlog-logbook', tuxlogLogbook)
 Vue.component('tuxlog-qslshipmentmode', tuxlogQslshipmentmode)
-
+Vue.component('tuxlog-dxcluster', tuxlogDxcluster)
 
 import { VBToggle } from 'bootstrap-vue'
 Vue.directive('b-toggle', VBToggle)
@@ -192,6 +192,7 @@ new Vue({
           <b-dropdown-item :to="{path: '/ui/dataview/LogDxcc/default'}">DXCC entities</b-dropdown-item>
           <b-dropdown-item :to="{path: '/ui/dataview/LogImportjobs/default'}">Importjobs</b-dropdown-item>
           <b-dropdown-item :to="{path: '/ui/dataview/LogBands/default'}">Bänder</b-dropdown-item>
+          <b-dropdown-item :to="{path: '/ui/dataview/LogDxclusters/default'}">DX Cluster</b-dropdown-item>
           <b-nav-form>
             <tuxlog-checkbox style="padding-left:20px;" label="Phone" @onchange_value="setDeviceType" />
           </b-nav-form>
