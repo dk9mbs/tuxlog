@@ -22,7 +22,7 @@ print("|password => ********")
 print("|model => "+sys.argv[6])
 print("+===================================+")
 
-cmd='%s -m pwiz -e mysql -u %s -P -H %s %s' % (python,username,host, database) 
+cmd='%s -m pwiz -e mysql -v -u %s -P -H %s %s' % (python,username,host, database) 
 
 print("spawning the command ...")
 child = pexpect.spawn(cmd)

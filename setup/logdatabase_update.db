@@ -139,7 +139,7 @@ BEGIN
         );
 
         INSERT INTO meta_dataforms(model_name,form_name, datacomponent) VALUES (
-            'LogDxclusters','default','tuxlog-dxcluster'
+            'LogDxclusters','default','tuxlog-dxcluster-data'
         );
 
     END IF;

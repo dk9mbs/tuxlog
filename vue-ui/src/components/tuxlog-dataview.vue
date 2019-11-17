@@ -18,7 +18,7 @@
       </b-row>
       <b-row class="my-1" >
         <b-col>
-          <div style="height:500px; overflow: auto;">
+          <div style="height:80vh; overflow: auto;">
             <b-table
               striped hover small
               v-bind:bordered="true" v-bind:items="datalist" v-bind:fields="fields" 

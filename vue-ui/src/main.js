@@ -21,7 +21,8 @@ import tuxlogRig from './components/tuxlog-rig.vue';
 import tuxlogQslshipmentmode from './components/tuxlog-qslshipmentmode';
 import tuxlogMode from './components/tuxlog-mode';
 import tuxlogLogbook from './components/tuxlog-logbook';
-import tuxlogDxcluster from './components/tuxlog-dxcluster';
+import tuxlogDxclusterData from './components/tuxlog-dxcluster-data';
+import tuxlogDxcluster from './pages/tuxlog-dxcluster.vue';
 
 import { BFormInput, BInputGroupText } from 'bootstrap-vue'
 import { BFormGroup } from 'bootstrap-vue'
@@ -91,6 +92,7 @@ Vue.component('tuxlog-rig', tuxlogRig)
 Vue.component('tuxlog-mode', tuxlogMode)
 Vue.component('tuxlog-logbook', tuxlogLogbook)
 Vue.component('tuxlog-qslshipmentmode', tuxlogQslshipmentmode)
+Vue.component('tuxlog-dxcluster-data', tuxlogDxclusterData)
 Vue.component('tuxlog-dxcluster', tuxlogDxcluster)
 
 import { VBToggle } from 'bootstrap-vue'
@@ -114,6 +116,7 @@ Vue.component('tuxlog-qsomobile', QsoMobile);
 import Qsl from './pages/tuxlog-qsl.vue';
 Vue.component('tuxlog-qsl', Qsl);
 
+
 //Tuxlog.setdeviceType('desktop');
 
 export const router = new VueRouter({
@@ -123,12 +126,13 @@ export const router = new VueRouter({
     { path: '/ui', component: {template: '<div style="padding: 5px;">tuxLog</div>'} },
     { path: '/ui/about', component: {template: '<div>about</div>'} },
     { path: '/ui/contact', component: {template: '<div>contact</div>'} },
-    { path: '/ui/qso', component: Qso, meta: {mobile: 'mobile'} },
-    { path: '/ui/qso/phone', component: QsoMobile },
+    { path: '/ui/tuxlog/qso', component: Qso, meta: {mobile: 'mobile'} },
+    { path: '/ui/tuxlog/qso/phone', component: QsoMobile },
     { path: '/ui/dataview/:table/:view', component: tuxlogDataView, props:true },
     { path: '/ui/dataform/:table/:form/:id', component: tuxlogDataForm, props:true },
     { path: '/ui/dataform/:table/:form/', component: tuxlogDataForm, props:true },
-    { path: '/ui/qsl', component: Qsl, props:false },
+    { path: '/ui/tuxlog/qsl', component: Qsl, props:false },
+    { path: '/ui/tuxlog/dxcluster', component: tuxlogDxcluster, props:false },
     ]
   });
 
@@ -179,9 +183,13 @@ new Vue({
       <b-navbar-nav class="ml-auto">
 
         <b-nav-item-dropdown text="Qso" right>
-          <b-dropdown-item :to="{path: '/ui/qso'}">QSO (desktop)</b-dropdown-item>
-          <b-dropdown-item :to="{path: '/ui/qso/phone'}">QSO (phone)</b-dropdown-item>
-          <b-dropdown-item :to="{path: '/ui/qsl'}">Qsl management</b-dropdown-item>
+          <b-dropdown-item :to="{path: '/ui/tuxlog/qso'}">QSO (desktop)</b-dropdown-item>
+          <b-dropdown-item :to="{path: '/ui/tuxlog/qso/phone'}">QSO (phone)</b-dropdown-item>
+          <b-dropdown-item :to="{path: '/ui/tuxlog/qsl'}">Qsl management</b-dropdown-item>
+        </b-nav-item-dropdown>
+
+        <b-nav-item-dropdown text="DXcluster" right>
+          <b-dropdown-item :to="{path: '/ui/tuxlog/dxcluster'}">Spots</b-dropdown-item>
         </b-nav-item-dropdown>
 
         <b-nav-item-dropdown text="System" right>
@@ -198,17 +206,8 @@ new Vue({
           </b-nav-form>
         </b-nav-item-dropdown>
 
-        <b-nav-item-dropdown text="Help" right>
-          <b-dropdown-item :to="{path: '/ui/about'}">About</b-dropdown-item>
-        </b-nav-item-dropdown>
 
         <!--Tuxlog.setdeviceType('mobile'); -->
-
-
-        <b-nav-item-dropdown right>
-          <template slot="button-content"><em>User</em></template>
-          <b-dropdown-item href="#">Sign Out</b-dropdown-item>
-        </b-nav-item-dropdown>
 
       </b-navbar-nav>
     </b-collapse>
