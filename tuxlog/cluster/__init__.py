@@ -1,8 +1,6 @@
 import re
-from tuxlog.band import frequency_to_band
 from common import BaseObject
 from functools import wraps
-from tuxlog.callsign.dxcallinfo import DxCallInfo
 from model.model import LogDxclusterSpots
 
 class ClusterSpot(BaseObject):
@@ -27,22 +25,13 @@ class ClusterSpot(BaseObject):
                 callsign = match.group(3)
                 comment = match.group(4).strip()
                 spot_time = match.group(5)
-                band = frequency_to_band(frequency)
-
-                spotter_call_info=DxCallInfo().get_dxinfo_by_call(spotter)
-                callsign_info=DxCallInfo().get_dxinfo_by_call(callsign)
-
-                #dict_spot=dict()
 
                 spot=LogDxclusterSpots()
                 spot.spot=self.__spot
                 spot.callsign=callsign
-                spot.callsign_dxcc_prefix=callsign_info
                 spot.spotter=spotter
-                spot.spotter_dxcc_prefix=spotter_call_info
                 spot.frequency=frequency
                 spot.comment=comment
-                spot.band=band
                 spot.time_utc=spot_time
                 fn('dx', spot)
 

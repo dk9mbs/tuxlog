@@ -977,6 +977,7 @@ CREATE TABLE IF NOT EXISTS log_dxcluster_spots(
     FOREIGN KEY(band_id) REFERENCES log_bands(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
 CREATE TABLE IF NOT EXISTS log_dxclusters(
     id int NOT NULL,
     host varchar(250) NOT NULL,
