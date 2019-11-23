@@ -94,9 +94,11 @@ def handle_error(error):
 # Import the base endpoints
 from common.endpoints.data import database
 from common.endpoints.webfunction import webfunction
+from common.endpoints.ui import ui
 
 app.register_blueprint(database,url_prefix='/api/v1.0/tuxlog')
 app.register_blueprint(webfunction, url_prefix='/api/v1.0/webfunction')
+app.register_blueprint(ui, url_prefix='/')
     
 find_all_solutions()
 

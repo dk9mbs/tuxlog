@@ -36,6 +36,12 @@ def start(unique_name):
         if not __is_started(task):
             task[unique_name].start()
 
+def get_all():
+    result=dict()
+    for name, task in __backgroud_tasks.items():
+        result[name]=task.name
+
+    return result
 
 def __is_started(task):
     return task._started._flag

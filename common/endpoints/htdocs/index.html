@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="icon" href="favicon.ico">
+    <title>tuxLog by dk9mbs</title>
+
+
+    <link
+    type="text/css"
+    rel="stylesheet"
+    href="https://dk9mbs.de/test.css"
+  />
+
+  </head>
+  <body>
+    <noscript>
+      <strong>We're sorry but vue-ui doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+    <div id="app"></div>
+
+    <table border=1>
+      <tr>
+        <td colspan="2">
+          Background Tasks
+        </td>
+      </tr>
+        <% for key in config %>
+          <tr>
+            <td>
+              <{ key }>
+            </td>
+            <td>
+              <{ config[key] }>
+            </td>
+          </tr>
+        <% endfor %>
+    </table>
+
+  </body>
+</html>
+
+
+

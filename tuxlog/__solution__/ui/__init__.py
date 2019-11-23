@@ -34,7 +34,7 @@ logger = logging.getLogger(__name__)
 
 
 def register():
-    ui=Blueprint('ui', __name__, template_folder='htdocs', static_folder='static')
+    ui=Blueprint('tuxlog_ui', __name__, template_folder='htdocs', static_folder='static')
 
     # UI
     @ui.route('/')
