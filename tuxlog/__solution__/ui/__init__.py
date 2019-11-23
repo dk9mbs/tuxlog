@@ -62,6 +62,6 @@ def register():
             logger.exception(e)
             return Response( json.dumps( { 'error': 'not found'} ), 404)
 
-    app.register_blueprint(ui, url_prefix='/')
+    app.register_blueprint(ui, url_prefix='/tuxlog')
 
     #

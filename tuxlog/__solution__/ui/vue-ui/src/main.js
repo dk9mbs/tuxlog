@@ -123,16 +123,15 @@ export const router = new VueRouter({
   mode: 'history',
   base: __dirname,
   routes: [
-    { path: '/ui', component: {template: '<div style="padding: 5px;">tuxLog</div>'} },
-    { path: '/ui/about', component: {template: '<div>about</div>'} },
-    { path: '/ui/contact', component: {template: '<div>contact</div>'} },
-    { path: '/ui/tuxlog/qso', component: Qso, meta: {mobile: 'mobile'} },
-    { path: '/ui/tuxlog/qso/phone', component: QsoMobile },
-    { path: '/ui/dataview/:table/:view', component: tuxlogDataView, props:true },
-    { path: '/ui/dataform/:table/:form/:id', component: tuxlogDataForm, props:true },
-    { path: '/ui/dataform/:table/:form/', component: tuxlogDataForm, props:true },
-    { path: '/ui/tuxlog/qsl', component: Qsl, props:false },
-    { path: '/ui/tuxlog/dxcluster', component: tuxlogDxcluster, props:false },
+    { path: '/tuxlog/ui', component: {template: '<div style="padding: 5px;">tuxLog</div>'} },
+    { path: '/tuxlog/ui/contact', component: {template: '<div>contact</div>'} },
+    { path: '/tuxlog/ui/tuxlog/qso', component: Qso, meta: {mobile: 'mobile'} },
+    { path: '/tuxlog/ui/tuxlog/qso/phone', component: QsoMobile },
+    { path: '/tuxlog/ui/dataview/:table/:view', component: tuxlogDataView, props:true },
+    { path: '/tuxlog/ui/dataform/:table/:form/:id', component: tuxlogDataForm, props:true },
+    { path: '/tuxlog/ui/dataform/:table/:form/', component: tuxlogDataForm, props:true },
+    { path: '/tuxlog/ui/tuxlog/qsl', component: Qsl, props:false },
+    { path: '/tuxlog/ui/tuxlog/dxcluster', component: tuxlogDxcluster, props:false },
     ]
   });
 
@@ -183,24 +182,24 @@ new Vue({
       <b-navbar-nav class="ml-auto">
 
         <b-nav-item-dropdown text="Qso" right>
-          <b-dropdown-item :to="{path: '/ui/tuxlog/qso'}">QSO (desktop)</b-dropdown-item>
-          <b-dropdown-item :to="{path: '/ui/tuxlog/qso/phone'}">QSO (phone)</b-dropdown-item>
-          <b-dropdown-item :to="{path: '/ui/tuxlog/qsl'}">Qsl management</b-dropdown-item>
+          <b-dropdown-item :to="{path: '/tuxlog/ui/tuxlog/qso'}">QSO (desktop)</b-dropdown-item>
+          <b-dropdown-item :to="{path: '/tuxlog/ui/tuxlog/qso/phone'}">QSO (phone)</b-dropdown-item>
+          <b-dropdown-item :to="{path: '/tuxlog/ui/tuxlog/qsl'}">Qsl management</b-dropdown-item>
         </b-nav-item-dropdown>
 
         <b-nav-item-dropdown text="DXcluster" right>
-          <b-dropdown-item :to="{path: '/ui/tuxlog/dxcluster'}">Spots</b-dropdown-item>
+          <b-dropdown-item :to="{path: '/tuxlog/ui/tuxlog/dxcluster'}">Spots</b-dropdown-item>
         </b-nav-item-dropdown>
 
         <b-nav-item-dropdown text="System" right>
-          <b-dropdown-item :to="{path: '/ui/dataview/LogRigs/default'}">Rigs</b-dropdown-item>
-          <b-dropdown-item :to="{path: '/ui/dataview/LogModes/default'}">Modes</b-dropdown-item>
-          <b-dropdown-item :to="{path: '/ui/dataview/LogLogbooks/default'}">Logbooks</b-dropdown-item>
-          <b-dropdown-item :to="{path: '/ui/dataview/LogQslshipmentmodes/default'}">Qsl shipment</b-dropdown-item>
-          <b-dropdown-item :to="{path: '/ui/dataview/LogDxcc/default'}">DXCC entities</b-dropdown-item>
-          <b-dropdown-item :to="{path: '/ui/dataview/LogImportjobs/default'}">Importjobs</b-dropdown-item>
-          <b-dropdown-item :to="{path: '/ui/dataview/LogBands/default'}">Bänder</b-dropdown-item>
-          <b-dropdown-item :to="{path: '/ui/dataview/LogDxclusters/default'}">DX Cluster</b-dropdown-item>
+          <b-dropdown-item :to="{path: '/tuxlog/ui/dataview/LogRigs/default'}">Rigs</b-dropdown-item>
+          <b-dropdown-item :to="{path: '/tuxlog/ui/dataview/LogModes/default'}">Modes</b-dropdown-item>
+          <b-dropdown-item :to="{path: '/tuxlog/ui/dataview/LogLogbooks/default'}">Logbooks</b-dropdown-item>
+          <b-dropdown-item :to="{path: '/tuxlog/ui/dataview/LogQslshipmentmodes/default'}">Qsl shipment</b-dropdown-item>
+          <b-dropdown-item :to="{path: '/tuxlog/ui/dataview/LogDxcc/default'}">DXCC entities</b-dropdown-item>
+          <b-dropdown-item :to="{path: '/tuxlog/ui/dataview/LogImportjobs/default'}">Importjobs</b-dropdown-item>
+          <b-dropdown-item :to="{path: '/tuxlog/ui/dataview/LogBands/default'}">Bänder</b-dropdown-item>
+          <b-dropdown-item :to="{path: '/tuxlog/ui/dataview/LogDxclusters/default'}">DX Cluster</b-dropdown-item>
           <b-nav-form>
             <tuxlog-checkbox style="padding-left:20px;" label="Phone" @onchange_value="setDeviceType" />
           </b-nav-form>
