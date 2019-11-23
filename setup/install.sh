@@ -71,7 +71,8 @@ from common.app import app as application
 application.secret_key = "$KEY"
 EOF
 
-cd $APPDIR/vue-ui/
+#cd $APPDIR/vue-ui/
+cd $APPDIR/tuxlog/__solution__/ui/vue-ui/
 npm install
 npm run build
 

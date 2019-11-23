@@ -59,9 +59,9 @@ def task():
             if spot_type=='dx':
                 socketio.emit('dxcluter_message', {})
             elif spot_type=='raw':
-                print(spot)
+                logger.info(spot)
             else:
-                print("-------")
+                logger.info("-------")
 
         parse_spot()
 

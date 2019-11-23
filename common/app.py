@@ -21,7 +21,7 @@ from flask import Blueprint
 from flask import jsonify
 from flask_socketio import SocketIO
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO )
 #logging.basicConfig(filename='/tmp/tuxlog.log')
 logger = logging.getLogger(__name__)
 
@@ -92,13 +92,10 @@ def handle_error(error):
     return jsonify(response), status_code
 
 # Import the base endpoints
-
 from common.endpoints.data import database
 from common.endpoints.webfunction import webfunction
-from ui_view import ui
 
 app.register_blueprint(database,url_prefix='/api/v1.0/tuxlog')
-app.register_blueprint(ui, url_prefix='/')
 app.register_blueprint(webfunction, url_prefix='/api/v1.0/webfunction')
     
 find_all_solutions()
