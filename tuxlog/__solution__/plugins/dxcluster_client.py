@@ -5,10 +5,9 @@ import threading
 from tuxlog.cluster import ClusterSpot
 from model.model import LogDxclusters
 from tuxlog.system.settungs import Setting
+import common.bgtask
 
 logger = logging.getLogger(__name__)
-
-thread=None
 
 def task():
     import telnetlib
@@ -66,9 +65,7 @@ def task():
         parse_spot()
 
 def register():
-    global thread
+    thread=threading.Thread(target=task)
+    thread.setName("Internal DX Cluster Client")
+    common.bgtask.register(thread.name, thread)
 
-    if thread==None:
-        thread=threading.Thread(target=task)
-        thread.start()
-        logger.info("started")

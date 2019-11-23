@@ -100,3 +100,8 @@ app.register_blueprint(webfunction, url_prefix='/api/v1.0/webfunction')
     
 find_all_solutions()
 
+'''
+Start all registered backgroud jobs
+'''
+import common.bgtask
+common.bgtask.start_all()
