@@ -50,6 +50,8 @@ class CustomFlask(Flask):
         comment_end_string='#>',
     ))
 
+
+
 app = CustomFlask(__name__, template_folder='htdocs', static_url_path='/static')
 app.config['SECRET_KEY'] = 'secret!'
 app.config['TEMPLATES_AUTO_RELOAD'] = True
@@ -57,6 +59,27 @@ app.jinja_env.auto_reload = True
 
 app.debug=False
 app.threaded=True
+
+
+from flask.templating import DispatchingJinjaLoader
+from flask.globals import _request_ctx_stack
+
+class ModifiedLoader(DispatchingJinjaLoader):
+    def _iter_loaders(self, template):
+        bp = _request_ctx_stack.top.request.blueprint
+        if bp is not None and bp in self.app.blueprints:
+            loader = self.app.blueprints[bp].jinja_loader
+            if loader is not None:
+                yield loader, template
+
+        loader = self.app.jinja_loader
+        if loader is not None:
+            yield loader, template
+
+# jinja_options is an ImmutableDict, so we have to do this song and dance
+app.jinja_options = Flask.jinja_options.copy() 
+app.jinja_options['loader'] = ModifiedLoader(app)
+
 
 socketio=SocketIO(app)
 
@@ -94,13 +117,14 @@ def handle_error(error):
 # Import the base endpoints
 from common.endpoints.data import database
 from common.endpoints.webfunction import webfunction
-from common.endpoints.ui import ui
+from common.endpoints.admin import admin
 
 app.register_blueprint(database,url_prefix='/api/v1.0/tuxlog')
 app.register_blueprint(webfunction, url_prefix='/api/v1.0/webfunction')
-app.register_blueprint(ui, url_prefix='/')
+app.register_blueprint(admin, url_prefix='/admin')
     
 find_all_solutions()
+
 
 '''
 Start all registered backgroud jobs

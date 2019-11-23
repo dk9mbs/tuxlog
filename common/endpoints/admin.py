@@ -18,14 +18,20 @@ from flask import Blueprint
 from common.app import app
 import common.bgtask
 
+'''
+Included by common.app
+
+https://stackoverflow.com/questions/7974771/flask-blueprint-template-folder
+'''
+
 logger = logging.getLogger(__name__)
 
-ui=Blueprint('ui', __name__, template_folder='htdocs', static_folder='static')
+admin=Blueprint('admin', __name__, template_folder='htdocs', static_folder='static')
 
-@ui.route('/')
-@ui.route('/<file>')
-@ui.route('/<path:path>')
-def index(file="index.html", path=""):
+@admin.route('/')
+@admin.route('/<file>')
+@admin.route('/ui/<path:path>')
+def admin_index(file="admin.html", path=""):
     if file=='favicon.ico':
         return Response(status=404)
 
