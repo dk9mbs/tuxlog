@@ -27,13 +27,13 @@
           Background Tasks
         </td>
       </tr>
-        <% for key in config %>
+        <% for item in config %>
           <tr>
             <td>
-              <{ key }>
+              <{ item['unique_name'] }>
             </td>
             <td>
-              <{ config[key] }>
+              <{ item['status'] }>
             </td>
           </tr>
         <% endfor %>

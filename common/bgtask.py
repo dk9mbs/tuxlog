@@ -37,9 +37,11 @@ def start(unique_name):
             task[unique_name].start()
 
 def get_all():
-    result=dict()
+    result=list()
     for name, task in __backgroud_tasks.items():
-        result[name]=task.name
+        status='stopped'
+        if __is_started(task): status='started'
+        result.append({'unique_name': name, 'status': status, 'name': task.name})
 
     return result
 
