@@ -9,5 +9,6 @@ devServer: {
 	'vue$': 'vue/dist/vue.esm.js'
     }
   }
- }
+ },
+ publicPath: "tuxlog/"
 }

@@ -78,36 +78,36 @@ BEGIN
     IF NOT EXISTS (select id from meta_dataviews where model_name='LogLogs') THEN
         INSERT INTO meta_dataviews (model_name, view_name, fields, where_clause,filter_clause, id_field_name, open_path, order_by) VALUES (
             'LogRigs', 'default', '["id","description", "hamlib_id","remote_host","remote_port"]', 
-                '','description like \'$1\'','id','/ui/dataform/LogRigs/default/$1','description');
+                '','description like \'$1\'','id','/tuxlog/ui/dataform/LogRigs/default/$1','description');
 
 
         INSERT INTO meta_dataviews (model_name, view_name, fields, where_clause,filter_clause, id_field_name, open_path, order_by) VALUES (
             'LogLogbooks', 'default', '["id","mycall","description"]', 
-                '','description like \'$1\'','id','/ui/dataform/LogLogbooks/default/$1','description');
+                '','description like \'$1\'','id','/tuxlog/ui/dataform/LogLogbooks/default/$1','description');
 
         INSERT INTO meta_dataviews (model_name, view_name, fields, where_clause,filter_clause, id_field_name, open_path, order_by) VALUES (
             'LogModes', 'default', '["id","description"]', 
-                '','description like \'$1\'','id','/ui/dataform/LogModes/default/$1','description');
+                '','description like \'$1\'','id','/tuxlog/ui/dataform/LogModes/default/$1','description');
 
         INSERT INTO meta_dataviews (model_name, view_name, fields, where_clause,filter_clause, id_field_name, open_path, order_by) VALUES (
             'LogQslshipmentmodes', 'default', '["id","description"]', 
-                '','description like \'$1\'','id','/ui/dataform/LogQslshipmentmodes/default/$1','description');
+                '','description like \'$1\'','id','/tuxlog/ui/dataform/LogQslshipmentmodes/default/$1','description');
 
         INSERT INTO meta_dataviews (model_name, view_name, fields, where_clause,filter_clause, id_field_name, open_path, order_by) VALUES (
             'LogDxcc', 'default', '["id","country"]', 
-                '','coutry like \'$1\'','id','/ui/dataform/LogDxcc/default/$1','country');
+                '','coutry like \'$1\'','id','/tuxlog/ui/dataform/LogDxcc/default/$1','country');
 
         INSERT INTO meta_dataviews (model_name, view_name, fields, where_clause,filter_clause, id_field_name, open_path, order_by) VALUES (
             'LogImportjobs', 'default', '["id","job_name", "start_date", "end_date","message", "import_success","import_fail", "status"]', 
-                '','job_name like \'$1\'','id','/ui/dataform/LogImportjobs/default/$1','id desc');
+                '','job_name like \'$1\'','id','/tuxlog/ui/dataform/LogImportjobs/default/$1','id desc');
 
         INSERT INTO meta_dataviews (model_name, view_name, fields, where_clause,filter_clause, id_field_name, open_path, order_by) VALUES (
             'LogBands', 'default', '["name", "frequency_min", "frequency_max", "frequency_unit"]', 
-                '','name like \'$1\'','id','/ui/dataform/LogBands/default/$1','id');
+                '','name like \'$1\'','id','/tuxlog/ui/dataform/LogBands/default/$1','id');
 
         INSERT INTO meta_dataviews (model_name, view_name, fields, where_clause,filter_clause, id_field_name, open_path, order_by) VALUES (
             'LogDxclusters', 'default', '["id", "host", "port"]', 
-                '','host like \'$1\'','id','/ui/dataform/LogDxclusters/default/$1','id');
+                '','host like \'$1\'','id','/tuxlog/ui/dataform/LogDxclusters/default/$1','id');
 
     END IF;
 
