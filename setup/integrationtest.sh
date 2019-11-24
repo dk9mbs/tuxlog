@@ -3,9 +3,9 @@ PYTHON="python3.5"
 
 CFG_FILE="/etc/tuxlog/tuxlog_cfg.json"
 DATABASE="tuxlog_build"
-USERNAME=$($PYTHON ./cfgreader.py $CFG_FILE build mysqlcfg username)
-PASSWORD=$($PYTHON ./cfgreader.py $CFG_FILE build mysqlcfg password)
-HOST=$($PYTHON ./cfgreader.py $CFG_FILE build mysqlcfg host)
+USERNAME=$($PYTHON ../tools/cfgreader.py $CFG_FILE build mysqlcfg username)
+PASSWORD=$($PYTHON ../tools/cfgreader.py $CFG_FILE build mysqlcfg password)
+HOST=$($PYTHON ../tools/cfgreader.py $CFG_FILE build mysqlcfg host)
 BASEDIR=$(dirname "$0")
 TESTDATA="/etc/tuxlog/test/logdatabase_testdata.db"
 

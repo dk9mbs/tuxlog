@@ -28,16 +28,16 @@ mkdir -p $APPDIR/htdocs
 
 cd $APPDIR
 # in case case of new installation of tuxlog get the dabase security data by the user
-$PYTHON ./cfgreader.py $CFG_FILE "$ENVIRONMENT" mysqlcfg database
+$PYTHON ../tools/cfgreader.py $CFG_FILE "$ENVIRONMENT" mysqlcfg database
 
 $PIP install -r requirements.txt
 
 cd $APPDIR/setup/
-KEY=$($PYTHON ./cfgreader.py $CFG_FILE "$ENVIRONMENT" "security" "secret_key")
-DATABASE=$($PYTHON ./cfgreader.py $CFG_FILE "$ENVIRONMENT" mysqlcfg database)
-USERNAME=$($PYTHON ./cfgreader.py $CFG_FILE "$ENVIRONMENT" mysqlcfg username)
-PASSWORD=$($PYTHON ./cfgreader.py $CFG_FILE "$ENVIRONMENT" mysqlcfg password)
-HOST=$($PYTHON ./cfgreader.py $CFG_FILE "$ENVIRONMENT" mysqlcfg host)
+KEY=$($PYTHON ../tools/cfgreader.py $CFG_FILE "$ENVIRONMENT" "security" "secret_key")
+DATABASE=$($PYTHON ../tools/cfgreader.py $CFG_FILE "$ENVIRONMENT" mysqlcfg database)
+USERNAME=$($PYTHON ../tools/cfgreader.py $CFG_FILE "$ENVIRONMENT" mysqlcfg username)
+PASSWORD=$($PYTHON ../tools/cfgreader.py $CFG_FILE "$ENVIRONMENT" mysqlcfg password)
+HOST=$($PYTHON ../tools/cfgreader.py $CFG_FILE "$ENVIRONMENT" mysqlcfg host)
 
 echo ""
 echo "========================================================"
