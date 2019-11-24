@@ -22,11 +22,14 @@ CFG_FILE="/etc/tuxlog/tuxlog_cfg.json"
 mkdir -p /etc/tuxlog
 mkdir -p $APPDIR/htdocs
 
-if [ ! -f /etc/tuxlog/tuxlog_cfg.json ]; then
-    cp "$BASEDIR/tuxlog_cfg.json" /etc/tuxlog/
-fi
+#if [ ! -f /etc/tuxlog/tuxlog_cfg.json ]; then
+#    cp "$BASEDIR/tuxlog_cfg.json" /etc/tuxlog/
+#fi
 
 cd $APPDIR
+# in case case of new installation of tuxlog get the dabase security data by the user
+$PYTHON ./cfgreader.py $CFG_FILE "$ENVIRONMENT" mysqlcfg database
+
 $PIP install -r requirements.txt
 
 cd $APPDIR/setup/

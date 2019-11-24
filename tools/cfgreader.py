@@ -8,6 +8,52 @@ import sys
 cfg_file=sys.argv[1]
 environment=sys.argv[2]
 
+if not os.path.exists(cfg_file):
+    cfg={
+        "default": "build",
+        "build":{
+            "mysqlcfg": {"host":"localhost", "port":"3306","database":"database", "username":"username", "password":"password"},
+            "security": {"secret_key": "mykey"},
+            "client": {"host": "localhost", "port":"5000", "username":"username", "password": "password"}
+        },
+        "dev":{
+            "mysqlcfg": {"host":"localhost", "port":"3306","database":"database", "username":"username", "password":"password"},
+                "security": {"secret_key": "mykey"},
+            "client": {"host": "localhost", "port":"5000", "username":"username", "password": "password"}
+        },
+        "test":{
+            "mysqlcfg": {"host":"localhost", "port":"3306","database":"database", "username":"username", "password":"password"},
+                "security": {"secret_key": "mykey"},
+            "client": {"host": "localhost", "port":"5000", "username":"username", "password": "password"}
+        },
+        "prod":{
+            "mysqlcfg": {"host":"localhost", "port":"3306","database":"database", "username":"username", "password":"password"},
+                "security": {"secret_key": "mykey"},
+            "client": {"host": "localhost", "port":"5000", "username":"username", "password": "password"}
+        }
+    }
+
+    environments=["build","test","dev"]
+
+    host=input("Host: ")
+    port=input("Port: ")
+    database=input("Database: ")
+    username=input("Database User: ")
+    password=input("Password: ")
+
+    for env in environments:
+        cfg[env]['mysqlcfg']['host']=host
+        cfg[env]['mysqlcfg']['port']=port
+        cfg[env]['mysqlcfg']['database']=database
+        cfg[env]['mysqlcfg']['username']=username
+        cfg[env]['mysqlcfg']['password']=password
+
+    with open(cfg_file,'w') as json_cfg:
+        json_cfg.writelines(json.dumps(cfg))
+        json_cfg.flush()
+        json_cfg.close()
+
+
 with open (cfg_file, 'r') as json_cfg:
     cfg=json.load(json_cfg)
 

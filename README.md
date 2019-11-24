@@ -22,6 +22,7 @@ chmod 0755 ./virtenv
 cd virtenv
 git clone https://github.com/dk9mbs/tuxlog.git
 cd tuxlog
+export NO_SQLITE=1
 ../bin/pip3 install -r requirements.txt
 
 ./setup
@@ -29,8 +30,8 @@ cd tuxlog
 # configure manually /etc/tuxlog/tuxlog_cfg.json
 #
 cd setup
-./integrationtest.sh
 ./install.sh
+./integrationtest.sh
 
 cd ../vue-ui
 npm install
