@@ -28,7 +28,7 @@ mkdir -p $APPDIR/htdocs
 
 cd $APPDIR
 # in case case of new installation of tuxlog get the dabase security data by the user
-$PYTHON ../tools/cfgreader.py $CFG_FILE "$ENVIRONMENT" mysqlcfg database
+$PYTHON $APPDIR/tools/cfgreader.py $CFG_FILE "$ENVIRONMENT" mysqlcfg database
 
 $PIP install -r requirements.txt
 
