@@ -33,7 +33,8 @@ cd setup
 ./integrationtest.sh
 ./install.sh
 
-cd ../vue-ui
+#cd ../vue-ui
+cd ../tuxlog/__solution__/ui_/vue-ui
 npm install
 npm run build
 ```
