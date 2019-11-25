@@ -30,8 +30,8 @@ export NO_SQLITE=1
 # configure manually /etc/tuxlog/tuxlog_cfg.json
 #
 cd setup
-./install.sh
 ./integrationtest.sh
+./install.sh
 
 cd ../vue-ui
 npm install
