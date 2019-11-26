@@ -13,6 +13,7 @@ apt-get install -y nodejs gcc g++ make
 npm install -g @vue/cli
 
 #cd /tmp
+cd ../
 python3 -m venv virtenv
 chmod 0755 ./virtenv
 source virtenv/bin/activate

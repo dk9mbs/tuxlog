@@ -5,3 +5,5 @@ model.py
 app.wsgi
 /htdocs
 /*/__solution__/ui/htdocs/
+/virtenv
+
