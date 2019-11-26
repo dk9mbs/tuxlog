@@ -17,15 +17,12 @@ apt-get update
 apt-get install -y nodejs gcc g++ make mycli default-mysql-client
 npm install -g @vue/cli
 
-
-pip3 install --upgrade pip
-
-
 cd $APPDIR
 python3 -m venv virtenv
 chmod 0755 ./virtenv
 source virtenv/bin/activate
 
+pip3 install --upgrade pip
 export NO_SQLITE=1
 pip3 install -r requirements.txt
 
