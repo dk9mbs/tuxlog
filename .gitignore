@@ -4,4 +4,6 @@ model.py
 *.py.save
 app.wsgi
 /htdocs
-/*/__solution__/ui/htdocs/
+/tuxlog/__solution__/ui/htdocs/*
+/virtenv
+
