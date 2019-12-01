@@ -35,7 +35,16 @@ def get_modellist_by_raw(*args, **kwargs):
         limit=""
         where=""
         pagesize=0
-        
+        select="*"
+        distinct=""
+
+        if 'distinct' in kwargs:
+            if bool(kwargs['distinct'])==True:
+                distinct="DISTINCT"
+
+        if 'select' in kwargs:
+            select=kwargs['select']
+
         if 'pagesize' in kwargs:
             pagesize=int(kwargs['pagesize'])
 
@@ -54,7 +63,7 @@ def get_modellist_by_raw(*args, **kwargs):
         if where!="":
             where = " WHERE %s" % where
 
-        sql='/* Build by  get_modellist_by_raw*/ Select * from %s %s %s %s;' % (table, where, order, limit)
+        sql='/* Build by  get_modellist_by_raw*/ Select %s %s from %s %s %s %s;' % (distinct, select, table, where, order, limit)
     else:
         sql=kwargs['sql']
 

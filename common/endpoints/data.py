@@ -69,6 +69,8 @@ def get_dataset(table):
     where=""
     pagesize=0
     page=1
+    distinct=False
+    select="*"
 
     if request.args.get("page") != None:
         page=request.args.get("page")
@@ -82,7 +84,13 @@ def get_dataset(table):
     if request.args.get("where") != None:
         where = urllib.parse.unquote(request.args.get("where"))
     
-    tmp = get_modellist_by_raw(table, where=where, order=order, pagesize=pagesize)
+    if request.args.get("select") != None:
+        select=urllib.parse.unquote(request.args.get("select"))
+
+    if 'distinct' in request.args:
+        distinct=True
+
+    tmp = get_modellist_by_raw(table, where=where, order=order, pagesize=pagesize, distinct=distinct, select=select)
 
     tmp=json.dumps(tmp, default=typeformatter)
     return Response(

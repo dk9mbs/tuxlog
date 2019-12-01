@@ -1,6 +1,11 @@
 <template>
   <div>
-        <div class="mb-1" style="height: 60vh; overflow: auto;font-size:10px;">
+        <div class="mb-1" style="overflow: auto;font-size:10px;background-color:inherit;">
+        <tuxlog-checkbox v-for="(item, index) in bands" v-model="bands[index]['show_dxspots']" 
+            :key="item.name" :label="item.name" style="float: left;padding-left: 15px;padding-bottom:2px;"/>
+        </div>
+
+        <div class="mb-1" style="height: 500px;overflow: auto;font-size:10px;clear: left;">
             <b-table :fields="fields" :items="items" :busy="isBusy"
                 hover small
                 v-bind:bordered="true">
@@ -29,6 +34,7 @@
                 </template>
             </b-table>
         </div>
+
   </div>
 </template>
 
@@ -42,12 +48,16 @@ import axios from 'axios';
 export default {
   name: 'qsl',
   data() { return {
+      test: true,
       isBusy: false,
       items: [],
       fields: ["spotter","dxcc","country","continent","frequency","band","dx","dx_dxcc","dx_country","dx_continent", "comment","time_utc"],
+      bands: [],
+      selectedBands:[],
     }
   },
   mounted () {
+      this.getBands();
       this.getClusterData();
   },
   watch: {
@@ -57,8 +67,34 @@ export default {
   computed: {
   },
   methods: {
+      'getBands': function() {
+          Tuxlog.webRequestAsync('GET', '/api/v1.0/tuxlog/LogBands?select=name&distinct', undefined, (response)=> {
+            this.bands = response.data;
+            //debugger;
+          }, (response) => {
+              alert('Error loading bands!')
+          })
+      },
       'getClusterData':  function () {
-            Tuxlog.webRequestAsync('GET','/api/v1.0/tuxlog/LogVwDxclusterSpots?pagesize=50', undefined,(response) => {
+            var filter="";
+            this.bands.forEach(band => {
+                if(band['show_dxspots']=="1") {
+                    if(filter!="") filter=filter+",";
+                    filter=filter+"'"+band['name']+"'";
+                }
+            });
+
+            if(filter!="") {
+                filter='(band IN ('+filter+'))';
+            }
+            console.log(filter);
+
+            var url='/api/v1.0/tuxlog/LogVwDxclusterSpots?pagesize=50';
+            if(filter!="") {
+                url=url+'&where='+filter
+            }
+            //console.log(url);
+            Tuxlog.webRequestAsync('GET',url , undefined,(response) => {
                 this.items=response.data;
                 window.setTimeout(this.getClusterData, 5000);
             },(response) => { 

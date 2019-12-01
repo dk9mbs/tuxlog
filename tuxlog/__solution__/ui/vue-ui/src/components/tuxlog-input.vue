@@ -16,14 +16,14 @@
     <template v-slot:prepend>
       <b-input-group-text v-b-popover.hover.left="tooltip" :title="label"
         v-if="hidelabel === false"
-        style="border-radius: 10px;background-color:silver;min-width: 70px;margin-right:3px;padding-top: 8px;padding-left:5px;font-size:10px;">
+        style="border-radius: 5px;background-color:white;min-width: 80px;margin-right:3px;padding-top: 3px;padding-left:5px;font-size:10px;">
         <div v-if="mandatory!==true">{{ label }}</div>
         <div v-if="mandatory===true" >{{ label }}*</div>
         </b-input-group-text>
     </template>  
 
     <b-form-input v-bind:readonly="readonly" v-bind:id="id" v-bind:type="type" v-model="getValue" 
-            size="sm" @input="handleInput" @change="onchange_value" class="mb-0" style="border-radius: 10px">
+            size="sm" @input="handleInput" @change="onchange_value" class="mb-0" style="border-radius: 5px">
     </b-form-input>
     </b-input-group>
     <!-- </b-form-group> --> 
