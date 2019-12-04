@@ -2,7 +2,7 @@ import logging
 from playhouse.signals import post_save, pre_save
 from model.model import LogLogs
 from playhouse.signals import pre_save, post_save
-from model.model import LogDxclusterSpots
+from model.model import LogDxclusterSpots, LogLogs, LogLogbooks
 from tuxlog.callsign.dxcallinfo import DxCallInfo
 from tuxlog.band import frequency_to_band
 
@@ -14,6 +14,16 @@ def execute_pre(sender, instance, created):
     callsign_info=DxCallInfo().get_dxinfo_by_call(instance.callsign)
     band = frequency_to_band(instance.frequency)
 
+    instance.new_dxcc=1
+    instance.new_locator=1
+
+
+    test=callsign_info.dxcc.id
+    if callsign_info != None:
+        log=LogLogs.select().join(LogLogbooks, on=(LogLogs.logbook == LogLogbooks.id)).where(LogLogs.dxcc == test).limit(1)
+        if list(log).count==0:
+            instance.new_dxcc=0
+    
     instance.callsign_dxcc_prefix=callsign_info
     instance.spotter_dxcc_prefix=spotter_call_info
     instance.band=band

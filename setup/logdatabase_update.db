@@ -163,6 +163,17 @@ BEGIN
         INSERT INTO log_importjob_status (id, description) VALUES (30, 'Fail');
     END IF;
 
+
+   IF NOT EXISTS (select COLUMN_NAME from INFORMATION_SCHEMA.columns WHERE TABLE_SCHEMA=DATABASE() 
+        AND TABLE_NAME='log_dxcluster_spots' AND column_name='new_dxcc') THEN
+
+        ALTER TABLE log_dxcluster_spots ADD new_dxcc smallint NOT NULL default '0' COMMENT 'New DXCC';
+        ALTER TABLE log_dxcluster_spots ADD new_locator smallint NOT NULL default '0' COMMENT 'New Locator';
+
+    END IF;
+
+
+
     IF NOT EXISTS (SELECT version FROM meta_sys_dbversion WHERE version='upd20190903') THEN 
         INSERT INTO meta_sys_dbversion(version,description) VALUES ('upd20190903','upd20190903');
     END IF;
