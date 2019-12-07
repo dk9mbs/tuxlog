@@ -17,12 +17,12 @@ def execute_pre(sender, instance, created):
     instance.new_dxcc=1
     instance.new_locator=1
 
-
-    test=callsign_info.dxcc.id
     if callsign_info != None:
-        log=LogLogs.select().join(LogLogbooks, on=(LogLogs.logbook == LogLogbooks.id)).where(LogLogs.dxcc == test).limit(1)
-        if list(log).count==0:
-            instance.new_dxcc=0
+        if callsign_info.dxcc != None:
+            test=callsign_info.dxcc.id
+            log=LogLogs.select().join(LogLogbooks, on=(LogLogs.logbook == LogLogbooks.id)).where(LogLogs.dxcc == test).limit(1)
+            if list(log).count==0:
+                instance.new_dxcc=0
     
     instance.callsign_dxcc_prefix=callsign_info
     instance.spotter_dxcc_prefix=spotter_call_info
