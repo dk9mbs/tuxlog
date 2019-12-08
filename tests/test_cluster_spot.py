@@ -4,6 +4,7 @@ import os
 from model import model
 from tuxlog.cluster import ClusterSpot
 from model.model import LogDxclusterSpots
+from tuxlog.__solution__.plugins.dxcluster_spot import register as register_hook
 
 class ClusterSpotTest(unittest.TestCase):
     def test_spotparse(self):
@@ -12,6 +13,7 @@ class ClusterSpotTest(unittest.TestCase):
         Test that it can sum a list of integers
         """
 
+        register_hook()
         spot='DX de EA7FKY:     7090.0  EB7CFA       TROFEO SAN VICENTE             1625Z'
 
         @ClusterSpot(spot, "KHz", "MHz")

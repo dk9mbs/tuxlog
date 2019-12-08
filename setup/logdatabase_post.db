@@ -16,7 +16,8 @@ ds=spotter dxcc
 SELECT DISTINCT s.spotter,ds.id AS dxcc,ds.country AS country, ds.continent AS continent,
     s.frequency,b.name AS band,
     s.callsign AS dx,dc.id AS dx_dxcc,dc.country AS dx_country,dc.continent AS dx_continent,
-    s.comment, s.time_utc, s.new_dxcc, s.new_locator
+    s.comment, s.time_utc, s.new_dxcc, s.new_locator, 
+    timestampdiff(MINUTE, date,now()) AS age_minutes
     from log_dxcluster_spots s 
         INNER JOIN log_dxcc_prefixes ps ON s.spotter_dxcc_prefix_id=ps.id 
         INNER JOIN log_dxcc_prefixes pc ON s.callsign_dxcc_prefix_id=pc.id 

@@ -21,7 +21,7 @@ def execute_pre(sender, instance, created):
         if callsign_info.dxcc != None:
             test=callsign_info.dxcc.id
             log=LogLogs.select().join(LogLogbooks, on=(LogLogs.logbook == LogLogbooks.id)).where(LogLogs.dxcc == test).limit(1)
-            if list(log).count==0:
+            if len(list(log))>0:
                 instance.new_dxcc=0
     
     instance.callsign_dxcc_prefix=callsign_info

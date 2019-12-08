@@ -3,6 +3,9 @@
         <div class="mb-1" style="overflow: auto;font-size:10px;background-color:inherit;">
         <tuxlog-checkbox v-for="(item, index) in bands" v-model="bands[index]['show_dxspots']" 
             :key="item.name" :label="item.name" style="float: left;padding-left: 15px;padding-bottom:2px;"/>
+
+        <tuxlog-input v-model="age" label="Age" 
+            style="float: let; padding-left: 15px;padding-bottom:2px;width: 150px;"  />
         </div>
 
         <div class="mb-1" style="height: 500px;overflow: auto;font-size:10px;clear: left;">
@@ -44,11 +47,12 @@ import { debuglog } from 'util';
 import { truncate } from 'fs';
 import  {Tuxlog, ifnull}  from '../common.js'
 import axios from 'axios';
+import { fileURLToPath } from 'url';
 
 export default {
   name: 'qsl',
   data() { return {
-      test: true,
+      age: 60,
       isBusy: false,
       items: [],
       fields: ["spotter","dxcc","country","continent","frequency","band","dx","dx_dxcc","dx_country","dx_continent", "comment","time_utc"],
@@ -77,6 +81,8 @@ export default {
       },
       'getClusterData':  function () {
             var filter="";
+            var age=this.age;
+
             this.bands.forEach(band => {
                 if(band['show_dxspots']=="1") {
                     if(filter!="") filter=filter+",";
@@ -87,7 +93,13 @@ export default {
             if(filter!="") {
                 filter='(band IN ('+filter+'))';
             }
-            console.log(filter);
+
+            if (age!=undefined) {
+                if (filter!="") filter+=" AND ";
+                filter+=" age_minutes <="+age;
+            }
+
+            //console.log(filter);
 
             var url='/api/v1.0/tuxlog/LogVwDxclusterSpots?pagesize=50';
             if(filter!="") {
