@@ -8,7 +8,7 @@ from tuxlog.__solution__.plugins.dxcluster_spot import register as register_hook
 
 class ClusterSpotTest(unittest.TestCase):
     def test_spotparse(self):
-        config.DatabaseConfig.open(model.database, config.DatabaseConfig.read_from_file(os.getenv("tuxlog_environment")))
+        config.DatabaseConfig.open(model.database, config.DatabaseConfig.read_from_file())
         """
         Test that it can sum a list of integers
         """
@@ -26,12 +26,12 @@ class ClusterSpotTest(unittest.TestCase):
 
         spot='DX de N2CG:       1844.0  TO9W         FT8 F/H FK88 -13 in NJ FN20    0312Z FN20'
         @ClusterSpot(spot, "KHz", "MHz")
-        def inner_parse(*args, **kwargs):
+        def inner_parse1(*args, **kwargs):
             #spot_type=args[0]
             json_spot=args[1]
             print(json_spot)
 
-        inner_parse()
+        inner_parse1()
         
 
 if __name__ == '__main__':

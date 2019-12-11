@@ -31,13 +31,17 @@ class DatabaseConfig:
         cls._current_cfg=cfg
 
     @classmethod
-    def read_from_file(cls, environment="", file="/etc/tuxlog/tuxlog_cfg.json"):
+    def read_from_file(cls, environment=None, file="/etc/tuxlog/tuxlog_cfg.json"):
 
         with open(file) as json_file:
             cfg=json.load(json_file)
 
         if environment==None:
-            logger.info('no envoronment in args found.')
+            logger.info('Get environment by os environment')
+            environment=os.getenv("tuxlog_environment")
+
+        if environment==None:
+            logger.info('Get environment by cfg default value')
             environment=cfg['default']
 
         logger.info('current environment => %s' % environment)
