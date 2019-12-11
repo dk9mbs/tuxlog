@@ -25,7 +25,7 @@ logging.basicConfig(level=logging.INFO )
 #logging.basicConfig(filename='/tmp/tuxlog.log')
 logger = logging.getLogger(__name__)
 
-config.DatabaseConfig.open(model.database, config.DatabaseConfig.read_from_file(os.getenv("tuxlog_environment")))
+config.DatabaseConfig.open(model.database, config.DatabaseConfig.read_from_file())
 
 def handler(signum, frame):
     pass
