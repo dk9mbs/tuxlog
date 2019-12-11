@@ -24,5 +24,15 @@ class ClusterSpotTest(unittest.TestCase):
 
         inner_parse()
 
+        spot='DX de N2CG:       1844.0  TO9W         FT8 F/H FK88 -13 in NJ FN20    0312Z FN20'
+        @ClusterSpot(spot, "KHz", "MHz")
+        def inner_parse(*args, **kwargs):
+            #spot_type=args[0]
+            json_spot=args[1]
+            print(json_spot)
+
+        inner_parse()
+        
+
 if __name__ == '__main__':
     unittest.main()
