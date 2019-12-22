@@ -37,7 +37,11 @@ class DatabaseConfig:
             cfg=json.load(json_file)
 
         if environment==None:
-            logger.info('try to getting environment by os environment')
+            logger.info('try to getting environment by os environment (TUXLOG_ENVIRONMENT)')
+            environment=os.getenv("TUXLOG_ENVIRONMENT")
+
+        if environment==None:
+            logger.info('try to getting environment by os environment (tuxlog_environment)')
             environment=os.getenv("tuxlog_environment")
 
         if environment==None:
