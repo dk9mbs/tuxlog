@@ -287,6 +287,28 @@ BEGIN
 END //
 DELIMITER ;
 
+DROP PROCEDURE IF EXISTS proc_install_upd20200910;
+DELIMITER //
+CREATE PROCEDURE proc_install_upd20200910
+()
+BEGIN
+    call proc_printf('installing upd20200910 ...');
+
+    IF NOT EXISTS (SELECT version FROM meta_sys_dbversion WHERE version='upd20200910') THEN 
+
+        ALTER TABLE meta_data_exchange_fields ADD id Int NOT NULL AUTO_INCREMENT UNIQUE KEY FIRST;
+
+        UPDATE meta_data_exchange_fields SET internal_fieldname='logbook_id' WHERE external_fieldname='STATION_CALLSIGN';
+        
+        INSERT INTO log_modes (id,description) VALUES ('MFSK','MFSK');
+
+        INSERT INTO meta_sys_dbversion(version,description) VALUES ('upd20200910','upd20200910');
+    END IF;
+
+    call proc_printf('upd20100910 installed!');
+
+END //
+DELIMITER ;
 
 
 
@@ -295,6 +317,7 @@ call proc_install_upd20190804();
 call proc_install_upd20190825();
 call proc_install_upd20190903();
 call proc_install_upd20191027();
+call proc_install_upd20200910();
 
 
 
