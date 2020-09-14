@@ -56,9 +56,12 @@ class AdifDataTypeTools:
         return datetime.time(hour=int(str(adif_time)[0:2]), minute=int(str(adif_time)[2:4]), second=int(str(adif_time)[4:6]))
 
 if __name__ == "__main__":
-
-    rest=RestApiClient(sys.argv[1])
-    rest.login ("tuxlog","password")
+    rest_uid=sys.argv[1]
+    rest_pwd=sys.argv[2]
+    api=sys.argv[3]
+    adif=sys.argv[4]
+    rest=RestApiClient(api)
+    rest.login (rest_uid,rest_pwd)
 
     fetch="""
     <restapi type="select">
@@ -72,7 +75,7 @@ if __name__ == "__main__":
     """
     mapping=json.loads(rest.read_multible("meta_data_exchange_fields",fetch))
 
-    f = open("/tmp/wsjtx_log.adi", "r")
+    f = open(adif, "r")
     content=f.read()
 
     @AdifParserLib
