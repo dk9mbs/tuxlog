@@ -33,7 +33,7 @@ def execute(context, plugin_context, params):
         </filter>
     </restapi>
     """
-    fetchparser=FetchXmlParser(fetch)
+    fetchparser=FetchXmlParser(fetch,context)
     rs=DatabaseServices.exec(fetchparser, context,fetch_mode=0, run_as_system=True)
 
     if rs.get_result()==None or len(rs.get_result()) == 0:

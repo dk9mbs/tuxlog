@@ -66,7 +66,7 @@ class DxCallInfo:
         </restapi>
         """
 
-        fetchparser=FetchXmlParser(fetch)
+        fetchparser=FetchXmlParser(fetch, context)
         rs=DatabaseServices.exec(fetchparser, context, fetch_mode=1)
         result=rs.get_result()
         rs.close()
