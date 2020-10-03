@@ -35,6 +35,10 @@ INSERT INTO api_table(id,alias,table_name,id_field_name,id_field_type,desc_field
     VALUES
     (20004,'log_dxcc_prefixes','log_dxcc_prefixes','id','String','id',10001);
 
+INSERT INTO api_table(id,alias,table_name,id_field_name,id_field_type,desc_field_name,solution_id) 
+    VALUES
+    (20005,'log_logbooks','log_logbooks','id','String','description',10001);
+
 
 INSERT INTO api_group_permission (group_id,table_id,mode_create,mode_read,mode_update,mode_delete,solution_id)
     VALUES
@@ -55,6 +59,10 @@ INSERT INTO api_group_permission (group_id,table_id,mode_create,mode_read,mode_u
 INSERT INTO api_group_permission (group_id,table_id,mode_create,mode_read,mode_update,mode_delete,solution_id)
     VALUES
     (20000,20004,0,-1,0,0,10001);
+
+INSERT INTO api_group_permission (group_id,table_id,mode_create,mode_read,mode_update,mode_delete,solution_id)
+    VALUES
+    (20000,20005,0,-1,0,0,10001);
 
 /*
 Guests
@@ -80,6 +88,9 @@ INSERT INTO api_group_permission (group_id,table_id,mode_create,mode_read,mode_u
     VALUES
     (100,20004,0,-1,0,0,10001);
 
+INSERT INTO api_group_permission (group_id,table_id,mode_create,mode_read,mode_update,mode_delete,solution_id)
+    VALUES
+    (100,20005,0,-1,0,0,10001);
 
 
 INSERT INTO api_event_handler (plugin_module_name,publisher,event,type,sorting,solution_id) 
