@@ -6,7 +6,7 @@ from datetime import date
 from datetime import time
 
 class RestApiClient:
-    def __init__(self, root_url="http://localhost:5000/api"):
+    def __init__(self, root_url="http://localhost:5001/api"):
         self.__session_id=None
         self.__cookies=None
         self.__root=f"{root_url}/v1.0"
@@ -38,19 +38,28 @@ class RestApiClient:
             raise NameError(f"{r.text}")
         return r.text
 
-    def delete(self, table, id):
+    def delete(self, table, id,json_out=False):
         url=f"{self.__root}/data/{table}/{id}"
         r=requests.delete(url, cookies=self.__cookies)
         print(r.status_code)
         if r.status_code!=200:
             raise NameError(f"{r.status_code} {r.text}")
-        return r.text
 
-    def add(self, table,data):
+        if json_out==True:
+            return json.loads(r.text)
+        else:
+            return r.text
+
+    def add(self, table,data,json_out=False):
         logging.warning("Method add ist deprecated! Pse use create")
-        return self.create(table,data)
+        result= self.create(table,data,json_out)
 
-    def create(self, table,data):
+        if json_out==True:
+            return json.loads(result)
+        else:
+            return result
+
+    def create(self, table,data,json_out=False):
         url=f"{self.__root}/data/{table}"
         headers={"Content-Type":"application/json"}
         data=json.dumps(data,default=self.__json_serial)
@@ -58,16 +67,24 @@ class RestApiClient:
         r=requests.post(url, headers=headers, json=data, cookies=self.__cookies)
         if r.status_code!=200:
             raise NameError(f"{r.status_code} {r.text}")
-        return r.text
 
-    def read(self, table, id):
+        if json_out==True:
+            return json.loads(r.text)
+        else:
+            return r.text
+
+    def read(self, table, id,json_out=False):
         url=f"{self.__root}/data/{table}/{id}"
         r=requests.get(url, cookies=self.__cookies)
         if r.status_code!=200:
             raise NameError(f"{r.status_code} {r.text}")
-        return r.text
 
-    def update(self,table,id, data):
+        if json_out==True:
+            return json.loads(r.text)
+        else:
+            return r.text
+
+    def update(self,table,id, data,json_out=False):
         url=f"{self.__root}/data/{table}/{id}"
         headers={"Content-Type":"application/json"}
         data=json.dumps(data,default=self.__json_serial)
@@ -75,9 +92,13 @@ class RestApiClient:
         r=requests.put(url, headers=headers, json=data, cookies=self.__cookies)
         if r.status_code!=200:
             raise NameError(f"{r.status_code} {r.text}")
-        return r.text
 
-    def read_multible(self, table, fetchxml=None):
+        if json_out==True:
+            return json.loads(r.text)
+        else:
+            return r.text
+
+    def read_multible(self, table, fetchxml=None,json_out=False):
         if fetchxml==None:
             url=f"{self.__root}/data/{table}"
             r=requests.get(url, cookies=self.__cookies)
@@ -88,7 +109,25 @@ class RestApiClient:
 
         if r.status_code!=200:
             raise NameError(f"{r.status_code} {r.text}")
-        return r.text
+
+        if json_out==True:
+            return json.loads(r.text)
+        else:
+            return r.text
+
+    def execute_action(self,action_name,data,json_out=False):
+        url=f"{self.__root}/action/{action_name}"
+        headers={"Content-Type":"application/json"}
+        data=json.dumps(data,default=self.__json_serial)
+        data=json.loads(data)
+        r=requests.post(url, headers=headers, json=data, cookies=self.__cookies)
+        if r.status_code!=200:
+            raise NameError(f"{r.status_code} {r.text}")
+
+        if json_out==True:
+            return json.loads(r.text)
+        else:
+            return r.text
 
     def __json_serial(self, obj):
         """JSON serializer for objects not serializable by default json code"""
@@ -99,7 +138,7 @@ class RestApiClient:
 
 if __name__=='__main__':
     client=RestApiClient()
-    print(client.login("guest", "password"))
+    print(client.login("root", "password"))
 
     print(client.delete("dummy",99))
     print(client.delete("dummy",100))
@@ -112,7 +151,7 @@ if __name__=='__main__':
 
 
     fetch="""
-    <restapi>
+    <restapi type="select">
         <table name="dummy"/>
         <comment text="from admin.py"/>
         <filter type="OR">
@@ -121,8 +160,12 @@ if __name__=='__main__':
         </filter>
     </restapi>
     """
-    print(client.read_multible("dummy", fetch))
+    dummies=client.read_multible("dummy", fetch, json_out=True)
+    for dummy in dummies:
+        print(dummy)
 
+    print("Executing a test action ...")
+    print(client.execute_action('test',{"id":"12345"}))
 
     print(client.logoff())
 

@@ -15,6 +15,8 @@ class TestDxCallInfo(unittest.TestCase):
     def test_dxcall_dl(self):
         info=DxCallInfo.get_dxinfo_by_call(self.context, "DK9MBS")
         self.assertEqual(info['dxcc_id'].upper(), "DL")
+        self.assertEqual(info['itu_zone'], 28)
+        self.assertEqual(info['cq_zone'], 14)
 
         info=DxCallInfo.get_dxinfo_by_call(self.context, "DL4AC")
         self.assertEqual(info['dxcc_id'].upper(), "DL")
@@ -22,6 +24,8 @@ class TestDxCallInfo(unittest.TestCase):
     def test_dxcall_dl_with_pre_and_post(self):
         info=DxCallInfo.get_dxinfo_by_call(self.context, "oz/DK9MBS/p")
         self.assertEqual(info['dxcc_id'].upper(), "OZ")
+        self.assertEqual(info['itu_zone'], 18)
+        self.assertEqual(info['cq_zone'], 14)
 
     def test_dxcall_us(self):
         info=DxCallInfo.get_dxinfo_by_call(self.context, "AG5ZL")

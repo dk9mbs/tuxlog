@@ -51,7 +51,9 @@ class Ui(tk.Frame):
                 type=column.attrib['type']
                 data_bind=""
                 data_src=""
+                data_table=""
                 text=""
+                data_table_filter=""
 
                 if 'text' in column.attrib:
                     text=column.attrib['text']
@@ -61,6 +63,12 @@ class Ui(tk.Frame):
 
                 if 'data_src' in column.attrib:
                     data_src=column.attrib['data_src']
+
+                if 'data_table' in column.attrib:
+                    data_table=column.attrib['data_table']
+
+                if column.find('filter'):
+                    data_table_filter=ET.tostring(column.find('filter'))
 
                 label=None
                 if 'label' in column.attrib:
@@ -79,10 +87,12 @@ class Ui(tk.Frame):
                 textvar.set(text)
                 if type.upper()=='INPUT':
                     control=DialogInput(self,name=id, textvariable=textvar)
+                elif type.upper() == 'CHECKBOX':
+                    control=tk.Checkbutton(self,name=id,textvariable=textvar)
                 elif type.upper() == 'BUTTON':
                     control=DialogButton(self,name=id,textvariable=textvar)
                 elif type.upper() == 'COMBOBOX':
-                    items={"DO9MBS (deprecated)":"do9mbs", "DK9MBS":"dk9mbs", "OZ/DK9MBS":"oz/dk9mbs"}
+                    items=generate_combo_source(data_table, data_table_filter)
                     control=DialogCombobox(self, name=id, textvariable=textvar, values=items)
                 else:
                     control=tk.Label(self,name=id, textvariable=textvar)
@@ -90,6 +100,8 @@ class Ui(tk.Frame):
                 control.bind("<Button-1>", lambda event: self.__generic_event_handler(event, "leftclick"))
                 control.bind("<Button-2>", lambda event: self.__generic_event_handler(event, "middleclick"))
                 control.bind("<Button-3>", lambda event: self.__generic_event_handler(event, "rightclick"))
+                control.bind("<FocusIn>", lambda event: self.__generic_event_handler(event, "focusin"))
+                control.bind("<FocusOut>", lambda event: self.__generic_event_handler(event, "focusout"))
                 self.add_control(control, row=self._total_rows,column=col,colspan=colspan, name=id,data_src=data_src,
                     data_bind=data_bind, textvar=textvar)
 
@@ -156,29 +168,38 @@ class DialogButton(tk.Entry):
 
 class DialogCombobox(ttk.Combobox):
     def __init__(self, parent, *args, **options):
-        self.dict = None
+        self.dict = {}
 
         if 'values' in options:
-            if isinstance(options.get('values'), dict):
-                self.dict = options.get('values')
-                options['values'] = sorted(self.dict.keys())
+            keys=[]
+            for item in options['values']:
+                keys.append(item['name'])
+                self.dict[item['name']]=item['id']
+
+            options['values']=keys
 
         ttk.Combobox.__init__(self,parent,*args, **options)
 
         self.bind('<<ComboboxSelected>>', self.on_select)
 
     def on_select(self, event):
-        print(self.get())
+        #print(self.get())
+        pass
 
     def get(self):
         if ttk.Combobox.get(self)=='':
             return ''
 
-        if self.dict:
-            return self.dict[ttk.Combobox.get(self)]
-        else:
-            return ttk.Combobox.get(self)
+        return self.dict[ttk.Combobox.get(self)]
 
+
+def generate_combo_source(table_name, filter_xml_string):
+    params={"table_name": table_name, "filter":f"{filter_xml_string}" }
+    result=client.execute_action('generate_data_combo_source', params, json_out=True)
+    if not 'data_source' in result:
+        raise NameError(f'Could not find meta data for table: {table_name}')
+
+    return result['data_source']
 
 form_xml=f"""
 <formxml>
@@ -187,25 +208,86 @@ form_xml=f"""
             <columns>
                 <column id="search_yourcall" data_src="search" data_bind="yourcall" type="Input" label="Callsign"/>
                 <column id="search_locator" data_src="search" data_binf="locator" type="Input" label="Locator" />
-                <column id="search_logbook_id" data_src="search" data_bind="logbook_id" type="Combobox" label="Logbook"/>
+                <column id="search_logbook_id" data_table="log_logbooks" data_src="search" data_bind="logbook_id" type="Combobox" label="Logbook">
+                    <filter>
+                        <condition field="id" operator="neq" value="*"/>
+                    </filter>
+                </column>
             </columns>
         </row>
+
         <row>
             <columns>
                 <column id="search" type="Button" text="Search"/>
             </columns>
         </row>
+
         <row weight="1">
             <columns>
             </columns>
         </row>
+
+        <row>
+            <columns>
+                <column id="logbook_id" data_table="log_logbooks" data_src="search" data_bind="logbook_id" type="Combobox" label="Logbook">
+                    <filter>
+                        <condition field="id" operator="neq" value="*"/>
+                    </filter>
+                </column>
+
+                <column id="mode_id" data_table="log_modes" data_src="search" data_bind="mode_id" type="Combobox" label="Mode">
+                </column>
+
+                <column id="rig_id" data_table="log_rigs" data_src="search" data_bind="rig_id" type="Combobox" label="Rig">
+                </column>
+            </columns>
+        </row>
+
+
+        <row>
+            <columns>
+                <column id="frequency" type="Input" label="QRG" data_src="data" data_bind="viacall"/>
+                <column id="power" type="Input" label="Power" data_src="data" data_bind="power"/>
+                <column id="logdate_utc" type="Input" label="Date (UTC)" data_src="data" data_bind="logdate_utc"/>
+                <column id="start_utc" type="Input" label="Time" data_src="data" data_bind="start_utc"/>
+            </columns>
+        </row>
+
         <row>
             <columns>
                 <column id="yourcall" type="Input" label="Callsign" data_src="data" data_bind="yourcall"/>
-                <column id="locator" type="Input" label="Locator" data_src="data" data_bind="locator"/>
-                <column id="logbook_id" type="Input" label="Logbook" data_src="data" data_bind="logbook_id"/>
+                <column id="viacall" type="Input" label="Via" data_src="data" data_bind="viacall"/>
+                <column id="rxrst" type="Input" label="Rx rst" data_src="data" data_bind="rxrst"/>
+                <column id="txrst" type="Input" label="Tx rst" data_src="data" data_bind="txrst"/>
             </columns>
         </row>
+        <row>
+            <columns>
+                <column id="name" type="Input" label="Name" data_src="data" data_bind="name"/>
+                <column id="qth" type="Input" label="QTH" data_src="data" data_bind="qth"/>
+                <column id="locator" type="Input" label="Locator" data_src="data" data_bind="locator"/>
+                <column id="country" type="Input" label="Country" data_src="data" data_bind="country"/>
+            </columns>
+        </row>
+
+        <row>
+            <columns>
+                <column id="qsl_shipmentmode" type="Combobox" label="QSL" data_table="log_qslshipmentmodes" data_src="data" data_bind="qsl_shipmentmode"/>
+                <column id="comment" type="Input" label="Comment" data_src="data" data_bind="comment"/>
+                <column id="qslrecv" type="Checkbox" label="QSL in" data_src="data" data_bind="qslrecv"/>
+                <column id="qslsend" type="Checkbox" label="QSL out" data_src="data" data_bind="qslsend"/>
+            </columns>
+        </row>
+
+        <row>
+            <columns>
+                <column id="dxcc" type="Input" label="dxcc" data_src="data" data_bind="dxcc"/>
+                <column id="cq" type="Input" label="cq zone" data_src="data" data_bind="cq"/>
+                <column id="itu" type="Input" label="itu zone" data_src="data" data_bind="itu"/>
+                <column id="dok" type="Input" label="DOK (DL only)" data_src="data" data_bind="dok"/>
+            </columns>
+        </row>
+
     </rows>
 </formxml>
 """
@@ -276,13 +358,18 @@ def on_search_click(event, control_name, event_name):
     logs=load_log_list(treev, yourcall=ui.get_control("search_yourcall")['control'].get(),
         locator=ui.get_control("search_locator")['control'].get(), logbook_id=ui.get_control("search_logbook_id")['control'].get() )
 
+def on_yourcall_change(event, control_name, event_name):
+    result=client.execute_action("tuxlog_get_dxcc_info",{"call":"dl4ac"},json_out=True)
+    print(result)
+    ui.bind("data", {"cq":result['cq_zone'],"itu":result['itu_zone'],"dxcc": result['dxcc']})
 
 xml=ET.fromstring(form_xml)
 ui=Ui(Ui.create_root(),xml)
 ui.register_callback("search","leftclick", on_search_click)
+ui.register_callback("yourcall", "focusout", on_yourcall_change)
 
 treev = ttk.Treeview(ui, selectmode ='browse')
-ui.add_control(treev,row=2,column=0, colspan=6, name="treev")
+ui.add_control(treev,row=2,column=0, colspan=12, name="treev")
 
 verscrlbar = ttk.Scrollbar(ui,
                            orient ="vertical",

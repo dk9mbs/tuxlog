@@ -8,7 +8,7 @@ from core.meta import read_table_meta
 logger=log.create_logger(__name__)
 
 def __validate(params):
-    if 'data' not in params:
+    if 'input' not in params:
         return False
 
     return True
@@ -18,9 +18,13 @@ def execute(context, plugin_context, params):
         logger.warning(f"Missings params")
         return
 
-    print(params)
-    data=params['data']
+    filter=""
+    data=params['input']
+
     table_name=data['table_name']
+    if 'filter' in data:
+        filter=data['filter']
+
     meta=read_table_meta(context, table_name=table_name)
 
     if meta==None:
@@ -37,10 +41,14 @@ def execute(context, plugin_context, params):
             <field name="{id_fld}" alias="id" />
             <field name="{desc_fld}" alias="name" />
         </select>
+        {filter}
+        <orderby>
+            <field name="{desc_fld}" sort="ASC"/>
+        </orderby>
     </restapi>
     """
-    print(fetch)
+
     fetchparser=FetchXmlParser(fetch,context)
     rs=DatabaseServices.exec(fetchparser, context,fetch_mode=0, run_as_system=True)
 
-    return rs.get_result()
+    params['output']['data_source']=rs.get_result()

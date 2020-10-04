@@ -16,10 +16,9 @@ class TestFetchxmlParser(unittest.TestCase):
         self.context=AppInfo.create_context(session_id)
 
     def test_combo_source(self):
-        params={"table_name": "log_logbooks"}
-        plugin_context=Plugin.create_context("log_logs","execute","after")
+        params={"table_name": "log_logbooks", "filter":"""<filter type="and"><condition field="id" operator="neq" value="*"/> </filter>"""}
+        plugin_context=Plugin.create_context("generate_data_combo_source","execute","before")
         print(execute(self.context,plugin_context, {"data": params}))
-        #self.assertEqual(record['band_id']['value'], 90)
 
     def tearDown(self):
         AppInfo.save_context(self.context, True)
