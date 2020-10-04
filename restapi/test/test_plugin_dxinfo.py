@@ -4,7 +4,9 @@ from core.database import CommandBuilderFactory
 from core.database import FetchXmlParser
 from config import CONFIG
 from core.appinfo import AppInfo
+from core.plugin import Plugin
 from dxcallinfo import DxCallInfo
+from tuxlog_set_dxcc import execute
 
 class TestDxCallInfo(unittest.TestCase):
     def setUp(self):
@@ -34,6 +36,14 @@ class TestDxCallInfo(unittest.TestCase):
     def test_dxcall_unknown(self):
         info=DxCallInfo.get_dxinfo_by_call(self.context, "XXXXXXXXXX")
         self.assertEqual(info, None)
+
+    def test_plugin_dl_call(self):
+        record={"yourcall": {"value": "dk9mbs"}}
+        params={"data":record}
+        plugin_context=Plugin.create_context("log_logs","update","before")
+        execute(self.context,plugin_context,params)
+        self.assertEqual(params['data']['dxcc']['value'], "DL")
+
 
     def tearDown(self):
         AppInfo.save_context(self.context, True)

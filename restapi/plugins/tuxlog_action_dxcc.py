@@ -24,9 +24,9 @@ def execute(context, plugin_context, params):
     callsign=params['input']['call']
 
     info=DxCallInfo.get_dxinfo_by_call(context, callsign)
-    params['output']['dxcc']=None
-    params['output']['cq_zone']=None
-    params['output']['itu_zone']=None
+    params['output']['dxcc']=""
+    params['output']['cq_zone']=""
+    params['output']['itu_zone']=""
     if info==None:
         return
 

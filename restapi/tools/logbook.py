@@ -44,7 +44,7 @@ class Ui(tk.Frame):
         c=0
         for row in tree.find('rows').findall('row'):
             for column in row.find('columns').findall('column'):
-                c+=2
+                #c+=2
 
                 colspan=0
                 id=column.attrib['id']
@@ -54,6 +54,7 @@ class Ui(tk.Frame):
                 data_table=""
                 text=""
                 data_table_filter=""
+                default_value=""
 
                 if 'text' in column.attrib:
                     text=column.attrib['text']
@@ -67,11 +68,15 @@ class Ui(tk.Frame):
                 if 'data_table' in column.attrib:
                     data_table=column.attrib['data_table']
 
+                if 'default' in column.attrib:
+                    default_value=column.attrib['default']
+
                 if column.find('filter'):
                     data_table_filter=ET.tostring(column.find('filter'))
 
                 label=None
                 if 'label' in column.attrib:
+                    c+=2
                     col=c-1
                     colspan=1
                     textvar=tk.StringVar()
@@ -80,7 +85,8 @@ class Ui(tk.Frame):
                     label.extra = f"lab_{id}"
                     self.add_control(label, row=self._total_rows,column=c-2,colspan=colspan, name=f"lab_{id}", textvar=textvar)
                 else:
-                    col=c-2
+                    c+=1
+                    col=c-1
                     colspan=1
 
                 textvar=tk.StringVar()
@@ -88,7 +94,8 @@ class Ui(tk.Frame):
                 if type.upper()=='INPUT':
                     control=DialogInput(self,name=id, textvariable=textvar)
                 elif type.upper() == 'CHECKBOX':
-                    control=tk.Checkbutton(self,name=id,textvariable=textvar)
+                    textvar=tk.IntVar()
+                    control=tk.Checkbutton(self,name=id,variable=textvar)
                 elif type.upper() == 'BUTTON':
                     control=DialogButton(self,name=id,textvariable=textvar)
                 elif type.upper() == 'COMBOBOX':
@@ -103,7 +110,7 @@ class Ui(tk.Frame):
                 control.bind("<FocusIn>", lambda event: self.__generic_event_handler(event, "focusin"))
                 control.bind("<FocusOut>", lambda event: self.__generic_event_handler(event, "focusout"))
                 self.add_control(control, row=self._total_rows,column=col,colspan=colspan, name=id,data_src=data_src,
-                    data_bind=data_bind, textvar=textvar)
+                    data_bind=data_bind, textvar=textvar, default_value=default_value)
 
             if 'weight' in row.attrib:
                 tk.Grid.rowconfigure(self,self._total_rows,weight=1)
@@ -124,7 +131,7 @@ class Ui(tk.Frame):
         tk.Grid.columnconfigure(root, 0, weight=1)
         return root
 
-    def add_control(self, control, row=0, column=0, colspan=1, name="", data_src="", data_bind="", textvar=None):
+    def add_control(self, control, row=0, column=0, colspan=1, name="", data_src="", data_bind="", textvar=None, default_value=""):
         control.extra=name
         sticky='nswe'
         if isinstance(control, tk.Label):
@@ -132,7 +139,7 @@ class Ui(tk.Frame):
 
         control.grid(row=row, column=column, sticky=sticky, columnspan=colspan, padx=1, pady=1)
         self._controls.append({"control": control,
-            "data_bind": data_bind, "data_src": data_src, "id":name, "name": name, "textvar": textvar})
+            "data_bind": data_bind, "data_src": data_src, "id":name, "name": name, "textvar": textvar, "default_value": default_value})
 
     def get_control(self, control_name):
         for control in self._controls:
@@ -154,9 +161,33 @@ class Ui(tk.Frame):
         for k,v in data.items():
             controls=self.get_control_by_data_bind(data_src, k)
             for control in controls:
-                if control['textvar'] != None:
-                    control['textvar'].set(v)
+                if isinstance(control['control'], DialogCombobox):
+                    control['control'].set(v)
+                else:
+                    if control['textvar'] != None:
+                        control['textvar'].set(v)
 
+    def get_bind_data(self, data_src):
+        result={}
+        for control in self._controls:
+            value=None
+            if control['data_src']==data_src:
+                if isinstance(control['control'],DialogCombobox):
+                    value=control['control'].get()
+                else:
+                    if not control['textvar']==None:
+                        value=control['textvar'].get()
+
+                if value=="":
+                    value=None
+
+                result[control['data_bind']]=value
+        return result
+
+    def reset(self, data_src):
+        for control in self._controls:
+            if control['data_src']==data_src:
+                control['textvar'].set(control['default_value'])
 
 class DialogInput(tk.Entry):
     def __init__(self, parent, *args, **kwargs):
@@ -213,12 +244,12 @@ form_xml=f"""
                         <condition field="id" operator="neq" value="*"/>
                     </filter>
                 </column>
+                <column id="search" type="Button" text="Search"/>
             </columns>
         </row>
 
         <row>
             <columns>
-                <column id="search" type="Button" text="Search"/>
             </columns>
         </row>
 
@@ -229,16 +260,16 @@ form_xml=f"""
 
         <row>
             <columns>
-                <column id="logbook_id" data_table="log_logbooks" data_src="search" data_bind="logbook_id" type="Combobox" label="Logbook">
+                <column id="logbook_id" data_table="log_logbooks" data_src="data" data_bind="logbook_id" type="Combobox" label="Logbook">
                     <filter>
                         <condition field="id" operator="neq" value="*"/>
                     </filter>
                 </column>
 
-                <column id="mode_id" data_table="log_modes" data_src="search" data_bind="mode_id" type="Combobox" label="Mode">
+                <column id="mode_id" data_table="log_modes" data_src="data" data_bind="mode_id" type="Combobox" label="Mode">
                 </column>
 
-                <column id="rig_id" data_table="log_rigs" data_src="search" data_bind="rig_id" type="Combobox" label="Rig">
+                <column id="rig_id" data_table="log_rigs" data_src="data" data_bind="rig_id" type="Combobox" label="Rig">
                 </column>
             </columns>
         </row>
@@ -246,7 +277,7 @@ form_xml=f"""
 
         <row>
             <columns>
-                <column id="frequency" type="Input" label="QRG" data_src="data" data_bind="viacall"/>
+                <column id="frequency" type="Input" label="QRG" data_src="data" data_bind="frequency"/>
                 <column id="power" type="Input" label="Power" data_src="data" data_bind="power"/>
                 <column id="logdate_utc" type="Input" label="Date (UTC)" data_src="data" data_bind="logdate_utc"/>
                 <column id="start_utc" type="Input" label="Time" data_src="data" data_bind="start_utc"/>
@@ -288,11 +319,22 @@ form_xml=f"""
             </columns>
         </row>
 
+        <row>
+            <columns>
+                <column id="btn_new" type="Button" text="New"/>
+                <column id="btn_save" type="Button" text="Save"/>
+                <column id="btn_default" type="Button" text="Default"/>
+            </columns>
+        </row>
+
     </rows>
 </formxml>
 """
 
 def load_log_list(treev, **kwargs):
+    for item in treev.get_children():
+        ui.get_control("treev")['control'].delete(item)
+
     where=[]
     if 'yourcall' in kwargs:
         value=kwargs['yourcall']
@@ -352,21 +394,30 @@ def load_log_list(treev, **kwargs):
     return logs
 
 def on_search_click(event, control_name, event_name):
-    for item in ui.get_control("treev")['control'].get_children():
-        ui.get_control("treev")['control'].delete(item)
 
     logs=load_log_list(treev, yourcall=ui.get_control("search_yourcall")['control'].get(),
         locator=ui.get_control("search_locator")['control'].get(), logbook_id=ui.get_control("search_logbook_id")['control'].get() )
 
 def on_yourcall_change(event, control_name, event_name):
-    result=client.execute_action("tuxlog_get_dxcc_info",{"call":"dl4ac"},json_out=True)
+    call=ui.get_control(control_name)['control'].get()
+    result=client.execute_action("tuxlog_get_dxcc_info",{"call":call},json_out=True)
+    ui.bind("data", {"cq":result['cq_zone'],"itu":result['itu_zone'],"dxcc": result['dxcc'],"yourcall":call.upper()})
+
+def on_save_click(event,control_name, event_name):
+    result=ui.get_bind_data("data")
     print(result)
-    ui.bind("data", {"cq":result['cq_zone'],"itu":result['itu_zone'],"dxcc": result['dxcc']})
+    print(client.create("log_logs", result))
+    load_log_list(ui.get_control("treev")['control'])
+
+def on_new_click(event, control_name,event_name):
+    ui.reset("data")
 
 xml=ET.fromstring(form_xml)
 ui=Ui(Ui.create_root(),xml)
 ui.register_callback("search","leftclick", on_search_click)
 ui.register_callback("yourcall", "focusout", on_yourcall_change)
+ui.register_callback("btn_save", "leftclick", on_save_click)
+ui.register_callback("btn_new","leftclick", on_new_click)
 
 treev = ttk.Treeview(ui, selectmode ='browse')
 ui.add_control(treev,row=2,column=0, colspan=12, name="treev")

@@ -26,12 +26,12 @@ def execute(context, plugin_context, params):
 
     info=DxCallInfo.get_dxinfo_by_call(context, callsign)
     params['data']['dxcc']={"value": None}
-    params['data']['cq_zone']={"value": None}
-    params['data']['itu_zone']={"value": None}
+    params['data']['cq']={"value": None}
+    params['data']['itu']={"value": None}
     if info==None:
         return
 
     params['data']['dxcc']['value']=info['dxcc_id']
-    params['data']['itu_zone']['value']=info['itu_zone']
-    params['data']['cq_zone']['value']=info['cq_zone']
+    params['data']['itu']['value']=info['itu_zone']
+    params['data']['cq']['value']=info['cq_zone']
 
