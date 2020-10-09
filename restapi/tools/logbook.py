@@ -458,7 +458,7 @@ def on_delete_click(event,dialog,control_name,event_name):
     load_log_list(ui.get_control("treev")['control'])
 
 
-def on_new_click(event, control_name,event_name):
+def on_new_click(event,dialog, control_name,event_name):
     ui.reset("data")
     ui.set_dialog_record_id(None, "data")
 
