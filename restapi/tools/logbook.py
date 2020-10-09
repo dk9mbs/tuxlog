@@ -1,4 +1,5 @@
 from tkinter import ttk
+from enum import Enum
 import tkinter as tk
 import json
 import xml.etree.ElementTree as ET
@@ -9,9 +10,17 @@ from clientlib import RestApiClient
 client=RestApiClient("http://localhost:5001/api")
 client.login("tuxlog", "password")
 
-class Ui(tk.Frame):
+class DataDialogMode(Enum):
+    UNDEFINED = 0
+    NEW = 1
+    EDIT = 2
+
+class DataDialog(tk.Frame):
     def __init__(self, parent,form_xml, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
+        self._data_mode={"data": DataDialogMode.UNDEFINED}
+        self._data_record_id={}
+
         self._root=parent
         self._callbacks=[]
         self._controls=[]
@@ -38,7 +47,7 @@ class Ui(tk.Frame):
         for callback in self._callbacks:
             if callback['control_name']==control_name and callback['message']==message:
                 logging.info(f"Fire event with message: {message}")
-                callback['fn'](event, control_name, message)
+                callback['fn'](event,self, control_name, message)
 
     def __read_form_xml(self, tree):
         c=0
@@ -95,6 +104,7 @@ class Ui(tk.Frame):
                     control=DialogInput(self,name=id, textvariable=textvar)
                 elif type.upper() == 'CHECKBOX':
                     textvar=tk.IntVar()
+                    default_value=0
                     control=tk.Checkbutton(self,name=id,variable=textvar)
                 elif type.upper() == 'BUTTON':
                     control=DialogButton(self,name=id,textvariable=textvar)
@@ -104,11 +114,6 @@ class Ui(tk.Frame):
                 else:
                     control=tk.Label(self,name=id, textvariable=textvar)
 
-                control.bind("<Button-1>", lambda event: self.__generic_event_handler(event, "leftclick"))
-                control.bind("<Button-2>", lambda event: self.__generic_event_handler(event, "middleclick"))
-                control.bind("<Button-3>", lambda event: self.__generic_event_handler(event, "rightclick"))
-                control.bind("<FocusIn>", lambda event: self.__generic_event_handler(event, "focusin"))
-                control.bind("<FocusOut>", lambda event: self.__generic_event_handler(event, "focusout"))
                 self.add_control(control, row=self._total_rows,column=col,colspan=colspan, name=id,data_src=data_src,
                     data_bind=data_bind, textvar=textvar, default_value=default_value)
 
@@ -121,7 +126,7 @@ class Ui(tk.Frame):
             c=0
 
     def __generic_event_handler(self,event, message):
-        self._fire_external_event(event, event.widget.extra, message)
+        self._fire_external_event(event,event.widget.extra, message)
 
     @staticmethod
     def create_root():
@@ -132,6 +137,13 @@ class Ui(tk.Frame):
         return root
 
     def add_control(self, control, row=0, column=0, colspan=1, name="", data_src="", data_bind="", textvar=None, default_value=""):
+        control.bind("<Button-1>", lambda event: self.__generic_event_handler(event, "leftclick"))
+        control.bind("<Button-2>", lambda event: self.__generic_event_handler(event, "middleclick"))
+        control.bind("<Button-3>", lambda event: self.__generic_event_handler(event, "rightclick"))
+        control.bind("<FocusIn>", lambda event: self.__generic_event_handler(event, "focusin"))
+        control.bind("<FocusOut>", lambda event: self.__generic_event_handler(event, "focusout"))
+        control.bind("<<TreeviewSelect>>", lambda event: self.__generic_event_handler(event, "itemselect"))
+
         control.extra=name
         sticky='nswe'
         if isinstance(control, tk.Label):
@@ -160,6 +172,7 @@ class Ui(tk.Frame):
         self._datasource[data_src]=data
         for k,v in data.items():
             controls=self.get_control_by_data_bind(data_src, k)
+            if v==None: v=''
             for control in controls:
                 if isinstance(control['control'], DialogCombobox):
                     control['control'].set(v)
@@ -169,6 +182,7 @@ class Ui(tk.Frame):
 
     def get_bind_data(self, data_src):
         result={}
+
         for control in self._controls:
             value=None
             if control['data_src']==data_src:
@@ -189,6 +203,19 @@ class Ui(tk.Frame):
             if control['data_src']==data_src:
                 control['textvar'].set(control['default_value'])
 
+    def get_dialog_mode(self, data_src="data"):
+        return self._data_mode[data_src]
+
+    def set_dialog_record_id(self, id, data_src="data"):
+        self._data_record_id[data_src]=id
+        if id == None:
+            self._data_mode[data_src]=DataDialogMode.NEW
+        else:
+            self._data_mode[data_src]=DataDialogMode.EDIT
+
+    def get_dialog_record_id(self,data_src="data"):
+        return self._data_record_id[data_src]
+
 class DialogInput(tk.Entry):
     def __init__(self, parent, *args, **kwargs):
         tk.Entry.__init__(self, parent, *args, **kwargs)
@@ -200,11 +227,13 @@ class DialogButton(tk.Entry):
 class DialogCombobox(ttk.Combobox):
     def __init__(self, parent, *args, **options):
         self.dict = {}
+        self.dict_keys = {}
 
         if 'values' in options:
             keys=[]
             for item in options['values']:
                 keys.append(item['name'])
+                self.dict_keys[item['id']]=item['name']
                 self.dict[item['name']]=item['id']
 
             options['values']=keys
@@ -222,6 +251,12 @@ class DialogCombobox(ttk.Combobox):
             return ''
 
         return self.dict[ttk.Combobox.get(self)]
+
+    def set(self,value):
+        for k,v in self.dict_keys.items():
+            if k.lower()==str(value).lower():
+                #v=self.dict_keys[value.lower()]
+                ttk.Combobox.set(self, v)
 
 
 def generate_combo_source(table_name, filter_xml_string):
@@ -323,6 +358,7 @@ form_xml=f"""
             <columns>
                 <column id="btn_new" type="Button" text="New"/>
                 <column id="btn_save" type="Button" text="Save"/>
+                <column id="btn_delete" type="Button" text="Delete"/>
                 <column id="btn_default" type="Button" text="Default"/>
             </columns>
         </row>
@@ -393,31 +429,53 @@ def load_log_list(treev, **kwargs):
 
     return logs
 
-def on_search_click(event, control_name, event_name):
+def on_search_click(event,dialog, control_name, event_name):
 
     logs=load_log_list(treev, yourcall=ui.get_control("search_yourcall")['control'].get(),
         locator=ui.get_control("search_locator")['control'].get(), logbook_id=ui.get_control("search_logbook_id")['control'].get() )
 
-def on_yourcall_change(event, control_name, event_name):
+def on_yourcall_change(event,dialog, control_name, event_name):
     call=ui.get_control(control_name)['control'].get()
     result=client.execute_action("tuxlog_get_dxcc_info",{"call":call},json_out=True)
     ui.bind("data", {"cq":result['cq_zone'],"itu":result['itu_zone'],"dxcc": result['dxcc'],"yourcall":call.upper()})
 
-def on_save_click(event,control_name, event_name):
+def on_save_click(event,dialog,control_name, event_name):
     result=ui.get_bind_data("data")
     print(result)
-    print(client.create("log_logs", result))
+    if ui.get_dialog_mode("data")==DataDialogMode.NEW:
+        print(client.create("log_logs", result))
+    elif ui.get_dialog_mode("data")==DataDialogMode.EDIT:
+        print(client.update("log_logs",ui.get_dialog_record_id("data"), result))
+
     load_log_list(ui.get_control("treev")['control'])
+    ui.reset("data")
+    ui.set_dialog_record_id(None, "data")
+
+def on_delete_click(event,dialog,control_name,event_name):
+    id=dialog.get_dialog_record_id("data")
+    print(client.delete("log_logs",id))
+    dialog.set_dialog_record_id(None,"data")
+    load_log_list(ui.get_control("treev")['control'])
+
 
 def on_new_click(event, control_name,event_name):
     ui.reset("data")
+    ui.set_dialog_record_id(None, "data")
+
+def on_item_click(event,dialog,control_name,event_name):
+    id=ui.get_control(control_name)['control'].focus()
+    result=client.read("log_logs", id, json_out=True)
+    ui.bind("data", result)
+    ui.set_dialog_record_id(id, "data")
 
 xml=ET.fromstring(form_xml)
-ui=Ui(Ui.create_root(),xml)
+ui=DataDialog(DataDialog.create_root(),xml)
 ui.register_callback("search","leftclick", on_search_click)
 ui.register_callback("yourcall", "focusout", on_yourcall_change)
 ui.register_callback("btn_save", "leftclick", on_save_click)
 ui.register_callback("btn_new","leftclick", on_new_click)
+ui.register_callback("btn_delete","leftclick", on_delete_click)
+ui.register_callback("treev","itemselect",on_item_click)
 
 treev = ttk.Treeview(ui, selectmode ='browse')
 ui.add_control(treev,row=2,column=0, colspan=12, name="treev")

@@ -15,9 +15,9 @@ INSERT INTO api_group(id,groupname,solution_id) VALUES (20000,'tuxlog',10001);
 
 INSERT INTO api_user_group(user_id,group_id,solution_id) VALUES (20000,20000,10001);
 
-INSERT INTO api_table(id,alias,table_name,id_field_name,id_field_type,desc_field_name,solution_id)
+INSERT INTO api_table(id,alias,table_name,id_field_name,id_field_type,desc_field_name,enable_audit_log,solution_id)
     VALUES
-    (20000,'log_logs','log_logs','id','Int','yourcall',10001);
+    (20000,'log_logs','log_logs','id','Int','yourcall',-1,10001);
 
 INSERT INTO api_table(id,alias,table_name,id_field_name,id_field_type,desc_field_name,solution_id) 
     VALUES
@@ -55,7 +55,7 @@ INSERT INTO api_table(id,alias,table_name,id_field_name,id_field_type,desc_field
 
 INSERT INTO api_group_permission (group_id,table_id,mode_create,mode_read,mode_update,mode_delete,solution_id)
     VALUES
-    (20000,20000,-1,-1,-1,0,10001);
+    (20000,20000,-1,-1,-1,-1,10001);
 
 INSERT INTO api_group_permission (group_id,table_id,mode_create,mode_read,mode_update,mode_delete,solution_id)
     VALUES
