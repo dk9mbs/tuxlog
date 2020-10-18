@@ -1,0 +1,97 @@
+<formxml>
+    <rows>
+        <row>
+            <columns>
+                <column id="search_yourcall" data_src="search" data_bind="yourcall" type="Input" label="Callsign"/>
+                <column id="search_locator" data_src="search" data_binf="locator" type="Input" label="Locator" />
+                <column id="search_logbook_id" data_table="log_logbooks" data_src="search" data_bind="logbook_id" type="Combobox" label="Logbook">
+                    <filter>
+                        <condition field="id" operator="neq" value="*"/>
+                    </filter>
+                </column>
+                <column id="search" type="Button" text="Search"/>
+            </columns>
+        </row>
+
+        <row>
+            <columns>
+            </columns>
+        </row>
+
+        <row weight="1">
+            <columns>
+            </columns>
+        </row>
+
+        <row>
+            <columns>
+                <column id="logbook_id" data_table="log_logbooks" data_src="data" data_bind="logbook_id" type="Combobox" label="Logbook">
+                    <filter>
+                        <condition field="id" operator="neq" value="*"/>
+                    </filter>
+                </column>
+
+                <column id="mode_id" data_table="log_modes" data_src="data" data_bind="mode_id" type="Combobox" label="Mode">
+                </column>
+
+                <column id="rig_id" data_table="log_rigs" data_src="data" data_bind="rig_id" type="Combobox" label="Rig">
+                </column>
+            </columns>
+        </row>
+
+
+        <row>
+            <columns>
+                <column id="frequency" type="Input" label="QRG" data_src="data" data_bind="frequency"/>
+                <column id="power" type="Input" label="Power" data_src="data" data_bind="power"/>
+                <column id="logdate_utc" type="Input" label="Date (UTC)" data_src="data" data_bind="logdate_utc"/>
+                <column id="start_utc" type="Input" label="Time" data_src="data" data_bind="start_utc"/>
+            </columns>
+        </row>
+
+        <row>
+            <columns>
+                <column id="yourcall" type="Input" label="Callsign" data_src="data" data_bind="yourcall"/>
+                <column id="viacall" type="Input" label="Via" data_src="data" data_bind="viacall"/>
+                <column id="rxrst" type="Input" label="Rx rst" data_src="data" data_bind="rxrst"/>
+                <column id="txrst" type="Input" label="Tx rst" data_src="data" data_bind="txrst"/>
+            </columns>
+        </row>
+        <row>
+            <columns>
+                <column id="name" type="Input" label="Name" data_src="data" data_bind="name"/>
+                <column id="qth" type="Input" label="QTH" data_src="data" data_bind="qth"/>
+                <column id="locator" type="Input" label="Locator" data_src="data" data_bind="locator"/>
+                <column id="country" type="Input" label="Country" data_src="data" data_bind="country"/>
+            </columns>
+        </row>
+
+        <row>
+            <columns>
+                <column id="qsl_shipmentmode" type="Combobox" label="QSL" data_table="log_qslshipmentmodes" data_src="data" data_bind="qsl_shipmentmode"/>
+                <column id="comment" type="Input" label="Comment" data_src="data" data_bind="comment"/>
+                <column id="qslrecv" type="Checkbox" label="QSL in" data_src="data" data_bind="qslrecv"/>
+                <column id="qslsend" type="Checkbox" label="QSL out" data_src="data" data_bind="qslsend"/>
+            </columns>
+        </row>
+
+        <row>
+            <columns>
+                <column id="dxcc" type="Input" label="dxcc" data_src="data" data_bind="dxcc"/>
+                <column id="cq" type="Input" label="cq zone" data_src="data" data_bind="cq"/>
+                <column id="itu" type="Input" label="itu zone" data_src="data" data_bind="itu"/>
+                <column id="dok" type="Input" label="DOK (DL only)" data_src="data" data_bind="dok"/>
+            </columns>
+        </row>
+
+        <row>
+            <columns>
+                <column id="btn_new" type="Button" text="New"/>
+                <column id="btn_save" type="Button" text="Save"/>
+                <column id="btn_delete" type="Button" text="Delete"/>
+                <column id="btn_default" type="Button" text="Default"/>
+            </columns>
+        </row>
+
+    </rows>
+</formxml>
