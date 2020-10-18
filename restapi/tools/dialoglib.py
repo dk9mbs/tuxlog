@@ -130,13 +130,13 @@ class DataDialog(tk.Frame):
     def __generic_event_handler(self,event, message):
         self._fire_external_event(event,event.widget.extra, message)
 
-    @staticmethod
-    def create_root():
-        root=tk.Tk()
-        root.resizable(width = 1, height = 1)
-        tk.Grid.rowconfigure(root, 0, weight=1)
-        tk.Grid.columnconfigure(root, 0, weight=1)
-        return root
+    #@staticmethod
+    #def create_root():
+    #    root=tk.Tk()
+    #    root.resizable(width = 1, height = 1)
+    #    tk.Grid.rowconfigure(root, 0, weight=1)
+    #    tk.Grid.columnconfigure(root, 0, weight=1)
+    #    return root
 
     def add_control(self, control, row=0, column=0, colspan=1, name="", data_src="", data_bind="", textvar=None, default_value=""):
         control.bind("<Button-1>", lambda event: self.__generic_event_handler(event, "leftclick"))

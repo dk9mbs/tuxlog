@@ -169,22 +169,4 @@ def init_dialog(client,root):
 
     ui.bind("data", {"yourcall": "dk9mbs"})
 
-    #
-    #
-    #
-    menu = tk.Menu(ui.get_root())
-    ui.get_root().config(menu=menu)
-    filemenu = tk.Menu(menu)
-    menu.add_cascade(label="File", menu=filemenu)
-    filemenu.add_command(label="New", command=lambda: generic_item_event(ui, 'NewFile') )
-    filemenu.add_command(label="Open...", command=lambda: generic_item_event(ui, ''))
-    filemenu.add_separator()
-    filemenu.add_command(label="Exit", command=ui.get_root().quit)
-    helpmenu = tk.Menu(menu)
-    menu.add_cascade(label="Help", menu=helpmenu)
-    helpmenu.add_command(label="About...", command=lambda: generic_item_event(ui, 'About'))
-    #
-    #
-    #
-    #ui.get_root().mainloop()
 
