@@ -7,13 +7,14 @@ import logging
 
 from dialoglib import DataDialog, DataDialogMode
 
-def init_dialog(client,root):
+def init_dialog(app):
+    root=tk.Toplevel(app.master)
     f=open('log.dialog.xml','r')
     form_xml=f.read()
     xml=ET.fromstring(form_xml)
     f.close()
 
-    ui=DataDialog(root,xml,client)
+    ui=DataDialog(root,xml,app.client)
     #ui.register_callback("search","leftclick", on_search_click)
     #ui.register_callback("yourcall", "focusout", on_yourcall_change)
     #ui.register_callback("btn_save", "leftclick", on_save_click)
