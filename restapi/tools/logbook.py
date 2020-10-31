@@ -118,13 +118,32 @@ def generic_item_event(dialog, item, item_id=None):
     print(item)
 
 
-def init_dialog(client,root):
-    f=open('log.dialog.xml','r')
+#
+#
+#
+
+def subscribe(app, dialog):
+    app.subscribe("logbook_client_id", "rigctl.read.frequency", rigctl_data, {"dialog":dialog} )
+
+def rigctl_data(topic, msg, user_data):
+    dialog=user_data['dialog']
+    if dialog.get_dialog_mode("data")==DataDialogMode.NEW:
+        dialog.bind("data", {"frequency": msg})
+
+#
+#
+#
+def close_window(app, root):
+    app.unsubscribe("logbook_client_id")
+    root.destroy()
+
+def open_window(app, root):
+    f=open('logbook.dialog.xml','r')
     form_xml=f.read()
     xml=ET.fromstring(form_xml)
     f.close()
 
-    ui=DataDialog(root,xml,client)
+    ui=DataDialog(root,xml,app.client)
     ui.register_callback("search","leftclick", on_search_click)
     ui.register_callback("yourcall", "focusout", on_yourcall_change)
     ui.register_callback("btn_save", "leftclick", on_save_click)
@@ -165,8 +184,9 @@ def init_dialog(client,root):
     treev.heading("9", text ="Continent")
     treev.heading("10", text ="Country")
 
-    logs=load_log_list(client,ui,treev)
+    logs=load_log_list(app.client,ui,treev)
 
     ui.bind("data", {"yourcall": "dk9mbs"})
 
+    subscribe(app,ui)
 
