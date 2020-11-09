@@ -6,4 +6,4 @@ app.wsgi
 /htdocs
 /tuxlog/__solution__/ui/htdocs/*
 /virtenv
-
+*.FCStd1
