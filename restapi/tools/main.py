@@ -1,3 +1,4 @@
+import sys
 import tkinter as tk
 import time
 from threading import Thread
@@ -12,8 +13,12 @@ class TuxlogApiClient(RestApiClient):
     def __init__(self, root_url):
         super().__init__(root_url=root_url)
 
-client=TuxlogApiClient("http://localhost:5001/api")
-client.login("tuxlog", "password")
+username=sys.argv[1]
+password=sys.argv[2]
+api_url=sys.argv[3]
+#http://localhost:5001/api
+client=TuxlogApiClient(api_url)
+client.login(username, password)
 
 
 
