@@ -8,20 +8,3 @@ DELETE FROM log_settings WHERE name='rest_server_port';
 
 /* Views */
 DROP VIEW IF EXISTS log_vw_dxcluster_spots;
-CREATE VIEW IF NOT EXISTS log_vw_dxcluster_spots 
-AS 
-/* 
-ds=spotter dxcc
-*/
-SELECT DISTINCT s.spotter,ds.id AS dxcc,ds.country AS country, ds.continent AS continent,
-    s.frequency,b.name AS band,
-    s.callsign AS dx,dc.id AS dx_dxcc,dc.country AS dx_country,dc.continent AS dx_continent,
-    s.comment, s.time_utc, s.new_dxcc, s.new_locator, 
-    timestampdiff(MINUTE, date,now()) AS age_minutes
-    from log_dxcluster_spots s 
-        INNER JOIN log_dxcc_prefixes ps ON s.spotter_dxcc_prefix_id=ps.id 
-        INNER JOIN log_dxcc_prefixes pc ON s.callsign_dxcc_prefix_id=pc.id 
-        INNER JOIN log_dxcc ds ON ps.dxcc_id=ds.id 
-        INNER JOIN log_dxcc dc ON pc.dxcc_id=dc.id 
-        INNER JOIN log_bands b ON s.band_id=b.id 
-    ORDER BY s.id desc;

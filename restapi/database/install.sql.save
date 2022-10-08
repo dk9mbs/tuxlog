@@ -19,17 +19,15 @@ INSERT INTO api_user_group(user_id,group_id,solution_id) VALUES (20000,20000,100
 
 INSERT INTO api_table(id,alias,table_name,id_field_name,id_field_type,desc_field_name,enable_audit_log,solution_id)
     VALUES
-    (20000,'log_logs','log_logs','id','int','yourcall',-1,10001);
+    (20000,'log_logs','log_logs','id','Int','yourcall',-1,10001);
 
 INSERT INTO api_table(id,alias,table_name,id_field_name,id_field_type,desc_field_name,solution_id) 
     VALUES
-    (20001,'log_data_exchange_fields','meta_data_exchange_fields','id','int','external_fieldname',10001);
-
-UPDATE api_table SET alias='log_data_exchange_fields' where id=20001 AND alias like 'meta%';
+    (20001,'meta_data_exchange_fields','meta_data_exchange_fields','id','Int','external_fieldname',10001);
 
 INSERT INTO api_table(id,alias,table_name,id_field_name,id_field_type,desc_field_name,solution_id) 
     VALUES
-    (20002,'log_bands','log_bands','id','int','name',10001);
+    (20002,'log_bands','log_bands','id','Int','name',10001);
 
 INSERT INTO api_table(id,alias,table_name,id_field_name,id_field_type,desc_field_name,solution_id) 
     VALUES
@@ -51,9 +49,10 @@ INSERT INTO api_table(id,alias,table_name,id_field_name,id_field_type,desc_field
     VALUES
     (20007,'log_modes','log_modes','id','String','description',10001);
 
-INSERT INTO api_table(id,alias,table_name,id_field_name,id_field_type,desc_field_name,solution_id) 
-    VALUES
-    (20008,'log_qslshipmentmodes','log_qslshipmentmodes','id','String','description',10001);
+
+
+
+meta_data_exchange_fields
 
 
 INSERT INTO api_group_permission (group_id,table_id,mode_create,mode_read,mode_update,mode_delete,solution_id)
@@ -135,7 +134,5 @@ INSERT INTO api_event_handler (plugin_module_name,publisher,event,type,sorting,s
     VALUES ('tuxlog_action_dxcc','tuxlog_get_dxcc_info','execute','before',100,10001);
 INSERT IGNORE INTO api_event_handler (plugin_module_name,publisher,event,type,sorting,solution_id)
     VALUES ('tuxlog_app_start','$app_start','execute','before',100,10001);
-INSERT IGNORE INTO api_event_handler (plugin_module_name,publisher,event,type,sorting,solution_id,run_async)
-    VALUES ('tuxlog_plugin_import-cty','tuxlog_cty_endpoint','post','before',100,10001,-1);
 
 

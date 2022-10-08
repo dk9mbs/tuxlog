@@ -213,37 +213,6 @@ CREATE TABLE IF NOT EXISTS log_bands(
     PRIMARY KEY(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS meta_dataviews(
-    id int NOT NULL AUTO_INCREMENT COMMENT 'Unique ID',
-    model_name varchar(250) NOT NULL COMMENT 'Name of Table',
-    view_name varchar(250) NOT NULL COMMENT 'name of the view',
-    fields text NULL COMMENT 'Fields object (json)',
-    id_field_name varchar(250) NOT NULL DEFAULT 'id' COMMENT 'name of the id field',
-    where_clause text NULL COMMENT 'WHERE Clause (sql)',
-    filter_clause text NULL COMMENT 'additive where clause for search',
-    order_by text NULL COMMENT 'order by sql clause',
-    page_size int NOT NULL default '5000' COMMENT 'Pagesize',
-    open_path text NULL COMMENT 'On activation redirect to this path ($1 will replace with the selected id)',
-    PRIMARY KEY(id),
-    UNIQUE KEY (model_name, view_name)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-CREATE TABLE IF NOT EXISTS meta_dataforms(
-    id int NOT NULL AUTO_INCREMENT COMMENT 'Unique ID',
-    model_name varchar(250) NOT NULL COMMENT '',
-    form_name varchar(250) NOT NULL COMMENT '',
-    datacomponent varchar(250) NOT NULL COMMENT 'vuejs component name',
-    PRIMARY KEY(id),
-    UNIQUE KEY(model_name, form_name)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS meta_database_fieldtypes(
-    type_name varchar(50) NOT NULL,
-    internal_type int NOT NULL default '0' COMMENT '0=String 1=Number 2=Date',
-    PRIMARY KEY(type_name)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 /*
 CREATE TABLE IF NOT EXISTS  meta_callbook_providers(
     id varchar(50) NOT NULL,
@@ -488,13 +457,6 @@ call proc_initlogbook('dk9mbs');
 /*
 * Database Fields
 */
-INSERT INTO meta_database_fieldtypes(type_name,internal_type) VALUES ('varchar',0);
-INSERT INTO meta_database_fieldtypes(type_name,internal_type) VALUES ('int',1);
-INSERT INTO meta_database_fieldtypes(type_name,internal_type) VALUES ('smallint',1);
-INSERT INTO meta_database_fieldtypes(type_name,internal_type) VALUES ('tinyint',1);
-INSERT INTO meta_database_fieldtypes(type_name,internal_type) VALUES ('bit',1);
-INSERT INTO meta_database_fieldtypes(type_name,internal_type) VALUES ('time',2);
-INSERT INTO meta_database_fieldtypes(type_name,internal_type) VALUES ('date',2);
 
 INSERT INTO meta_data_exchange_converters(id,description,classname_in,classname_out) 
 VALUES('adif_v2','ADIFV2','','');
@@ -1004,9 +966,9 @@ BEGIN
     IF NOT EXISTS (SELECT * FROM meta_sys_dbversion WHERE version='INSTALL-DXCLUSTER_V3.0.0') THEN
 		call proc_printf ('DXCluster installieren ...!');
 
-INSERT INTO log_dxclusters(id,host,port,position,prompt_username) VALUES (1,'oz5bbs.dk',8000,0,'login: ');
-INSERT INTO log_dxclusters(id,host,port,position,prompt_username) VALUES (2,'zl2arn.ddns.net',7300,10,'login: ');
-INSERT INTO log_dxclusters(id,host,port,position,prompt_username) VALUES (3,'la3waa.ddns.net',8000,20,'login: ');
+INSERT INTO log_dxclusters(id,host,port,position,prompt_username,username) VALUES (1,'oz5bbs.dk',8000,0,'login: ','[your call]');
+INSERT INTO log_dxclusters(id,host,port,position,prompt_username,username) VALUES (2,'zl2arn.ddns.net',7300,10,'login: ','[your call]');
+INSERT INTO log_dxclusters(id,host,port,position,prompt_username,username) VALUES (3,'la3waa.ddns.net',8000,20,'login: ','[your call]');
 /*
 INSERT INTO log_dxcluster_loginscripts(id,dxcluster_id,position,prompt,send) VALUES (1,1,10,'login: ','callsign');
 INSERT INTO log_dxcluster_loginscripts(id,dxcluster_id,position,prompt,send) VALUES (2,2,10,'login: ','callsign');
