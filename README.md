@@ -79,7 +79,8 @@ npm run build
 ## How to import adif data?
 
 ```bash
-./webfn-proxy.sh build import_adif '{"logbook_id":"dk9mbs"}' /tmp/wsjtx_log.adi
+./webfn-proxy.sh build import_adif '{"logbook_id":"dk9mbs"}' /tmp/wsjtx_log.adi (deprecated)
+python adifimport.py username password https://test.de/api ~/.local/share/WSJT-X/wsjtx_log.adi
 ```
 ## How to import cty.dat?
 
