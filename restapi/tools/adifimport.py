@@ -98,6 +98,8 @@ if __name__ == "__main__":
                     data[mapping['internal_fieldname']]=value
                     break
 
+        data['logbook_id']=str(data['logbook_id']).lower()
+
         fetch=f"""
         <restapi type="select">
             <table name="log_logs"/>

@@ -10,6 +10,7 @@ class RestApiClient:
         self.__session_id=None
         self.__cookies=None
         self.__root=f"{root_url}/v1.0"
+        print(self.__root)
 
     def login(self, username, password):
         headers={

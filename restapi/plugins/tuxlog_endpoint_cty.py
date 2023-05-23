@@ -33,6 +33,7 @@ class TuxlogCty(Resource):
             context=g.context
             connection=context.get_connection()
 
+            print(request.files.getlist('file'))
             for f in request.files.getlist('file'):
                 content=str(f.read(),'UTF-8')
                 plugin=Plugin(context, "tuxlog_cty_endpoint", "post")
