@@ -65,7 +65,7 @@ if __name__ == "__main__":
 
     fetch="""
     <restapi type="select">
-        <table name="meta_data_exchange_fields"/>
+        <table name="log_data_exchange_fields"/>
         <filter>
             <condition field="converter_id" operator="=" value="adif_v2"/>
             <condition field="internal_fieldname" operator="notnull"/>
@@ -73,7 +73,7 @@ if __name__ == "__main__":
         </filter>
     </restapi>
     """
-    mapping=json.loads(rest.read_multible("meta_data_exchange_fields",fetch))
+    mapping=json.loads(rest.read_multible("log_data_exchange_fields",fetch))
 
     f = open(adif, "r")
     content=f.read()
