@@ -8,6 +8,9 @@ DELETE FROM api_user WHERE solution_id=10001;
 DELETE FROM api_group WHERE solution_id=10001;
 DELETE FROM api_event_handler WHERE solution_id=10001;
 #DELETE FROM api_solution WHERE id=10001;
+DELETE FROM api_ui_app_nav_item WHERE solution_id=10001;
+DELETE FROM api_ui_app WHERE solution_id=10001;
+DELETE FROM api_table_view  WHERE solution_id=10001;
 
 INSERT IGNORE INTO api_solution(id,name) VALUES (10001, 'tuxlog');
 
@@ -54,6 +57,7 @@ INSERT IGNORE INTO api_table(id,alias,table_name,id_field_name,id_field_type,des
 INSERT IGNORE INTO api_table(id,alias,table_name,id_field_name,id_field_type,desc_field_name,solution_id) 
     VALUES
     (20008,'log_qslshipmentmodes','log_qslshipmentmodes','id','String','description',10001);
+
 
 
 INSERT IGNORE INTO api_group_permission (group_id,table_id,mode_create,mode_read,mode_update,mode_delete,solution_id)
@@ -123,6 +127,75 @@ INSERT IGNORE INTO api_group_permission (group_id,table_id,mode_create,mode_read
 INSERT IGNORE INTO api_group_permission (group_id,table_id,mode_create,mode_read,mode_update,mode_delete,solution_id)
     VALUES
     (100,20008,0,-1,0,0,10001);
+
+
+/* App */
+INSERT IGNORE INTO api_ui_app (id, name,description,home_url,solution_id)
+VALUES (
+10001001,'tuxlog','tuxlog','/ui/v1.0/data/view/log_logs/default?app_id=10001001',10001);
+INSERT IGNORE INTO api_ui_app_nav_item(id, app_id,name,url,type_id,solution_id) VALUES (10001001,10001001,'Meine Geräte','/ui/v1.0/data/view/log_rigs/default',1,10001);
+INSERT IGNORE INTO api_ui_app_nav_item(id, app_id,name,url,type_id,solution_id) VALUES (10001002,10001001,'Meine Rufzeichen','/ui/v1.0/data/view/log_logbooks/default',1,10001);
+INSERT IGNORE INTO api_ui_app_nav_item(id, app_id,name,url,type_id,solution_id) VALUES (10001003,10001001,'Bänder','/ui/v1.0/data/view/log_bands/default',1,10001);
+INSERT IGNORE INTO api_ui_app_nav_item(id, app_id,name,url,type_id,solution_id) VALUES (10001004,10001001,'Modes','/ui/v1.0/data/view/log_modes/default',1,10001);
+INSERT IGNORE INTO api_ui_app_nav_item(id, app_id,name,url,type_id,solution_id) VALUES (10001005,10001001,'Datenmapping','/ui/v1.0/data/view/log_data_exchange_fields/default',1,10001);
+
+
+/* Views */
+INSERT IGNORE INTO api_table_view (id,type_id,name,table_id,id_field_name,solution_id,fetch_xml, columns) VALUES (
+100010001,'LISTVIEW','default',20000,'id',10001,'<restapi type="select">
+    <table name="log_logs" alias="l"/>
+    <orderby>
+        <field name="logdate_utc" alias="l" sort="DESC"/>
+    </orderby>
+</restapi>',
+'{"id": {},"__mode_id@name": {},"__band_id@name": {},"__rig_id@name": {}, "logdate_utc": {} }');
+
+INSERT IGNORE INTO api_table_view (id,type_id,name,table_id,id_field_name,solution_id,fetch_xml, columns) VALUES (
+100010002,'LISTVIEW','default',20006,'id',10001,'<restapi type="select">
+    <table name="log_rigs" alias="r"/>
+    <orderby>
+        <field name="id" alias="r" sort="ASC"/>
+    </orderby>
+</restapi>',
+'{"id": {},"description": {},"hamlib_id": {},"remote_host": {}, "remote_port": {} }');
+
+INSERT IGNORE INTO api_table_view (id,type_id,name,table_id,id_field_name,solution_id,fetch_xml, columns) VALUES (
+100010003,'LISTVIEW','default',20005,'id',10001,'<restapi type="select">
+    <table name="log_logbooks" alias="l"/>
+    <orderby>
+        <field name="id" alias="l" sort="ASC"/>
+    </orderby>
+</restapi>',
+'{"id": {},"description": {},"mycall": {},"description": {} }');
+
+INSERT IGNORE INTO api_table_view (id,type_id,name,table_id,id_field_name,solution_id,fetch_xml, columns) VALUES (
+100010004,'LISTVIEW','default',20002,'id',10001,'<restapi type="select">
+    <table name="log_bands" alias="b"/>
+    <orderby>
+        <field name="id" alias="b" sort="ASC"/>
+    </orderby>
+</restapi>',
+'{"id": {},"name": {},"adif_name": {},"frequency_min": {}, "frequency_max":{}, "frequency_unit":{} }');
+
+INSERT IGNORE INTO api_table_view (id,type_id,name,table_id,id_field_name,solution_id,fetch_xml, columns) VALUES (
+100010005,'LISTVIEW','default',20007,'id',10001,'<restapi type="select">
+    <table name="log_modes" alias="m"/>
+    <orderby>
+        <field name="description" alias="m" sort="ASC"/>
+    </orderby>
+</restapi>',
+'{"id": {},"description": {},"parent": {} }');
+
+INSERT IGNORE INTO api_table_view (id,type_id,name,table_id,id_field_name,solution_id,fetch_xml, columns) VALUES (
+100010006,'LISTVIEW','default',20001,'id',10001,'<restapi type="select">
+    <table name="log_data_exchange_fields" alias="e"/>
+    <orderby>
+        <field name="converter_id" alias="e" sort="ASC"/>
+        <field name="external_fieldname" alias="e" sort="ASC"/>
+    </orderby>
+</restapi>',
+'{"id": {},"converter_id": {},"external_fieldname": {},"internal_fieldname": {}, "internal_datatype":{} }');
+
 
 
 INSERT IGNORE INTO api_event_handler (plugin_module_name,publisher,event,type,sorting,solution_id)
