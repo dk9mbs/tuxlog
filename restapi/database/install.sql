@@ -146,9 +146,10 @@ INSERT IGNORE INTO api_table_view (id,type_id,name,table_id,id_field_name,soluti
     <table name="log_logs" alias="l"/>
     <orderby>
         <field name="logdate_utc" alias="l" sort="DESC"/>
+        <field name="start_utc" alias="l" sort="DESC"/>
     </orderby>
 </restapi>',
-'{"id": {},"__mode_id@name": {},"__band_id@name": {},"__rig_id@name": {}, "logdate_utc": {} }');
+'{"id": {},"yourcall": {},"locator": {}, "txrst":{},"rxrst": {},  "__mode_id@name": {},"__band_id@name": {},"__rig_id@name": {}, "logdate_utc": {}, "start_utc": {}, "end_utc":{} }');
 
 INSERT IGNORE INTO api_table_view (id,type_id,name,table_id,id_field_name,solution_id,fetch_xml, columns) VALUES (
 100010002,'LISTVIEW','default',20006,'id',10001,'<restapi type="select">
