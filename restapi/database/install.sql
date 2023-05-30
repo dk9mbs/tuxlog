@@ -128,6 +128,63 @@ INSERT IGNORE INTO api_group_permission (group_id,table_id,mode_create,mode_read
     VALUES
     (100,20008,0,-1,0,0,10001);
 
+/* log_logs */
+/* api_event_handler */
+call api_proc_create_table_field_instance(20000,100, 'id','ID','int',14,'{"disabled": true}', @out_value);
+call api_proc_create_table_field_instance(20000,150, 'logdate_utc','Datum (UTC)','date',3,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,200, 'logbook_id','Mein Rufzeichen','int',2,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,250, 'yourcall','Rufzeichen (DX)','string',1,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,300, 'mode_id','Mode','int',2,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,400, 'rig_id','Gerät','int',2,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,500, 'power','Leistung','decimal',14,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,600, 'frequency','QRG','int',14,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,700, 'band_id','Band','int',2,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,900, 'start_utc','Start (UTC)','time',4,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,1100, 'viacall','Via','string',1,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,1200, 'name','Name','string',1,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,1210, 'dok', 'DOK','string',1,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,1300, 'locator','Locator','string',1,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,1400, 'qth','QTH','string',1,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,1405, 'country', 'Land','string',1,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,1410, 'txrst','RST (gesendet)','int',14,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,1420, 'rxrst','RST (empfangen)','int',14,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,1500, 'comment','Kommentar','string',1,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,1510, 'qsl_shipmentmode', 'QSL Versand','string',2,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,1550, 'end_utc','Ende (UTC)','time',4,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,1800, 'qslrecv','QSL empfangen','int',19,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,1900, 'qslsend','QSL gesendet','int',19,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,2300, 'lognr','Log Nummer','int',14,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,2400, 'itu_prefix','ITU Prefix','string',1,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,2500, 'dxcc','DXCC','string',1,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,2600, 'cq','CQ','string',1,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,2700, 'itu', 'ITU','tring',1,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,3100, 'web', 'WWW','string',1,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,3200, 'email', 'E-Mail','string',1,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,3300, 'distance', 'Distance','decimal',14,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,3400, 'source', 'Herkunft','string',1,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,3410, 'mytestnr','mytestnr','string',1,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,3420, 'yourtestnr','yourtestnr','string',1,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,3500, 'rxexchange1', 'RX Exchange 1','string',1,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,3600, 'txexchange1', 'TX Exchange 1','string',1,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,3700, 'rxexchange2', 'RX Exchange 2','string',1,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,3800, 'txexchange2', 'TX Exchange 2','string',1,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(20000,3900, 'entity', 'Entity','string',1,'{"disabled": false}', @out_value);
+
+
+
+/*
+call api_proc_create_table_field_instance(9,300, 'publisher','Publisher','string',1,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(9,400, 'event','Ereignis','string',1,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(9,500, 'type','Typ','string',1,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(9,600, 'sorting','Reihenfolge','int',14,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(9,700, 'solution_id','Lösung','int',2,'{"disabled": false}', @out_value);
+UPDATE api_table_field SET referenced_table_name='api_solution', referenced_table_id=25, referenced_field_name='id', is_lookup=-1 WHERE id=@out_value;
+call api_proc_create_table_field_instance(9,800, 'run_async','Asynchron','int',19,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(9,900, 'run_queue','Queue','int',19,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(9,1000, 'is_enabled','Aktiv','int',19,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(9,1100, 'config','Configuration','string',1,'{"disabled": false}', @out_value);
+call api_proc_create_table_field_instance(9,1100, 'inline_code','Inline Code','string',101,'{"disabled": false, "mode":"ace/mode/python"}', @out_value);
+*/
 
 /* App */
 INSERT IGNORE INTO api_ui_app (id, name,description,home_url,solution_id)
