@@ -15,7 +15,7 @@ kiwisolver==1.1.0
 MarkupSafe==1.1.1
 matplotlib==3.0.3
 netifaces==0.10.6
-numpy==1.16.4
+numpy==1.22.0
 peewee==3.9.6
 pexpect==4.7.0
 ptyprocess==0.6.0
