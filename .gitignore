@@ -1,9 +1,5 @@
 *.pyc
 *.__pycache__
-model.py
 *.py.save
-app.wsgi
-/htdocs
-/tuxlog/__solution__/ui/htdocs/*
-/virtenv
+/venv
 *.FCStd1

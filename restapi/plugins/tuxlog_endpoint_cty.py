@@ -6,7 +6,7 @@ from flask import Flask, g, session, make_response
 from flask import abort
 #from flask import Blueprint
 from flask import request
-from flask_restplus import Resource, Api, reqparse
+from flask_restx import Resource, Api, reqparse
 
 from core.appinfo import AppInfo
 from services.fetchxml import build_fetchxml_by_alias
